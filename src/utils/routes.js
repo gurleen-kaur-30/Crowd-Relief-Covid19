@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Router} from 'react-native-router-flux';
-import {Actions, Scene} from 'react-native-router-flux';
+import {Actions, Scene, Drawer} from 'react-native-router-flux';
 import crossroads from 'crossroads';
 import {drawerWidth} from '../assets/styles/drawer_styles';
 
@@ -57,16 +57,18 @@ export default class Route extends Component {
           <Scene key="signin" hideNavBar component={Signin} />
           <Scene key="signup" hideNavBar component={Signup} />
           <Scene key="forgot" hideNavBar component={Forgot} />
-          <Scene
+          <Drawer
             drawer
             hideNavBar
             key="drawer"
+            open={true}
             contentComponent={DrawerContent}
             drawerWidth={drawerWidth}
             initial={!this.props.initial}
             drawerOpenRoute="DrawerOpen"
             drawerCloseRoute="DrawerClose"
-            drawerToggleRoute="DrawerToggle">
+            drawerToggleRoute="DrawerToggle"
+          >
             <Scene key="profile" hideNavBar component={Profile} />
             <Scene key="mapFeed" hideNavBar component={MapFeedScreen} />
             <Scene
@@ -74,7 +76,7 @@ export default class Route extends Component {
               hideNavBar
               component={EmergencyPlaces}
             />
-          </Scene>
+          </Drawer>
           <Scene key="settingsOption" hideNavBar component={SettingsOption} />
           {/* <Scene key="aboutUs" hideNavBar component={AboutUs} /> */}
           <Scene
