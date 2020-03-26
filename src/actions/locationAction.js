@@ -1,5 +1,6 @@
-import { SEARCH_LOCATION, CURR_LOCATION } from './types';
-import { handleError } from './errorAction';
+import {SEARCH_LOCATION, CURR_LOCATION} from './types';
+import {handleError} from './errorAction';
+import Geolocation from '@react-native-community/geolocation';
 
 /**
  * This function is called to update the location co-ordinates to user's current location
@@ -7,28 +8,28 @@ import { handleError } from './errorAction';
  * @return dispatches location updates to set_currLocation.
  */
 export const watchCurrLocation = () => {
-	return dispatch => {
-		return new Promise((resolve, reject) => {
-			navigator.geolocation.watchPosition(
-				position => {
-					let data = {};
-					data.latitude = parseFloat(position.coords.latitude);
-					data.longitude = parseFloat(position.coords.longitude);
-					resolve(dispatch(set_currLocation(data)));
-				},
-				error => {
-					reject(dispatch(handleError(error)));
-					console.log(error.message);
-				}
-				// {
-				// 	enableHighAccuracy: true,
-				// 	timeout: 20000,
-				// 	maximumAge: 1000,
-				// 	distanceFilter: 10
-				// }
-			);
-		});
-	};
+  return dispatch => {
+    return new Promise((resolve, reject) => {
+      Geolocation.watchPosition(
+        position => {
+          let data = {};
+          data.latitude = parseFloat(position.coords.latitude);
+          data.longitude = parseFloat(position.coords.longitude);
+          resolve(dispatch(set_currLocation(data)));
+        },
+        error => {
+          reject(dispatch(handleError(error)));
+          console.log(error.message);
+        },
+        // {
+        // 	enableHighAccuracy: true,
+        // 	timeout: 20000,
+        // 	maximumAge: 1000,
+        // 	distanceFilter: 10
+        // }
+      );
+    });
+  };
 };
 
 /**
@@ -39,12 +40,12 @@ export const watchCurrLocation = () => {
  * @param {string} name     Name of the location entered by the user in the search bar.
  */
 export const setLocationOnCustomSearch = (latitude, longitude, name) => {
-	return dispatch => {
-		let data = {};
-		data.latitude = latitude;
-		data.longitude = longitude;
-		dispatch(set_location(data, name));
-	};
+  return dispatch => {
+    let data = {};
+    data.latitude = latitude;
+    data.longitude = longitude;
+    dispatch(set_location(data, name));
+  };
 };
 
 /**
@@ -53,11 +54,11 @@ export const setLocationOnCustomSearch = (latitude, longitude, name) => {
  * @param {string} name
  */
 function set_location(location, name) {
-	return {
-		type: SEARCH_LOCATION,
-		search_coordinates: location,
-		location_name: name
-	};
+  return {
+    type: SEARCH_LOCATION,
+    search_coordinates: location,
+    location_name: name,
+  };
 }
 
 /**
@@ -65,8 +66,8 @@ function set_location(location, name) {
  * @param {JSON} location json object containing latitude and longitude
  */
 function set_currLocation(location) {
-	return {
-		type: CURR_LOCATION,
-		curr_coordinates: location
-	};
+  return {
+    type: CURR_LOCATION,
+    curr_coordinates: location,
+  };
 }

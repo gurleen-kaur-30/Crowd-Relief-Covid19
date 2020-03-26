@@ -1,10 +1,9 @@
 import React, {Component} from 'react';
-import {Text, View, TouchableHighlight, TouchableOpacity} from 'react-native';
+import {Text} from 'react-native';
 import {Tabs, Tab, TabHeading} from 'native-base';
-import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MapScreen from './map/mapScreen';
-// import FeedScreen from './feed';
+import FeedScreen from './feed';
 import {styles} from '../../assets/styles/mapFeed_styles';
 
 /**
@@ -36,7 +35,7 @@ export default class MapFeedScreen extends Component {
               <Text style={styles.tabText}>Global Feed</Text>
             </TabHeading>
           }>
-          {/* <FeedScreen /> */}
+          <FeedScreen />
         </Tab>
       </Tabs>
     );

@@ -41,7 +41,7 @@ export const onPressSignIn = (email, password) => {
     dispatch(loginLoading(true));
     firebase
       .auth()
-      .signInAndRetrieveDataWithEmailAndPassword(email, password) //signs in to firebase
+      .signInWithEmailAndPassword(email, password) //signs in to firebase
       .then(data => {
         dispatch(getUserAuthFirebase(data.user, 'email'));
         dispatch(addUserFirebase(userFirebaseStructure(data.user)));

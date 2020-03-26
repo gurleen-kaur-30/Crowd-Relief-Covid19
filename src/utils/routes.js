@@ -73,7 +73,7 @@ export default class Route extends Component {
             />
           </Scene>
           <Scene key="settingsOption" hideNavBar component={SettingsOption} />
-          <Scene key="aboutUs" hideNavBar component={AboutUs} />
+          {/* <Scene key="aboutUs" hideNavBar component={AboutUs} /> */}
           <Scene
             back={true}
             key="addIncident"

@@ -123,7 +123,7 @@ class SettingsOption extends Component {
               </Body>
               <Right>
                 <Switch
-                  thumbTintColor="#1c76cb"
+                  thumbColor="#1c76cb"
                   onValueChange={enable_notifications => {
                     this.handleNotifications(enable_notifications);
                   }}
@@ -169,7 +169,7 @@ class SettingsOption extends Component {
                   <Slider
                     value={this.state.emergency_radius}
                     minimumTrackTintColor="#4c93f7"
-                    thumbTintColor="#1c76cb"
+                    thumbColor="#1c76cb"
                     maximumTrackTintColor="#9bd5ff"
                     thumbTouchSize={{
                       width: 50,
@@ -228,7 +228,7 @@ class SettingsOption extends Component {
                   <Slider
                     value={this.state.notification_min_radius}
                     minimumTrackTintColor="#4c93f7"
-                    thumbTintColor="#1c76cb"
+                    thumbColor="#1c76cb"
                     maximumTrackTintColor="#9bd5ff"
                     step={500}
                     minimumValue={1000}
@@ -283,7 +283,7 @@ class SettingsOption extends Component {
                   <Slider
                     value={this.state.notification_timeout}
                     minimumTrackTintColor="#4c93f7"
-                    thumbTintColor="#1c76cb"
+                    thumbColor="#1c76cb"
                     maximumTrackTintColor="#9bd5ff"
                     step={2}
                     minimumValue={6}

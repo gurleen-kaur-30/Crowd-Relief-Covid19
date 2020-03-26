@@ -1,11 +1,11 @@
-import { Text, View, TouchableOpacity, Alert } from 'react-native';
-import React, { Component } from 'react';
+import {Text, View, TouchableOpacity, Alert} from 'react-native';
+import React, {Component} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { Actions } from 'react-native-router-flux';
-import { styles } from '../../../assets/styles/navBarButton_styles';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { updateIncidentFirebase } from '../../../actions/incidentsAction';
+import {Actions} from 'react-native-router-flux';
+import {styles} from '../../../assets/styles/navBarButton_styles';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
+import {updateIncidentFirebase} from '../../../actions/incidentsAction';
 import PropTypes from 'prop-types';
 
 /**
@@ -14,61 +14,59 @@ import PropTypes from 'prop-types';
  */
 
 class DeleteButtonIncident extends Component {
-	//Handles the delete functionality of an incident and updates the firebase database
-	handleDelete() {
-		Alert.alert(
-			'',
-			'Are you sure you want to delete this incident?',
-			[
-				{
-					text: 'No',
-					onPress: () => console.log('Cancel Pressed'),
-					style: 'cancel'
-				},
-				{
-					text: 'Yes',
-					onPress: () => {
-						this.props.toggleLoader(true);
-						Promise.resolve()
-							.then(() => {
-								this.props
-									.updateIncidentFirebase(
-										this.props.incident.incident.key,
-										{ visible: false }
-									)
-							})
-							.then(() => {
-								Actions.pop();
-							});
-					}
-				}
-			],
-			{ cancelable: false }
-		);
-	}
+  //Handles the delete functionality of an incident and updates the firebase database
+  handleDelete() {
+    Alert.alert(
+      '',
+      'Are you sure you want to delete this incident?',
+      [
+        {
+          text: 'No',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {
+          text: 'Yes',
+          onPress: () => {
+            this.props.toggleLoader(true);
+            Promise.resolve()
+              .then(() => {
+                this.props.updateIncidentFirebase(
+                  this.props.incident.incident.key,
+                  {visible: false},
+                );
+              })
+              .then(() => {
+                Actions.pop();
+              });
+          },
+        },
+      ],
+      {cancelable: false},
+    );
+  }
 
-	componentWillReceiveProps (nextProps) {
-		if (this.props.incident.loading && !nextProps.incident.loading) {
-			this.props.toggleLoader(false);
-		}
-	}
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    if (this.props.incident.loading && !nextProps.incident.loading) {
+      this.props.toggleLoader(false);
+    }
+  }
 
-	render() {
-		if (this.props.incident.isLoggedIn) {
-			return (
-				<TouchableOpacity
-					style={styles.incidentNavButton}
-					onPress={() => {
-						this.handleDelete();
-					}}
-				>
-					<Icon name="trash-o" size={24} color={'white'} />
-				</TouchableOpacity>
-			);
-		} else {
-			return <View />;
-		}
-	}
+  render() {
+    if (this.props.incident.isLoggedIn) {
+      return (
+        <TouchableOpacity
+          style={styles.incidentNavButton}
+          onPress={() => {
+            this.handleDelete();
+          }}>
+          <Icon name="trash-o" size={24} color={'white'} />
+        </TouchableOpacity>
+      );
+    } else {
+      return <View />;
+    }
+  }
 }
 
 /**
@@ -77,8 +75,8 @@ class DeleteButtonIncident extends Component {
  * does not meet the specified type.
  */
 DeleteButtonIncident.propTypes = {
-	updateIncidentFirebase: PropTypes.func.isRequired,
-	incident: PropTypes.object
+  updateIncidentFirebase: PropTypes.func.isRequired,
+  incident: PropTypes.object,
 };
 
 /**
@@ -88,12 +86,12 @@ DeleteButtonIncident.propTypes = {
  * @return Turns action creator objects into an objects with the same keys.
  */
 function matchDispatchToProps(dispatch) {
-	return bindActionCreators(
-		{
-			updateIncidentFirebase: updateIncidentFirebase
-		},
-		dispatch
-	);
+  return bindActionCreators(
+    {
+      updateIncidentFirebase: updateIncidentFirebase,
+    },
+    dispatch,
+  );
 }
 
 /**
@@ -103,9 +101,10 @@ function matchDispatchToProps(dispatch) {
  * @return Returns states as props.
  */
 const mapStateToProps = state => ({
-	incident: state.incident
+  incident: state.incident,
 });
 
-export default connect(mapStateToProps, matchDispatchToProps)(
-	DeleteButtonIncident
-);
+export default connect(
+  mapStateToProps,
+  matchDispatchToProps,
+)(DeleteButtonIncident);

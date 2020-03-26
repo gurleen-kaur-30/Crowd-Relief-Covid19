@@ -49,12 +49,12 @@ class MapScreen extends Component {
     };
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.props.getAllIncidents();
     this.props.getEmergencyPlaces(this.props.settings.emergency_radius);
   }
 
-  componentWillUpdate(nextProps) {
+  UNSAFE_componentWillUpdate(nextProps) {
     //Check if notifications are enabled or not
     if (this.props.settings.enable_notifications) {
       //If there has been any location change or modifications in the incidents
@@ -216,7 +216,7 @@ class MapScreen extends Component {
           returnKeyType={'search'}
           fetchDetails={true}
           query={{
-            key: 'AIzaSyApvrC8t6Q4xaxQWHFEFvjCDREEgZw-_PQ',
+            key: Config.GOOGLE_MAPS_KEY,
             language: 'en',
           }}
           textInputProps={{

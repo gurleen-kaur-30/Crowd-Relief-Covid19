@@ -155,7 +155,7 @@ class MapContainer extends Component {
       const items = GeoJSON.parse(data, {
         Point: ['latitude', 'longitude'],
       });
-      const cluster = supercluster({
+      const cluster = new supercluster({
         radius: 60,
         maxZoom: 16,
         nodeSize: 64,
@@ -266,18 +266,18 @@ class MapContainer extends Component {
       longitude: region.longitude - region.longitudeDelta / 2,
     };
 
-    // props !== null ? (this.props = props) : null;
-    // if (
-    // 	this.props.all_incidents !== null &&
-    // 	this.props.emergencyPlaces.hospitals !== null &&
-    // 	this.props.emergencyPlaces.policeStations !== null
-    // ) {
-    // 	this._createRegions(
-    // 		region,
-    // 		this.generateIncidents(this.props.incident.domain),
-    // 		this.generateEmergencyPlaces()
-    // 	);
-    // }
+    props !== null ? (this.props = props) : null;
+    if (
+      this.props.all_incidents !== null &&
+      this.props.emergencyPlaces.hospitals !== null &&
+      this.props.emergencyPlaces.policeStations !== null
+    ) {
+      this._createRegions(
+        region,
+        this.generateIncidents(this.props.incident.domain),
+        this.generateEmergencyPlaces(),
+      );
+    }
   }
 
   /**
@@ -353,7 +353,7 @@ class MapContainer extends Component {
   }
 
   //Triggerinng on propChange like filtering/adding/modifying incidents.
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (
       nextProps.incident.all_incidents !== this.props.incident.all_incidents ||
       nextProps.incident.domain !== this.props.incident.domain

@@ -5,7 +5,6 @@ import {
   View,
   TouchableOpacity,
   ActivityIndicator,
-  AsyncStorage,
 } from 'react-native';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
@@ -17,6 +16,7 @@ import Config from 'react-native-config';
 import PropTypes from 'prop-types';
 import {Toast} from 'native-base';
 import Slides from '../introSlides';
+import AsyncStorage from '@react-native-community/async-storage';
 
 /**
  * Screen showing all login options.
@@ -32,8 +32,7 @@ class HomeLogin extends Component {
 
   componentDidMount() {
     GoogleSignin.configure({
-      webClientId:
-        '443270569292-7tp846fo5h4l4d08v2m1ujp36o30aha4.apps.googleusercontent.com',
+      webClientId: Config.GOOGLE_WEB_CLIENT_ID,
       forceConsentPrompt: true,
     });
 
@@ -99,7 +98,7 @@ class HomeLogin extends Component {
             <Text style={styles.button_login_text}> Email </Text>
           </TouchableOpacity>
         </View>
-        {this.state.onboarding === 'pending' && <Slides />}
+        {/* {this.state.onboarding === 'pending' && <Slides />} */}
       </View>
     );
   }
