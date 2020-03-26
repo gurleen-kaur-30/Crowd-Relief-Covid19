@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import {PermissionsAndroid} from 'react-native'
+
 import {connect} from 'react-redux';
 import {Router} from 'react-native-router-flux';
 import {Actions, Scene, Drawer} from 'react-native-router-flux';
@@ -42,6 +44,36 @@ export default class Route extends Component {
     }
     Actions.pop();
     return true;
+  }
+
+  componentDidMount(){
+    this.checkLocationPermission()
+  }
+  getLocationPermission(){
+    const granted = PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+    )
+    console.log("granted",granted)
+    return granted
+  }
+  checkLocationPermission(){
+    console.log("checking permission")
+    PermissionsAndroid.check(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+    )
+    .then((havePermission) => {
+        console.log(havePermission)
+        if(!havePermission){
+            console.log("not permitted")
+            this.getLocationPermission()
+            .then((granted) => {
+                if(granted == PermissionsAndroid.RESULTS.GRANTED){
+                }
+            })
+        } else if(havePermission){
+            console.log("permitted")
+        }
+    })
   }
 
   render() {
