@@ -11,7 +11,6 @@ import {
   Platform,
   SafeAreaView,
 } from 'react-native';
-import LocationServicesDialogBox from 'react-native-android-location-services-dialog-box';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {Actions} from 'react-native-router-flux';
@@ -24,7 +23,8 @@ var PushNotification = require('react-native-push-notification');
 import {Header, Title, Left, Body} from 'native-base';
 import {SideDrawer} from '../sideMenu';
 import ProfileIncident from './profileIncident';
-import {request, PERMISSIONS} from 'react-native-permissions';
+// import LocationServicesDialogBox from 'react-native-android-location-services-dialog-box';
+import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
 
 /**
  * Screen showing the profile along with his/her incidents.
@@ -32,18 +32,23 @@ import {request, PERMISSIONS} from 'react-native-permissions';
  */
 class Profile extends Component {
   UNSAFE_componentWillMount() {
-    console.log('TESTING>>>>>>>>>>>>>>>>>>>>');
     //Used to check if location services are enabled and
     //if not than asks to enables them by redirecting to location settings.
     if (Platform.OS === 'android') {
-      LocationServicesDialogBox.checkLocationServicesIsEnabled({
-        message:
-          '<h2>Please enable GPS!</h2>\
-            CrowdAlert wants to change your Location settings',
-        ok: 'Ok',
-        cancel: 'No',
-        providerListener: true,
-      }).then(success => {
+      // LocationServicesDialogBox.checkLocationServicesIsEnabled({
+      //   message:
+      //     '<h2>Please enable GPS!</h2>\
+      //       CrowdAlert wants to change your Location settings',
+      //   ok: 'Ok',
+      //   cancel: 'No',
+      //   providerListener: true,
+      // }).then(success => {
+      //   this.props.watchCurrLocation();
+      // });
+      RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({
+        interval: 10000,
+        fastInterval: 5000,
+      }).then(data => {
         this.props.watchCurrLocation();
       });
     } else {
@@ -62,7 +67,9 @@ class Profile extends Component {
     });
 
     //Gets user submitted incidents
-    this.props.getUserIncidents(this.props.user.email);
+    if (this.props.incident.user_incidents === null) {
+      this.props.getUserIncidents(this.props.user.email);
+    }
   }
 
   /**
@@ -108,7 +115,7 @@ class Profile extends Component {
               <View style={styles.empty} />
               <Text style={styles.userName}>{this.props.user.name}</Text>
             </View>
-            {this.props.incident.user_incidents === null ||
+            {this.props.incident.user_incidents !== null &&
             this.props.incident.loading ? (
               <ActivityIndicator
                 size={'large'}

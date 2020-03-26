@@ -34,7 +34,10 @@ const ConnectedRouter = connect()(Router);
 export default class Route extends Component {
   //Describes the functionality of the hardware back button
   onBackPress() {
-    if (Actions.currentScene === '_profile') {
+    if (
+      Actions.currentScene === '_profile' ||
+      Actions.currentScene === 'homeLogin'
+    ) {
       return false;
     }
     Actions.pop();
