@@ -23,6 +23,7 @@ import {styles} from '../assets/styles/addincident_styles';
 import PropTypes from 'prop-types';
 import ImagePicker from 'react-native-image-picker';
 import {Toast} from 'native-base';
+import Slider from '@react-native-community/slider';
 
 /**
  * Screen for adding an incident.
@@ -49,6 +50,7 @@ class AddIncident extends Component {
         },
         item: [],
         action: null,
+        urgency: null,
       },
       disable: false,
     };
@@ -75,6 +77,16 @@ class AddIncident extends Component {
         action: action,
       },
     });
+  };
+
+  updateSliderValue = urgency => {
+    this.setState({
+      incident: {
+        ...this.state.incident,
+        urgency: urgency,
+      },
+    });
+    console.log(this.state);
   };
 
   /**
@@ -163,6 +175,7 @@ class AddIncident extends Component {
       this.state.incident.title === null ||
       this.state.incident.details === null ||
       this.state.incident.category === null ||
+      this.state.incident.urgency === null ||
       this.state.incident.action === null
     ) {
       this.showToast('Please dont leave any field blank');
@@ -338,6 +351,24 @@ class AddIncident extends Component {
             numberOfLines={4}
             returnKeyType="next"
             placeholder="Description"
+          />
+
+          <View style={styles.textInputHeadingContainer}>
+            <Text style={styles.textInputHeading}>Urgency on a scale of 5</Text>
+          </View>
+          <Slider
+            minimumTrackTintColor="#4c93f7"
+            thumbColor="#1c76cb"
+            maximumTrackTintColor="#9bd5ff"
+            thumbTouchSize={{
+              width: 100,
+              height: 100,
+            }}
+            step={1}
+            minimumValue={1}
+            maximumValue={5}
+            onSlidingComplete={urgency => this.updateSliderValue(urgency)}
+            onValueChange={urgency => this.updateSliderValue(urgency)}
           />
           {/* <View style={styles.switchContainer}>
             <Text style={styles.switchText}>Get Help!</Text>

@@ -76,6 +76,7 @@ export const getAllIncidents = () => {
                 value: {
                   title: child.val().title,
                   action: child.val().action,
+                  urgency: child.val().urgency,
                   details: child.val().details,
                   category: child.val().category,
                   timestamp: child.val().timestamp,
@@ -131,6 +132,7 @@ export const getUserIncidents = userID => {
               value: {
                 title: child.val().title,
                 action: child.val().action,
+                urgency: child.val().urgency,
                 details: child.val().details,
                 category: child.val().category,
                 timestamp: child.val().timestamp,
