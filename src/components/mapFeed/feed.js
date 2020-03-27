@@ -148,7 +148,6 @@ class FeedScreen extends Component {
               showsVerticalScrollIndicator: false,
             }}
             onEventPress={event => {
-              console.log(event);
               this.viewClickedIncident(event);
             }}
             showTime={false}

@@ -143,7 +143,6 @@ class AddIncident extends Component {
    * The function is used to update incident details with the details entered by the user.
    */
   handleAddIncident() {
-    console.log(this.state.incident);
     Keyboard.dismiss();
 
     // Validate the title and the details

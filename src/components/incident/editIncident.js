@@ -67,9 +67,9 @@ class EditIncident extends Component {
       error = 'Title should be 3 or more characters';
     }
     // Checks for alpha numeric
-    else if (!/^[a-z0-9\s]+$/i.test(title)) {
-      error = 'Title can contain only alphabets and numbers';
-    }
+    // else if (!/^[a-z0-9\s]+$/i.test(title)) {
+    //   error = 'Title can contain only alphabets and numbers';
+    // }
 
     if (!error) {
       return true;

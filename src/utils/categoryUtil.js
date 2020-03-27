@@ -14,41 +14,17 @@ const categories = {
     category: 'all',
     image: all_marker,
   },
-  road: {
-    title: 'Road Accident',
-    category: 'road',
+  relief: {
+    title: 'Relief',
+    category: 'relief',
     image: road_marker,
     color: '#2c3e50',
   },
-  fire: {
-    title: 'Fire',
-    category: 'fire',
+  contribute: {
+    title: 'Contribute',
+    category: 'contribute',
     image: fire_marker,
     color: '#ed810e',
-  },
-  health: {
-    title: 'Health',
-    category: 'health',
-    image: health_marker,
-    color: '#ff0000',
-  },
-  flood: {
-    title: 'Floods',
-    category: 'flood',
-    image: flood_marker,
-    color: '#6fc8f2',
-  },
-  blackout: {
-    title: 'Electricity Blackout',
-    category: 'blackout',
-    image: electric_marker,
-    color: '#000',
-  },
-  earthquake: {
-    title: 'Earthquake',
-    category: 'earthquake',
-    image: earthquake_marker,
-    color: '#473118',
   },
 };
 
