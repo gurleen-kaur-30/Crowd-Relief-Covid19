@@ -108,7 +108,7 @@ class SettingsOption extends Component {
                 </TouchableOpacity>
               </Body>
             </ListItem>
-            <ListItem icon style={styles.listItem} noBorder>
+            {/* <ListItem icon style={styles.listItem} noBorder>
               <Left>
                 <Button disabled style={{backgroundColor: '#FF9501'}}>
                   {this.state.enable_notifications ? (
@@ -130,7 +130,7 @@ class SettingsOption extends Component {
                   value={this.state.enable_notifications}
                 />
               </Right>
-            </ListItem>
+            </ListItem> */}
             <ListItem icon style={styles.listItem} noBorder>
               <Left>
                 <Button disabled style={{backgroundColor: 'white'}}>
