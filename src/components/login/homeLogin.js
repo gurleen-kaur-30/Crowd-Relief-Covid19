@@ -32,8 +32,13 @@ class HomeLogin extends Component {
 
   componentDidMount() {
     GoogleSignin.configure({
-      webClientId: Config.GOOGLE_WEB_CLIENT_ID,
-      forceConsentPrompt: true,
+      webClientId: "180312338542-6rbr8ph1d3m8rtesuushqe4vrrmsvdci.apps.googleusercontent.com",
+      scopes: [],
+      offlineAccess: true, 
+      hostedDomain: '', 
+      loginHint: '', 
+      forceConsentPrompt: true, 
+      accountName: '',
     });
 
     // Only show onboarding screens
@@ -67,6 +72,24 @@ class HomeLogin extends Component {
     }
   }
 
+  googleSignIn = async () => {
+    try {
+        await GoogleSignin.hasPlayServices();
+        const userInfo = await GoogleSignin.signIn();
+        this.props.googleSignin(userInfo)
+    } catch (error) {
+        if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        // user cancelled the login flow
+        } else if (error.code === statusCodes.IN_PROGRESS) {
+        // operation (f.e. sign in) is in progress already
+        } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        // play services not available or outdated
+         } else {
+        // some other error happened
+        }
+    }
+  };
+
   render() {
     return (
       <View style={styles.container}>
@@ -84,7 +107,7 @@ class HomeLogin extends Component {
           <Text style={styles.login_text_heading}> LOGIN WITH </Text>
           <TouchableOpacity
             style={[styles.button_google, styles.loginButton]}
-            onPress={() => this.props.googleSignin()}>
+            onPress={() => this.googleSignIn()}>
             <Text style={styles.button_login_text}> Google </Text>
           </TouchableOpacity>
           <TouchableOpacity
