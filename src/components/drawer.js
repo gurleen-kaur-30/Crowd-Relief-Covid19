@@ -58,6 +58,27 @@ class DrawerContent extends Component {
     );
   }
 
+  onClickDashboard(){
+    Actions.profile()
+    Actions.drawerClose()
+  }
+
+  onClickMapFeed(){
+    Actions.mapFeed()
+    Actions.drawerClose()
+  }
+
+
+  onClickEmergencyLocation(){
+    Actions.emergencylocation()
+    Actions.drawerClose()
+  }
+
+  onClickSettingsOption(){
+    Actions.settingsOption()
+    Actions.drawerClose()
+  }
+
   render() {
     if (this.props.user === null) {
       return <ActivityIndicator size={'large'} />;
@@ -83,17 +104,18 @@ class DrawerContent extends Component {
             </TouchableHighlight>
             <Text style={styles.userName}>{this.props.user.name}</Text>
           </View>
+
           <View style={styles.bar} />
-          <TouchableHighlight onPress={Actions.profile}>
+          <TouchableHighlight onPress={()=>this.onClickDashboard()}>
             <Text style={styles.option}>Dashboard</Text>
           </TouchableHighlight>
-          <TouchableHighlight onPress={Actions.mapFeed}>
+          <TouchableHighlight onPress={()=> this.onClickMapFeed()}>
             <Text style={styles.option}>Map / Feed</Text>
           </TouchableHighlight>
-          <TouchableHighlight onPress={Actions.emergencylocation}>
+          <TouchableHighlight onPress={()=>this.onClickEmergencyLocation()}>
             <Text style={styles.option}>Emergency locations</Text>
           </TouchableHighlight>
-          <TouchableHighlight onPress={Actions.settingsOption}>
+          <TouchableHighlight onPress={()=>this.onClickSettingsOption()}>
             <Text style={styles.option}>Settings</Text>
           </TouchableHighlight>
           {/* <TouchableHighlight onPress={Actions.aboutUs}>
