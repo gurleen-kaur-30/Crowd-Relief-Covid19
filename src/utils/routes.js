@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
+import {PermissionsAndroid} from 'react-native'
+
 import {connect} from 'react-redux';
 import {Router} from 'react-native-router-flux';
-import {Actions, Scene} from 'react-native-router-flux';
+import {Actions, Scene, Drawer} from 'react-native-router-flux';
 import crossroads from 'crossroads';
 import {drawerWidth} from '../assets/styles/drawer_styles';
 
@@ -44,6 +46,36 @@ export default class Route extends Component {
     return true;
   }
 
+  componentDidMount(){
+    this.checkLocationPermission()
+  }
+  getLocationPermission(){
+    const granted = PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+    )
+    console.log("granted",granted)
+    return granted
+  }
+  checkLocationPermission(){
+    console.log("checking permission")
+    PermissionsAndroid.check(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+    )
+    .then((havePermission) => {
+        console.log(havePermission)
+        if(!havePermission){
+            console.log("not permitted")
+            this.getLocationPermission()
+            .then((granted) => {
+                if(granted == PermissionsAndroid.RESULTS.GRANTED){
+                }
+            })
+        } else if(havePermission){
+            console.log("permitted")
+        }
+    })
+  }
+
   render() {
     return (
       <ConnectedRouter backAndroidHandler={this.onBackPress}>
@@ -57,16 +89,18 @@ export default class Route extends Component {
           <Scene key="signin" hideNavBar component={Signin} />
           <Scene key="signup" hideNavBar component={Signup} />
           <Scene key="forgot" hideNavBar component={Forgot} />
-          <Scene
+          <Drawer
             drawer
             hideNavBar
             key="drawer"
+            open={true}
             contentComponent={DrawerContent}
             drawerWidth={drawerWidth}
             initial={!this.props.initial}
             drawerOpenRoute="DrawerOpen"
             drawerCloseRoute="DrawerClose"
-            drawerToggleRoute="DrawerToggle">
+            drawerToggleRoute="DrawerToggle"
+          >
             <Scene key="profile" hideNavBar component={Profile} />
             <Scene key="mapFeed" hideNavBar component={MapFeedScreen} />
             <Scene
@@ -74,7 +108,7 @@ export default class Route extends Component {
               hideNavBar
               component={EmergencyPlaces}
             />
-          </Scene>
+          </Drawer>
           <Scene key="settingsOption" hideNavBar component={SettingsOption} />
           {/* <Scene key="aboutUs" hideNavBar component={AboutUs} /> */}
           <Scene
