@@ -67,9 +67,7 @@ class Profile extends Component {
     });
 
     //Gets user submitted incidents
-    if (this.props.incident.user_incidents === null) {
-      this.props.getUserIncidents(this.props.user.email);
-    }
+    this.props.getUserIncidents(this.props.user.email);
   }
 
   /**
@@ -115,7 +113,7 @@ class Profile extends Component {
               <View style={styles.empty} />
               <Text style={styles.userName}>{this.props.user.name}</Text>
             </View>
-            {this.props.incident.user_incidents !== null &&
+            {this.props.incident.user_incidents === null ||
             this.props.incident.loading ? (
               <ActivityIndicator
                 size={'large'}

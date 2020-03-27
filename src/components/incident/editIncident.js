@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   TextInput,
   ActivityIndicator,
-  CheckBox,
+  Picker,
 } from 'react-native';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
@@ -31,13 +31,13 @@ class EditIncident extends Component {
     this.state = {
       title: this.props.incidentDetails.title,
       details: this.props.incidentDetails.details,
+      action: this.props.incidentDetails.action,
+      category: this.props.incidentDetails.category,
       image: {
         isPresent: this.props.incidentDetails.image.isPresent,
         base64: this.props.incidentDetails.image.base64,
         uri: this.props.incidentDetails.image.uri,
       },
-      getHelp: this.props.incidentDetails.getHelp,
-      visible: this.props.incidentDetails.visible,
     };
   }
 
@@ -175,6 +175,18 @@ class EditIncident extends Component {
   }
 
   render() {
+    let pickers;
+    if (this.state.category == 'contribute') {
+      pickers = [
+        <Picker.Item label="To be picked" value="to_pick" key="to_pick" />,
+        <Picker.Item label="Picked" value="picked" key="picked" />,
+      ];
+    } else {
+      pickers = [
+        <Picker.Item label="Required" value="required" key="required" />,
+        <Picker.Item label="Delivered" value="delivered" key="delivered" />,
+      ];
+    }
     return (
       <View style={styles.container}>
         <Header androidStatusBarColor="#1c76cb">
@@ -212,10 +224,21 @@ class EditIncident extends Component {
               </TouchableOpacity>
             </View>
           )}
+
+          <View style={styles.textInputHeadingContainer}>
+            <Text style={styles.textInputHeading}>Action to be taken</Text>
+          </View>
+          <Picker
+            selectedValue={this.state.action}
+            onValueChange={action => {
+              this.setState({action});
+            }}
+            style={styles.picker}>
+            {pickers}
+          </Picker>
           <View style={styles.textInputHeadingContainer}>
             <Text style={styles.textInputHeading}>Incident Title</Text>
           </View>
-
           <TextInput
             ref={input => (this.titleInput = input)}
             onChangeText={title => this.setState({title})}
@@ -238,7 +261,7 @@ class EditIncident extends Component {
             placeholder="Description"
             value={this.state.details}
           />
-          <View style={styles.switchContainer}>
+          {/* <View style={styles.switchContainer}>
             <Text style={styles.switchText}>Get Help!</Text>
             <Switch
               thumbColor="#1c76cb"
@@ -257,7 +280,7 @@ class EditIncident extends Component {
               }}
               value={this.state.visible}
             />
-          </View>
+          </View> */}
           {this.props.incident.loading && (
             <ActivityIndicator size="large" color="black" />
           )}

@@ -151,6 +151,26 @@ class Incident extends Component {
             ) : null}
             <Card style={styles.card}>
               <CardItem>
+                <Text style={styles.titleTextHeader}>Action</Text>
+              </CardItem>
+              <CardItem>
+                <Text style={styles.titleTextDescription}>
+                  {incidentDetails.action}
+                </Text>
+              </CardItem>
+            </Card>
+            <Card style={styles.card}>
+              <CardItem>
+                <Text style={styles.titleTextHeader}>Category</Text>
+              </CardItem>
+              <CardItem>
+                <Text style={styles.titleTextDescription}>
+                  {incidentDetails.category}
+                </Text>
+              </CardItem>
+            </Card>
+            <Card style={styles.card}>
+              <CardItem>
                 <Text style={styles.titleTextHeader}>Title</Text>
               </CardItem>
               <CardItem>

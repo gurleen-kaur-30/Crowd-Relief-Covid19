@@ -42,13 +42,13 @@ class AddIncident extends Component {
         },
         category: null,
         user_id: this.props.login.userDetails.email,
-        upvotes: 0,
         image: {
           isPresent: false,
           base64: '',
           uri: '',
         },
-        getHelp: true,
+        item: [],
+        action: null,
       },
       disable: false,
     };
@@ -64,6 +64,15 @@ class AddIncident extends Component {
       incident: {
         ...this.state.incident,
         category: category,
+      },
+    });
+  };
+
+  updateAction = action => {
+    this.setState({
+      incident: {
+        ...this.state.incident,
+        action: action,
       },
     });
   };
@@ -153,7 +162,8 @@ class AddIncident extends Component {
     if (
       this.state.incident.title === null ||
       this.state.incident.details === null ||
-      this.state.incident.category === null
+      this.state.incident.category === null ||
+      this.state.incident.action === null
     ) {
       this.showToast('Please dont leave any field blank');
     } else {
@@ -212,6 +222,21 @@ class AddIncident extends Component {
   };
 
   render() {
+    let pickers;
+    if (this.state.incident.category == 'contribute') {
+      pickers = [
+        <Picker.Item label="Choose" value={null} key="null" />,
+        <Picker.Item label="To be picked" value="to_pick" key="to_pick" />,
+        <Picker.Item label="Picked" value="picked" key="picked" />,
+      ];
+    } else {
+      pickers = [
+        <Picker.Item label="Choose" value={null} key="null" />,
+        <Picker.Item label="Required" value="required" key="required" />,
+        <Picker.Item label="Delivered" value="delivered" key="delivered" />,
+      ];
+    }
+
     return (
       <View style={styles.container}>
         <Header androidStatusBarColor="#1c76cb">
@@ -252,18 +277,28 @@ class AddIncident extends Component {
               </View>
             </TouchableOpacity>
           </View>
+          <View style={styles.textInputHeadingContainer}>
+            <Text style={styles.textInputHeading}>Kind of incident</Text>
+          </View>
           <Picker
             selectedValue={this.state.incident.category}
             onValueChange={category => {
               this.updateCategory(category);
             }}
             style={styles.picker}>
-            <Picker.Item label="Choose type of incident" value={null} />
-            <Picker.Item label="Road accident" value="road" />
-            <Picker.Item label="Health accident" value="health" />
-            <Picker.Item label="Electricity blackout" value="blackout" />
-            <Picker.Item label="Fire" value="fire" />
-            <Picker.Item label="Flood" value="flood" />
+            <Picker.Item label="Relief" value="relief" />
+            <Picker.Item label="Contribution" value="contribute" />
+          </Picker>
+          <View style={styles.textInputHeadingContainer}>
+            <Text style={styles.textInputHeading}>Action to be taken</Text>
+          </View>
+          <Picker
+            selectedValue={this.state.incident.action}
+            onValueChange={action => {
+              this.updateAction(action);
+            }}
+            style={styles.picker}>
+            {pickers}
           </Picker>
           <View style={styles.textInputHeadingContainer}>
             <Text style={styles.textInputHeading}>Incident Title</Text>
@@ -304,7 +339,7 @@ class AddIncident extends Component {
             returnKeyType="next"
             placeholder="Description"
           />
-          <View style={styles.switchContainer}>
+          {/* <View style={styles.switchContainer}>
             <Text style={styles.switchText}>Get Help!</Text>
             <Switch
               thumbColor="#1c76cb"
@@ -333,7 +368,7 @@ class AddIncident extends Component {
               }}
               value={this.state.incident.visible}
             />
-          </View>
+          </View> */}
           {this.props.incident.loading && (
             <ActivityIndicator size="large" color="black" />
           )}
@@ -341,7 +376,7 @@ class AddIncident extends Component {
             disabled={this.state.disable}
             style={styles.updateButton}
             onPress={() => this.handleAddIncident()}>
-            <Text style={styles.updateText}> Update </Text>
+            <Text style={styles.updateText}> Add </Text>
           </TouchableOpacity>
         </ScrollView>
       </View>

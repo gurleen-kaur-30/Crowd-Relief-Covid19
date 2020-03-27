@@ -17,6 +17,7 @@ import PropTypes from 'prop-types';
 import {Toast} from 'native-base';
 import Slides from '../introSlides';
 import AsyncStorage from '@react-native-community/async-storage';
+import {handleError} from '../../actions/errorAction';
 
 /**
  * Screen showing all login options.
@@ -32,12 +33,12 @@ class HomeLogin extends Component {
 
   componentDidMount() {
     GoogleSignin.configure({
-      webClientId: "180312338542-6rbr8ph1d3m8rtesuushqe4vrrmsvdci.apps.googleusercontent.com",
+      webClientId: Config.GOOGLE_WEB_CLIENT_ID,
       scopes: [],
-      offlineAccess: true, 
-      hostedDomain: '', 
-      loginHint: '', 
-      forceConsentPrompt: true, 
+      offlineAccess: true,
+      hostedDomain: '',
+      loginHint: '',
+      forceConsentPrompt: true,
       accountName: '',
     });
 
@@ -74,19 +75,11 @@ class HomeLogin extends Component {
 
   googleSignIn = async () => {
     try {
-        await GoogleSignin.hasPlayServices();
-        const userInfo = await GoogleSignin.signIn();
-        this.props.googleSignin(userInfo)
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      this.props.googleSignin(userInfo);
     } catch (error) {
-        if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        // user cancelled the login flow
-        } else if (error.code === statusCodes.IN_PROGRESS) {
-        // operation (f.e. sign in) is in progress already
-        } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        // play services not available or outdated
-         } else {
-        // some other error happened
-        }
+      handleError(error);
     }
   };
 

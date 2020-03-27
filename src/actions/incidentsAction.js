@@ -1,18 +1,18 @@
 import {
-	LATEST_INCIDENT_ADDED,
-	ALL_INCIDENTS,
-	INCIDENTS_LOADING,
-	USERS_INCIDENTS,
-	VIEW_INCIDENT,
-	NOTIFICATION_INCIDENTS,
-	TOGGLE_DOMAINS
+  LATEST_INCIDENT_ADDED,
+  ALL_INCIDENTS,
+  INCIDENTS_LOADING,
+  USERS_INCIDENTS,
+  VIEW_INCIDENT,
+  NOTIFICATION_INCIDENTS,
+  TOGGLE_DOMAINS,
 } from './types';
-import { handleError } from './errorAction';
+import {handleError} from './errorAction';
 import firebase from 'react-native-firebase';
-import { Toast } from 'native-base';
+import {Toast} from 'native-base';
 
 import configureStore from '../utils/store';
-let { store, persistor } = configureStore();
+let {store, persistor} = configureStore();
 
 /**
  * This function is called to update the store state that a new incident has been added.
@@ -20,37 +20,37 @@ let { store, persistor } = configureStore();
  * @return {Promise} 		After the incident is pushed to firebase database.
  */
 export const addIncidentToFirebase = incident => {
-	return dispatch => {
-		dispatch(incidentsLoading(true));
-		return new Promise((resolve, reject) => {
-			firebase
-				.database()
-				.ref()
-				.child('incidents')
-				.push(incident)
-				.then(result => {
-					dispatch(incidentsLoading(false));
-					dispatch(add_incident());
-					Toast.show({
-						text: 'Incident added!',
-						type: 'success',
-						duration: 2000
-					});
-					resolve();
-				})
-				.catch(error => {
-					dispatch(incidentsLoading(false));
-					dispatch(handleError(error));
-					console.log(error);
-					Toast.show({
-						text: 'Could not add incident, pls try again!',
-						type: 'error',
-						duration: 2000
-					});
-					reject();
-				});
-		});
-	};
+  return dispatch => {
+    dispatch(incidentsLoading(true));
+    return new Promise((resolve, reject) => {
+      firebase
+        .database()
+        .ref()
+        .child('incidents')
+        .push(incident)
+        .then(result => {
+          dispatch(incidentsLoading(false));
+          dispatch(add_incident());
+          Toast.show({
+            text: 'Incident added!',
+            type: 'success',
+            duration: 2000,
+          });
+          resolve();
+        })
+        .catch(error => {
+          dispatch(incidentsLoading(false));
+          dispatch(handleError(error));
+          console.log(error);
+          Toast.show({
+            text: 'Could not add incident, pls try again!',
+            type: 'error',
+            duration: 2000,
+          });
+          reject();
+        });
+    });
+  };
 };
 
 /**
@@ -59,59 +59,55 @@ export const addIncidentToFirebase = incident => {
  * @return {Promise}
  */
 export const getAllIncidents = () => {
-	return dispatch => {
-		return new Promise((resolve, reject) => {
-			firebase
-				.database()
-				.ref('incidents')
-				.on('value', snap => {
-					dispatch(incidentsLoading(true));
-					var all_incidents = [];
-					var notificationStack = store.getState().incident
-						.notificationStack;
-					// get children as an array
-					snap.forEach(child => {
-						if (child.val().visible) {
-							all_incidents.push({
-								key: child.key,
-								value: {
-									title: child.val().title,
-									details: child.val().details,
-									category: child.val().category,
-									timestamp: child.val().timestamp,
-									coordinates: child.val().location
-										.coordinates
-								}
-							});
-							//Adds the child to the stack if not present with a timestamp
-							if (notificationStack[child.key] === undefined) {
-								notificationStack[child.key] = {
-									date: String(new Date()),
-									isFirstTime: true
-								};
-							}
-						} else {
-							//Removes all those children which have been deleted ie. visible=false
-							if (child.key in notificationStack) {
-								delete notificationStack[child.key];
-							}
-						}
-					});
-					console.log(all_incidents, notificationStack);
-					//Sorting the incidents according to their correct timestamp order.
-					all_incidents.sort(function(a, b) {
-						return (
-							new Date(b.value.timestamp) -
-							new Date(a.value.timestamp)
-						);
-					});
-					dispatch(retrieveAllIncidents(all_incidents));
-					dispatch(updateNotificationsStack(notificationStack));
-					dispatch(incidentsLoading(false));
-					resolve();
-				});
-		});
-	};
+  return dispatch => {
+    return new Promise((resolve, reject) => {
+      firebase
+        .database()
+        .ref('incidents')
+        .on('value', snap => {
+          dispatch(incidentsLoading(true));
+          var all_incidents = [];
+          var notificationStack = store.getState().incident.notificationStack;
+          // get children as an array
+          snap.forEach(child => {
+            if (child.val().visible) {
+              all_incidents.push({
+                key: child.key,
+                value: {
+                  title: child.val().title,
+                  action: child.val().action,
+                  details: child.val().details,
+                  category: child.val().category,
+                  timestamp: child.val().timestamp,
+                  coordinates: child.val().location.coordinates,
+                },
+              });
+              //Adds the child to the stack if not present with a timestamp
+              if (notificationStack[child.key] === undefined) {
+                notificationStack[child.key] = {
+                  date: String(new Date()),
+                  isFirstTime: true,
+                };
+              }
+            } else {
+              //Removes all those children which have been deleted ie. visible=false
+              if (child.key in notificationStack) {
+                delete notificationStack[child.key];
+              }
+            }
+          });
+          console.log(all_incidents, notificationStack);
+          //Sorting the incidents according to their correct timestamp order.
+          all_incidents.sort(function(a, b) {
+            return new Date(b.value.timestamp) - new Date(a.value.timestamp);
+          });
+          dispatch(retrieveAllIncidents(all_incidents));
+          dispatch(updateNotificationsStack(notificationStack));
+          dispatch(incidentsLoading(false));
+          resolve();
+        });
+    });
+  };
 };
 
 /**
@@ -119,33 +115,34 @@ export const getAllIncidents = () => {
  * @param  {String} userID User's email ID is used as the UserID
  */
 export const getUserIncidents = userID => {
-	return dispatch => {
-		dispatch(incidentsLoading(true));
-		var incident_ref = firebase.database().ref('incidents/');
-		incident_ref
-			.orderByChild('user_id')
-			.equalTo(userID)
-			.on('value', function(snapshot) {
-				dispatch(incidentsLoading(true));
-				var items = [];
-				snapshot.forEach(child => {
-					if (child.val().visible) {
-						items.push({
-							key: child.key,
-							value: {
-								title: child.val().title,
-								details: child.val().details,
-								category: child.val().category,
-								timestamp: child.val().timestamp,
-								coordinates: child.val().location.coordinates
-							}
-						});
-					}
-				});
-				dispatch(userIncidents(items));
-				dispatch(incidentsLoading(false));
-			});
-	};
+  return dispatch => {
+    dispatch(incidentsLoading(true));
+    var incident_ref = firebase.database().ref('incidents/');
+    incident_ref
+      .orderByChild('user_id')
+      .equalTo(userID)
+      .on('value', function(snapshot) {
+        dispatch(incidentsLoading(true));
+        var items = [];
+        snapshot.forEach(child => {
+          if (child.val().visible) {
+            items.push({
+              key: child.key,
+              value: {
+                title: child.val().title,
+                action: child.val().action,
+                details: child.val().details,
+                category: child.val().category,
+                timestamp: child.val().timestamp,
+                coordinates: child.val().location.coordinates,
+              },
+            });
+          }
+        });
+        dispatch(userIncidents(items));
+        dispatch(incidentsLoading(false));
+      });
+  };
 };
 
 /**
@@ -156,9 +153,9 @@ export const getUserIncidents = userID => {
  * incident being viewed is of the logged in user or not
  */
 export const viewIncident = (incident, isLoggedIn) => {
-	return dispatch => {
-		dispatch(viewIncidentHelper(incident, isLoggedIn));
-	};
+  return dispatch => {
+    dispatch(viewIncidentHelper(incident, isLoggedIn));
+  };
 };
 
 /**
@@ -167,12 +164,12 @@ export const viewIncident = (incident, isLoggedIn) => {
  * @param  {JSON} userDetails Details of the user
  */
 export const updateIncidentFirebase = (key, value) => {
-	return dispatch => {
-		firebase
-			.database()
-			.ref('incidents/' + key)
-			.update(value);
-	};
+  return dispatch => {
+    firebase
+      .database()
+      .ref('incidents/' + key)
+      .update(value);
+  };
 };
 
 /**
@@ -180,14 +177,14 @@ export const updateIncidentFirebase = (key, value) => {
  * @param  {String} key Incident key whose timestamp is to be changed
  */
 export const updateIndvNotification = key => {
-	return dispatch => {
-		var notificationStack = store.getState().incident.notificationStack;
-		notificationStack[key] = {
-			date: String(new Date()),
-			isFirstTime: false
-		};
-		dispatch(updateNotificationsStack(notificationStack));
-	};
+  return dispatch => {
+    var notificationStack = store.getState().incident.notificationStack;
+    notificationStack[key] = {
+      date: String(new Date()),
+      isFirstTime: false,
+    };
+    dispatch(updateNotificationsStack(notificationStack));
+  };
 };
 
 /**
@@ -196,27 +193,24 @@ export const updateIndvNotification = key => {
  * @return Returns all the details regarding an incident.
  */
 export const getIndvIncident = key => {
-	return dispatch => {
-		dispatch(incidentsLoading(true));
-		firebase
-			.database()
-			.ref('incidents/' + key)
-			.on('value', snap => {
-				var item = {
-					key: snap.key,
-					value: snap._value
-				};
-				if (
-					item.value.user_id ===
-					store.getState().login.userDetails.email
-				) {
-					dispatch(viewIncident(item, true));
-				} else {
-					dispatch(viewIncident(item, false));
-				}
-				dispatch(incidentsLoading(false));
-			});
-	};
+  return dispatch => {
+    dispatch(incidentsLoading(true));
+    firebase
+      .database()
+      .ref('incidents/' + key)
+      .on('value', snap => {
+        var item = {
+          key: snap.key,
+          value: snap._value,
+        };
+        if (item.value.user_id === store.getState().login.userDetails.email) {
+          dispatch(viewIncident(item, true));
+        } else {
+          dispatch(viewIncident(item, false));
+        }
+        dispatch(incidentsLoading(false));
+      });
+  };
 };
 
 /**
@@ -225,9 +219,9 @@ export const getIndvIncident = key => {
  * @return Sends the category value to the store.
  */
 export const updateDomain = domain => {
-	return dispatch => {
-		dispatch(updateDomainHelper(domain));
-	};
+  return dispatch => {
+    dispatch(updateDomainHelper(domain));
+  };
 };
 
 /**
@@ -235,10 +229,10 @@ export const updateDomain = domain => {
  * @param  {String} domain Incident category for filtering.
  */
 export function updateDomainHelper(domain) {
-	return {
-		type: TOGGLE_DOMAINS,
-		domain: domain
-	};
+  return {
+    type: TOGGLE_DOMAINS,
+    domain: domain,
+  };
 }
 
 /**
@@ -248,11 +242,11 @@ export function updateDomainHelper(domain) {
  * incident being viewed is of the logged in user or not
  */
 export function viewIncidentHelper(incident, bool) {
-	return {
-		type: VIEW_INCIDENT,
-		incident: incident,
-		isLoggedIn: bool
-	};
+  return {
+    type: VIEW_INCIDENT,
+    incident: incident,
+    isLoggedIn: bool,
+  };
 }
 
 /**
@@ -260,19 +254,19 @@ export function viewIncidentHelper(incident, bool) {
  * @param  {JSON} data User specific incidents
  */
 function userIncidents(data) {
-	return {
-		type: USERS_INCIDENTS,
-		user_incidents: data
-	};
+  return {
+    type: USERS_INCIDENTS,
+    user_incidents: data,
+  };
 }
 
 /**
  * Triggers the redux store for updates.
  */
 function add_incident() {
-	return {
-		type: LATEST_INCIDENT_ADDED
-	};
+  return {
+    type: LATEST_INCIDENT_ADDED,
+  };
 }
 
 /**
@@ -281,10 +275,10 @@ function add_incident() {
  * @return  Returns the type and all_incidents list.
  */
 function retrieveAllIncidents(data) {
-	return {
-		type: ALL_INCIDENTS,
-		all_incidents: data
-	};
+  return {
+    type: ALL_INCIDENTS,
+    all_incidents: data,
+  };
 }
 
 /**
@@ -292,10 +286,10 @@ function retrieveAllIncidents(data) {
  * @param  {JSON} notificationStack Notification stack to be updated
  */
 function updateNotificationsStack(notificationStack) {
-	return {
-		type: NOTIFICATION_INCIDENTS,
-		notificationStack: notificationStack
-	};
+  return {
+    type: NOTIFICATION_INCIDENTS,
+    notificationStack: notificationStack,
+  };
 }
 
 /**
@@ -304,8 +298,8 @@ function updateNotificationsStack(notificationStack) {
  * @return  Returns the type and loading state.
  */
 function incidentsLoading(bool) {
-	return {
-		type: INCIDENTS_LOADING,
-		loading: bool
-	};
+  return {
+    type: INCIDENTS_LOADING,
+    loading: bool,
+  };
 }
