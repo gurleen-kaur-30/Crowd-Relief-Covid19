@@ -1,4 +1,4 @@
-package com.lockdown;
+package com.covid19_lockdown;
 
 import android.app.Application;
 import android.content.Context;

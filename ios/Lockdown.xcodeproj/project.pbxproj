@@ -17,9 +17,9 @@
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* LockdownTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* LockdownTests.m */; };
 		47CE8F93743BD3690CF0CDCC /* libPods-LockdownTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8ACF75CAB7CDB37C02F0749A /* libPods-LockdownTests.a */; };
-		54892AAAE67B1FFA2E064958 /* libPods-Lockdown-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F60513A7BC9573166ADBB7C2 /* libPods-Lockdown-tvOS.a */; };
-		7435E06D5F62595DD229AC0B /* libPods-Lockdown.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CECFDE07E37230D24A7ED5E /* libPods-Lockdown.a */; };
-		A7610426C020A1CF93BE83F9 /* libPods-Lockdown-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F486B1EFB19624A8FEC866E3 /* libPods-Lockdown-tvOSTests.a */; };
+		54892AAAE67B1FFA2E064958 /* libPods-Covid19_lockdown-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F60513A7BC9573166ADBB7C2 /* libPods-Covid19_lockdown-tvOS.a */; };
+		7435E06D5F62595DD229AC0B /* libPods-Covid19_lockdown.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CECFDE07E37230D24A7ED5E /* libPods-Covid19_lockdown.a */; };
+		A7610426C020A1CF93BE83F9 /* libPods-Covid19_lockdown-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F486B1EFB19624A8FEC866E3 /* libPods-Covid19_lockdown-tvOSTests.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -28,14 +28,14 @@
 			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 13B07F861A680F5B00A75B9A;
-			remoteInfo = Lockdown;
+			remoteInfo = Covid19_lockdown;
 		};
 		2D02E4911E0B4A5D006451C7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 2D02E47A1E0B4A5D006451C7;
-			remoteInfo = "Lockdown-tvOS";
+			remoteInfo = "Covid19_lockdown-tvOS";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -44,29 +44,29 @@
 		00E356EE1AD99517003FC87E /* LockdownTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LockdownTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* LockdownTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LockdownTests.m; sourceTree = "<group>"; };
-		08D4B667FCB07FE21C7D73E1 /* Pods-Lockdown-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lockdown-tvOS.release.xcconfig"; path = "Target Support Files/Pods-Lockdown-tvOS/Pods-Lockdown-tvOS.release.xcconfig"; sourceTree = "<group>"; };
-		0CECFDE07E37230D24A7ED5E /* libPods-Lockdown.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Lockdown.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		0DC23C60B41211F00673CCCF /* Pods-Lockdown.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lockdown.release.xcconfig"; path = "Target Support Files/Pods-Lockdown/Pods-Lockdown.release.xcconfig"; sourceTree = "<group>"; };
-		13B07F961A680F5B00A75B9A /* Lockdown.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Lockdown.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Lockdown/AppDelegate.h; sourceTree = "<group>"; };
-		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = Lockdown/AppDelegate.m; sourceTree = "<group>"; };
+		08D4B667FCB07FE21C7D73E1 /* Pods-Covid19_lockdown-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Covid19_lockdown-tvOS.release.xcconfig"; path = "Target Support Files/Pods-Covid19_lockdown-tvOS/Pods-Covid19_lockdown-tvOS.release.xcconfig"; sourceTree = "<group>"; };
+		0CECFDE07E37230D24A7ED5E /* libPods-Covid19_lockdown.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Covid19_lockdown.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0DC23C60B41211F00673CCCF /* Pods-Covid19_lockdown.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Covid19_lockdown.release.xcconfig"; path = "Target Support Files/Pods-Covid19_lockdown/Pods-Covid19_lockdown.release.xcconfig"; sourceTree = "<group>"; };
+		13B07F961A680F5B00A75B9A /* Covid19_lockdown.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Covid19_lockdown.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Covid19_lockdown/AppDelegate.h; sourceTree = "<group>"; };
+		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = Covid19_lockdown/AppDelegate.m; sourceTree = "<group>"; };
 		13B07FB21A68108700A75B9A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
-		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Lockdown/Images.xcassets; sourceTree = "<group>"; };
-		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Lockdown/Info.plist; sourceTree = "<group>"; };
-		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Lockdown/main.m; sourceTree = "<group>"; };
-		24B688333F4E12C942230660 /* Pods-Lockdown-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lockdown-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-Lockdown-tvOSTests/Pods-Lockdown-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
-		2D02E47B1E0B4A5D006451C7 /* Lockdown-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Lockdown-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		2D02E4901E0B4A5D006451C7 /* Lockdown-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Lockdown-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		4E7E0AE078435EE5E21187EF /* Pods-Lockdown-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lockdown-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-Lockdown-tvOSTests/Pods-Lockdown-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
-		50C6B1060FF0E7A6D615BC54 /* Pods-Lockdown.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lockdown.debug.xcconfig"; path = "Target Support Files/Pods-Lockdown/Pods-Lockdown.debug.xcconfig"; sourceTree = "<group>"; };
+		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Covid19_lockdown/Images.xcassets; sourceTree = "<group>"; };
+		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Covid19_lockdown/Info.plist; sourceTree = "<group>"; };
+		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Covid19_lockdown/main.m; sourceTree = "<group>"; };
+		24B688333F4E12C942230660 /* Pods-Covid19_lockdown-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Covid19_lockdown-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-Covid19_lockdown-tvOSTests/Pods-Covid19_lockdown-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
+		2D02E47B1E0B4A5D006451C7 /* Covid19_lockdown-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Covid19_lockdown-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2D02E4901E0B4A5D006451C7 /* Covid19_lockdown-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Covid19_lockdown-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4E7E0AE078435EE5E21187EF /* Pods-Covid19_lockdown-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Covid19_lockdown-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-Covid19_lockdown-tvOSTests/Pods-Covid19_lockdown-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
+		50C6B1060FF0E7A6D615BC54 /* Pods-Covid19_lockdown.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Covid19_lockdown.debug.xcconfig"; path = "Target Support Files/Pods-Covid19_lockdown/Pods-Covid19_lockdown.debug.xcconfig"; sourceTree = "<group>"; };
 		53E46DEAE1EE67D8F76CD68B /* Pods-LockdownTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LockdownTests.debug.xcconfig"; path = "Target Support Files/Pods-LockdownTests/Pods-LockdownTests.debug.xcconfig"; sourceTree = "<group>"; };
 		8ACF75CAB7CDB37C02F0749A /* libPods-LockdownTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-LockdownTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD071DFE8EF477C43B7F6B2E /* Pods-LockdownTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LockdownTests.release.xcconfig"; path = "Target Support Files/Pods-LockdownTests/Pods-LockdownTests.release.xcconfig"; sourceTree = "<group>"; };
-		D8F79777E77812EC0FB98714 /* Pods-Lockdown-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lockdown-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-Lockdown-tvOS/Pods-Lockdown-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
+		D8F79777E77812EC0FB98714 /* Pods-Covid19_lockdown-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Covid19_lockdown-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-Covid19_lockdown-tvOS/Pods-Covid19_lockdown-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
-		F486B1EFB19624A8FEC866E3 /* libPods-Lockdown-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Lockdown-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		F60513A7BC9573166ADBB7C2 /* libPods-Lockdown-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Lockdown-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F486B1EFB19624A8FEC866E3 /* libPods-Covid19_lockdown-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Covid19_lockdown-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F60513A7BC9573166ADBB7C2 /* libPods-Covid19_lockdown-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Covid19_lockdown-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,7 +82,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7435E06D5F62595DD229AC0B /* libPods-Lockdown.a in Frameworks */,
+				7435E06D5F62595DD229AC0B /* libPods-Covid19_lockdown.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -90,7 +90,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				54892AAAE67B1FFA2E064958 /* libPods-Lockdown-tvOS.a in Frameworks */,
+				54892AAAE67B1FFA2E064958 /* libPods-Covid19_lockdown-tvOS.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -98,7 +98,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A7610426C020A1CF93BE83F9 /* libPods-Lockdown-tvOSTests.a in Frameworks */,
+				A7610426C020A1CF93BE83F9 /* libPods-Covid19_lockdown-tvOSTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -125,12 +125,12 @@
 		0C6C7AE84F52E8116AFF9C7C /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				50C6B1060FF0E7A6D615BC54 /* Pods-Lockdown.debug.xcconfig */,
-				0DC23C60B41211F00673CCCF /* Pods-Lockdown.release.xcconfig */,
-				D8F79777E77812EC0FB98714 /* Pods-Lockdown-tvOS.debug.xcconfig */,
-				08D4B667FCB07FE21C7D73E1 /* Pods-Lockdown-tvOS.release.xcconfig */,
-				4E7E0AE078435EE5E21187EF /* Pods-Lockdown-tvOSTests.debug.xcconfig */,
-				24B688333F4E12C942230660 /* Pods-Lockdown-tvOSTests.release.xcconfig */,
+				50C6B1060FF0E7A6D615BC54 /* Pods-Covid19_lockdown.debug.xcconfig */,
+				0DC23C60B41211F00673CCCF /* Pods-Covid19_lockdown.release.xcconfig */,
+				D8F79777E77812EC0FB98714 /* Pods-Covid19_lockdown-tvOS.debug.xcconfig */,
+				08D4B667FCB07FE21C7D73E1 /* Pods-Covid19_lockdown-tvOS.release.xcconfig */,
+				4E7E0AE078435EE5E21187EF /* Pods-Covid19_lockdown-tvOSTests.debug.xcconfig */,
+				24B688333F4E12C942230660 /* Pods-Covid19_lockdown-tvOSTests.release.xcconfig */,
 				53E46DEAE1EE67D8F76CD68B /* Pods-LockdownTests.debug.xcconfig */,
 				CD071DFE8EF477C43B7F6B2E /* Pods-LockdownTests.release.xcconfig */,
 			);
@@ -138,7 +138,7 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
-		13B07FAE1A68108700A75B9A /* Lockdown */ = {
+		13B07FAE1A68108700A75B9A /* Covid19_lockdown */ = {
 			isa = PBXGroup;
 			children = (
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
@@ -149,7 +149,7 @@
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
 			);
-			name = Lockdown;
+			name = Covid19_lockdown;
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
@@ -157,9 +157,9 @@
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
-				0CECFDE07E37230D24A7ED5E /* libPods-Lockdown.a */,
-				F60513A7BC9573166ADBB7C2 /* libPods-Lockdown-tvOS.a */,
-				F486B1EFB19624A8FEC866E3 /* libPods-Lockdown-tvOSTests.a */,
+				0CECFDE07E37230D24A7ED5E /* libPods-Covid19_lockdown.a */,
+				F60513A7BC9573166ADBB7C2 /* libPods-Covid19_lockdown-tvOS.a */,
+				F486B1EFB19624A8FEC866E3 /* libPods-Covid19_lockdown-tvOSTests.a */,
 				8ACF75CAB7CDB37C02F0749A /* libPods-LockdownTests.a */,
 			);
 			name = Frameworks;
@@ -175,7 +175,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				13B07FAE1A68108700A75B9A /* Lockdown */,
+				13B07FAE1A68108700A75B9A /* Covid19_lockdown */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* LockdownTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
@@ -190,10 +190,10 @@
 		83CBBA001A601CBA00E9B192 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				13B07F961A680F5B00A75B9A /* Lockdown.app */,
+				13B07F961A680F5B00A75B9A /* Covid19_lockdown.app */,
 				00E356EE1AD99517003FC87E /* LockdownTests.xctest */,
-				2D02E47B1E0B4A5D006451C7 /* Lockdown-tvOS.app */,
-				2D02E4901E0B4A5D006451C7 /* Lockdown-tvOSTests.xctest */,
+				2D02E47B1E0B4A5D006451C7 /* Covid19_lockdown-tvOS.app */,
+				2D02E4901E0B4A5D006451C7 /* Covid19_lockdown-tvOSTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -220,9 +220,9 @@
 			productReference = 00E356EE1AD99517003FC87E /* LockdownTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		13B07F861A680F5B00A75B9A /* Lockdown */ = {
+		13B07F861A680F5B00A75B9A /* Covid19_lockdown */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "Lockdown" */;
+			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "Covid19_lockdown" */;
 			buildPhases = (
 				460946C64E58AA51DD539603 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
@@ -235,14 +235,14 @@
 			);
 			dependencies = (
 			);
-			name = Lockdown;
-			productName = Lockdown;
-			productReference = 13B07F961A680F5B00A75B9A /* Lockdown.app */;
+			name = Covid19_lockdown;
+			productName = Covid19_lockdown;
+			productReference = 13B07F961A680F5B00A75B9A /* Covid19_lockdown.app */;
 			productType = "com.apple.product-type.application";
 		};
-		2D02E47A1E0B4A5D006451C7 /* Lockdown-tvOS */ = {
+		2D02E47A1E0B4A5D006451C7 /* Covid19_lockdown-tvOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "Lockdown-tvOS" */;
+			buildConfigurationList = 2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "Covid19_lockdown-tvOS" */;
 			buildPhases = (
 				B60CF61D8BCCBCAE85CCC253 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F122414F3F0027D42C /* Start Packager */,
@@ -255,14 +255,14 @@
 			);
 			dependencies = (
 			);
-			name = "Lockdown-tvOS";
-			productName = "Lockdown-tvOS";
-			productReference = 2D02E47B1E0B4A5D006451C7 /* Lockdown-tvOS.app */;
+			name = "Covid19_lockdown-tvOS";
+			productName = "Covid19_lockdown-tvOS";
+			productReference = 2D02E47B1E0B4A5D006451C7 /* Covid19_lockdown-tvOS.app */;
 			productType = "com.apple.product-type.application";
 		};
-		2D02E48F1E0B4A5D006451C7 /* Lockdown-tvOSTests */ = {
+		2D02E48F1E0B4A5D006451C7 /* Covid19_lockdown-tvOSTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "Lockdown-tvOSTests" */;
+			buildConfigurationList = 2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "Covid19_lockdown-tvOSTests" */;
 			buildPhases = (
 				286ECA81DB20F9AC4DE42AC5 /* [CP] Check Pods Manifest.lock */,
 				2D02E48C1E0B4A5D006451C7 /* Sources */,
@@ -274,9 +274,9 @@
 			dependencies = (
 				2D02E4921E0B4A5D006451C7 /* PBXTargetDependency */,
 			);
-			name = "Lockdown-tvOSTests";
-			productName = "Lockdown-tvOSTests";
-			productReference = 2D02E4901E0B4A5D006451C7 /* Lockdown-tvOSTests.xctest */;
+			name = "Covid19_lockdown-tvOSTests";
+			productName = "Covid19_lockdown-tvOSTests";
+			productReference = 2D02E4901E0B4A5D006451C7 /* Covid19_lockdown-tvOSTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -303,7 +303,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "Lockdown" */;
+			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "Covid19_lockdown" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -316,10 +316,10 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				13B07F861A680F5B00A75B9A /* Lockdown */,
+				13B07F861A680F5B00A75B9A /* Covid19_lockdown */,
 				00E356ED1AD99517003FC87E /* LockdownTests */,
-				2D02E47A1E0B4A5D006451C7 /* Lockdown-tvOS */,
-				2D02E48F1E0B4A5D006451C7 /* Lockdown-tvOSTests */,
+				2D02E47A1E0B4A5D006451C7 /* Covid19_lockdown-tvOS */,
+				2D02E48F1E0B4A5D006451C7 /* Covid19_lockdown-tvOSTests */,
 			);
 		};
 /* End PBXProject section */
@@ -388,7 +388,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Lockdown-tvOSTests-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-Covid19_lockdown-tvOSTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -424,7 +424,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Lockdown-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-Covid19_lockdown-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -468,7 +468,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Lockdown-tvOS-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-Covid19_lockdown-tvOS-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -555,12 +555,12 @@
 /* Begin PBXTargetDependency section */
 		00E356F51AD99517003FC87E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 13B07F861A680F5B00A75B9A /* Lockdown */;
+			target = 13B07F861A680F5B00A75B9A /* Covid19_lockdown */;
 			targetProxy = 00E356F41AD99517003FC87E /* PBXContainerItemProxy */;
 		};
 		2D02E4921E0B4A5D006451C7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 2D02E47A1E0B4A5D006451C7 /* Lockdown-tvOS */;
+			target = 2D02E47A1E0B4A5D006451C7 /* Covid19_lockdown-tvOS */;
 			targetProxy = 2D02E4911E0B4A5D006451C7 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -572,7 +572,7 @@
 				13B07FB21A68108700A75B9A /* Base */,
 			);
 			name = LaunchScreen.xib;
-			path = Lockdown;
+			path = Covid19_lockdown;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -597,7 +597,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Lockdown.app/Lockdown";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Covid19_lockdown.app/Covid19_lockdown";
 			};
 			name = Debug;
 		};
@@ -617,18 +617,18 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Lockdown.app/Lockdown";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Covid19_lockdown.app/Covid19_lockdown";
 			};
 			name = Release;
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 50C6B1060FF0E7A6D615BC54 /* Pods-Lockdown.debug.xcconfig */;
+			baseConfigurationReference = 50C6B1060FF0E7A6D615BC54 /* Pods-Covid19_lockdown.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
-				INFOPLIST_FILE = Lockdown/Info.plist;
+				INFOPLIST_FILE = Covid19_lockdown/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -636,18 +636,18 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = Lockdown;
+				PRODUCT_NAME = Covid19_lockdown;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0DC23C60B41211F00673CCCF /* Pods-Lockdown.release.xcconfig */;
+			baseConfigurationReference = 0DC23C60B41211F00673CCCF /* Pods-Covid19_lockdown.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 1;
-				INFOPLIST_FILE = Lockdown/Info.plist;
+				INFOPLIST_FILE = Covid19_lockdown/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -655,14 +655,14 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = Lockdown;
+				PRODUCT_NAME = Covid19_lockdown;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
 		};
 		2D02E4971E0B4A5E006451C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D8F79777E77812EC0FB98714 /* Pods-Lockdown-tvOS.debug.xcconfig */;
+			baseConfigurationReference = D8F79777E77812EC0FB98714 /* Pods-Covid19_lockdown-tvOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -673,14 +673,14 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_TESTABILITY = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "Lockdown-tvOS/Info.plist";
+				INFOPLIST_FILE = "Covid19_lockdown-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.Lockdown-tvOS";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.Covid19_lockdown-tvOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
 				TARGETED_DEVICE_FAMILY = 3;
@@ -690,7 +690,7 @@
 		};
 		2D02E4981E0B4A5E006451C7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 08D4B667FCB07FE21C7D73E1 /* Pods-Lockdown-tvOS.release.xcconfig */;
+			baseConfigurationReference = 08D4B667FCB07FE21C7D73E1 /* Pods-Covid19_lockdown-tvOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -701,14 +701,14 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "Lockdown-tvOS/Info.plist";
+				INFOPLIST_FILE = "Covid19_lockdown-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.Lockdown-tvOS";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.Covid19_lockdown-tvOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
 				TARGETED_DEVICE_FAMILY = 3;
@@ -718,7 +718,7 @@
 		};
 		2D02E4991E0B4A5E006451C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4E7E0AE078435EE5E21187EF /* Pods-Lockdown-tvOSTests.debug.xcconfig */;
+			baseConfigurationReference = 4E7E0AE078435EE5E21187EF /* Pods-Covid19_lockdown-tvOSTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;
@@ -728,24 +728,24 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_TESTABILITY = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "Lockdown-tvOSTests/Info.plist";
+				INFOPLIST_FILE = "Covid19_lockdown-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.Lockdown-tvOSTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.Covid19_lockdown-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Lockdown-tvOS.app/Lockdown-tvOS";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Covid19_lockdown-tvOS.app/Covid19_lockdown-tvOS";
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 			};
 			name = Debug;
 		};
 		2D02E49A1E0B4A5E006451C7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 24B688333F4E12C942230660 /* Pods-Lockdown-tvOSTests.release.xcconfig */;
+			baseConfigurationReference = 24B688333F4E12C942230660 /* Pods-Covid19_lockdown-tvOSTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;
@@ -755,17 +755,17 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "Lockdown-tvOSTests/Info.plist";
+				INFOPLIST_FILE = "Covid19_lockdown-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.Lockdown-tvOSTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.Covid19_lockdown-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Lockdown-tvOS.app/Lockdown-tvOS";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Covid19_lockdown-tvOS.app/Covid19_lockdown-tvOS";
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 			};
 			name = Release;
@@ -881,7 +881,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "Lockdown" */ = {
+		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "Covid19_lockdown" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				13B07F941A680F5B00A75B9A /* Debug */,
@@ -890,7 +890,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "Lockdown-tvOS" */ = {
+		2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "Covid19_lockdown-tvOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2D02E4971E0B4A5E006451C7 /* Debug */,
@@ -899,7 +899,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "Lockdown-tvOSTests" */ = {
+		2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "Covid19_lockdown-tvOSTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2D02E4991E0B4A5E006451C7 /* Debug */,
@@ -908,7 +908,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "Lockdown" */ = {
+		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "Covid19_lockdown" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				83CBBA201A601CBA00E9B192 /* Debug */,
