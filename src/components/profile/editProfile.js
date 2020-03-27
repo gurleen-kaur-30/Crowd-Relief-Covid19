@@ -271,19 +271,7 @@ class EditProfile extends Component {
             <View style={styles.valueTextContainer}>
               <Text style={styles.valueText}>Email</Text>
             </View>
-            <TextInput
-              autoCapitalize="none"
-              autoCorrect={false}
-              ref={input => (this.emailInput = input)}
-              onChangeText={email => this.handleInput('email', email)}
-              onSubmitEditing={() => this.phoneNoInput.focus()}
-              keyboardType="email-address"
-              returnKeyType="next"
-              style={styles.textInput}
-              underlineColorAndroid="transparent"
-              placeholder="Email"
-              value={this.state.email}
-            />
+            <Text style={styles.textInput}>{this.state.email}</Text>
           </View>
           <View style={styles.valueItem}>
             <View style={styles.valueTextContainer}>
