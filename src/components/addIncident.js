@@ -10,6 +10,7 @@ import {
   Keyboard,
   ActivityIndicator,
   Picker,
+  Button,
   CheckBox,
 } from 'react-native';
 import {AccessToken, LoginManager, LoginButton} from 'react-native-fbsdk';
@@ -47,10 +48,11 @@ class AddIncident extends Component {
           base64: '',
           uri: '',
         },
-        item: [],
+        items: [],
         action: null,
       },
       disable: false,
+      textInput: [],
     };
   }
 
@@ -221,6 +223,99 @@ class AddIncident extends Component {
     });
   };
 
+  addValues = (text, index, index2) => {
+    let dataArray = this.state.incident.items;
+    if( dataArray[index] ){
+      let item = dataArray[index]
+      if( index2 == 0 ){
+        item.name = text
+      } else if( index2 == 1 ){
+        item.quantity = text
+      } else{
+        item.unit = text
+      }
+      dataArray[index] = item
+
+    } else{
+      let item = {name :"", quantity: "", unit: ""}
+      if( index2 == 0 ){
+        item.name = text
+      } else if( index2 == 1 ){
+        item.quantity = text
+      } else{
+        item.unit = text
+      }
+      dataArray[index] = item
+
+    }
+    this.setState({
+        incident: {
+          ...this.state.incident,
+          items: dataArray,
+        },
+      }, console.log(this.state.incident));
+  };
+
+  removeTextInput = () => {
+    let textInput = this.state.textInput;
+    let inputData = this.state.incident.items;
+    textInput.pop();
+    inputData.pop();
+    this.setState({
+      incident: {
+        ...this.state.incident,
+        items: inputData,
+      },
+      textInput,
+    });
+    console.log(this.state.incident);
+  };
+
+
+  //function to add TextInput dynamically
+  addTextInput = index => {
+    console.log(index)
+    let textInput = this.state.textInput;
+    textInput.push(
+      <View style={styles.itemsRow}>
+      <TextInput
+        key={index}  
+        onChangeText={text => this.addValues(text, index, 0)}
+        onSubmitEditing={() => this.detailsInput.focus()}
+        keyboardType="email-address"
+        returnKeyType="next"
+        placeholder="Item" 
+        style={styles.name}
+      />
+      <TextInput 
+        ref={input => (this.titleInput = input)}
+        key={String(index) + '1'}
+        style={styles.name} 
+        keyboardType={'numeric'}
+        onChangeText={text => this.addValues(text, index, 1)}
+        onSubmitEditing={() => this.detailsInput.focus()}
+        keyboardType="numeric"
+        returnKeyType="next"
+        placeholder="Quantity"
+      />
+      <Picker
+          selectedValue={this.state.incident.items[index]? this.state.incident.items[index]:"unit"}
+          onValueChange={unit => {
+            this.addValues(unit, index, 2);
+          }}
+          style={styles.name}>
+          <Picker.Item label="Unit" value="unit" />
+          <Picker.Item label="kg" value="kg" />
+          <Picker.Item label="gm" value="gm" />
+          <Picker.Item label="ltr" value="ltr" />
+          <Picker.Item label="ml" value="ml" />
+        </Picker>
+      </View>
+    
+    );
+    this.setState({textInput});
+  };
+
   render() {
     let pickers;
     if (this.state.incident.category == 'contribute') {
@@ -339,6 +434,21 @@ class AddIncident extends Component {
             returnKeyType="next"
             placeholder="Description"
           />
+            <View>
+              <View style= {styles.row}>
+                <View style={{margin: 10}}>
+              <Button title='Add Item' onPress={() => this.addTextInput(this.state.textInput.length)} />
+              </View>
+              <View style={{margin: 10}}>
+              <Button title='Remove Item' onPress={() => this.removeTextInput()} />
+              </View>
+              </View>
+              {this.state.textInput.map((value) => {
+                return value
+              })}
+          </View>
+          {/* <DynamicItems/> */}
+
           {/* <View style={styles.switchContainer}>
             <Text style={styles.switchText}>Get Help!</Text>
             <Switch
@@ -376,7 +486,7 @@ class AddIncident extends Component {
             disabled={this.state.disable}
             style={styles.updateButton}
             onPress={() => this.handleAddIncident()}>
-            <Text style={styles.updateText}> Add </Text>
+            <Text style={styles.updateText}> Add Incident</Text>
           </TouchableOpacity>
         </ScrollView>
       </View>
