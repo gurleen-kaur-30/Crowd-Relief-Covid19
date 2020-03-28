@@ -10,6 +10,11 @@ export const styles = StyleSheet.create({
     marginVertical: height / 100,
     marginHorizontal: width / 30,
   },
+  urgencypicker: {
+    marginVertical: height / 100,
+    marginHorizontal: width / 30,
+    width: width / 4,
+  },
   title: {
     marginLeft: width / 20,
     fontWeight: 'bold',
@@ -48,6 +53,8 @@ export const styles = StyleSheet.create({
     marginLeft: width / 20,
     paddingTop: height / 40,
     paddingBottom: height / 100,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   textInputHeading: {
     color: '#555',
@@ -77,31 +84,31 @@ export const styles = StyleSheet.create({
   updateText: {
     color: 'white',
   },
-  itemsRow:{
+  itemsRow: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-evenly',
-    paddingTop: height/25
+    paddingTop: height / 25,
   },
   buttonView: {
-  flexDirection: 'row'
+    flexDirection: 'row',
   },
   textInput: {
-      height: 40,
-      borderColor: 'black', 
-      borderWidth: 1,
-      margin: 20
+    height: 40,
+    borderColor: 'black',
+    borderWidth: 1,
+    margin: 20,
   },
-  row:{
-      flexDirection: 'row',
-      justifyContent: 'center'
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
-  name:{
-      height: height/20,
-      width: width/4,
-      borderColor: 'black', 
-      borderWidth: 1,
-      paddingLeft: width/50,
-      paddingTop: width/50
-  }
+  name: {
+    height: height / 20,
+    width: width / 4,
+    borderColor: 'black',
+    borderWidth: 1,
+    paddingLeft: width / 50,
+    paddingTop: width / 50,
+  },
 });

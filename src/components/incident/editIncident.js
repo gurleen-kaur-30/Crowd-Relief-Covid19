@@ -20,7 +20,6 @@ import PropTypes from 'prop-types';
 import {updateIncidentFirebase} from '../../actions/incidentsAction';
 import ImagePicker from 'react-native-image-picker';
 import {Toast} from 'native-base';
-import Slider from '@react-native-community/slider';
 
 /**
  * Screen showing the edit options for the profile and personal information.
@@ -146,13 +145,6 @@ class EditIncident extends Component {
     }
   }
 
-  updateSliderValue = urgency => {
-    this.setState({
-      urgency: urgency,
-    });
-    console.log(this.state);
-  };
-
   /**
    * This function provides options for adding incident image, and updates the image object.
    * @return updates the incident image.
@@ -186,34 +178,32 @@ class EditIncident extends Component {
 
   updateValues = (text, index, index2) => {
     let dataArray = this.state.items;
-    if( dataArray[index] ){
-      let item = dataArray[index]
-      if( index2 == 0 ){
-        item.name = text
-      } else if( index2 == 1 ){
-        item.quantity = text
-      } else{
-        item.unit = text
+    if (dataArray[index]) {
+      let item = dataArray[index];
+      if (index2 == 0) {
+        item.name = text;
+      } else if (index2 == 1) {
+        item.quantity = text;
+      } else {
+        item.unit = text;
       }
-      dataArray[index] = item
-
-    } else{
-      let item = {name :"", quantity: "", unit: ""}
-      if( index2 == 0 ){
-        item.name = text
-      } else if( index2 == 1 ){
-        item.quantity = text
-      } else{
-        item.unit = text
+      dataArray[index] = item;
+    } else {
+      let item = {name: '', quantity: '', unit: ''};
+      if (index2 == 0) {
+        item.name = text;
+      } else if (index2 == 1) {
+        item.quantity = text;
+      } else {
+        item.unit = text;
       }
-      dataArray[index] = item
-
+      dataArray[index] = item;
     }
     this.setState({items: dataArray}, console.log(this.state.items));
   };
 
   render() {
-    console.log("items",this.state.items)
+    console.log('items', this.state.items);
     let pickers;
     if (this.state.category == 'contribute') {
       pickers = [
@@ -301,68 +291,71 @@ class EditIncident extends Component {
             value={this.state.details}
           />
           <View style={styles.textInputHeadingContainer}>
-            <Text style={styles.textInputHeading}>Urgency on a scale of 5</Text>
+            <Text style={[styles.textInputHeading, {flex: 3}]}>
+              Urgency on a scale of 5
+            </Text>
+            <Picker
+              value={this.state.urgency}
+              selectedValue={this.state.urgency}
+              onValueChange={urgency => {
+                this.setState({urgency});
+              }}
+              style={styles.urgencypicker}>
+              {[...Array(5).keys()].map(item => {
+                return (
+                  <Picker.Item
+                    label={String(item + 1)}
+                    value={String(item + 1)}
+                    key={item}
+                  />
+                );
+              })}
+            </Picker>
           </View>
-          <Slider
-            value={this.state.urgency}
-            minimumTrackTintColor="#4c93f7"
-            thumbColor="#1c76cb"
-            maximumTrackTintColor="#9bd5ff"
-            thumbTouchSize={{
-              width: 100,
-              height: 100,
-            }}
-            step={1}
-            minimumValue={1}
-            maximumValue={5}
-            onSlidingComplete={urgency => this.updateSliderValue(urgency)}
-            onValueChange={urgency => this.updateSliderValue(urgency)}
-          />
           <View style={styles.textInputHeadingContainer}>
             <Text style={styles.textInputHeading}>Items</Text>
           </View>
-          {this.state.items.map( (item, index) => {
-            return(
+          {this.state.items.map((item, index) => {
+            return (
               <View style={styles.itemsRow}>
-            <TextInput
-              key={index}  
-              onChangeText={text => this.updateValues(text, index, 0)}
-              // onSubmitEditing={() => this.detailsInput.focus()}
-              keyboardType="email-address"
-              returnKeyType="next"
-              placeholder={item.name}
-              style={styles.name}
-              placeholderTextColor={"black"}
-            />
-            <TextInput 
-              ref={input => (this.titleInput = input)}
-              // key={String(index) + '1'}
-              style={styles.name} 
-              keyboardType={'numeric'}
-              onChangeText={text => this.updateValues(text, index, 1)}
-              // onSubmitEditing={() => this.detailsInput.focus()}
-              returnKeyType="next"
-              placeholder={item.quantity}
-              placeholderTextColor={"black"}
-            />
-            <Picker
-                selectedValue={item.unit}
-                onValueChange={unit => {
-                  this.updateValues(unit, index, 2);
-                }}
-                style={styles.name}>
-                <Picker.Item label="Unit" value="unit" />
-                <Picker.Item label="kg" value="kg" />
-                <Picker.Item label="gm" value="gm" />
-                <Picker.Item label="ltr" value="ltr" />
-                <Picker.Item label="ml" value="ml" />
-              </Picker>
-            </View>
-            )
-          })
-        }
-           
-         {/* <View style={styles.switchContainer}>
+                <TextInput
+                  key={index}
+                  onChangeText={text => this.updateValues(text, index, 0)}
+                  // onSubmitEditing={() => this.detailsInput.focus()}
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  placeholder={item.name}
+                  style={styles.name}
+                  placeholderTextColor={'black'}
+                />
+                <TextInput
+                  ref={input => (this.titleInput = input)}
+                  // key={String(index) + '1'}
+                  style={styles.name}
+                  keyboardType={'numeric'}
+                  onChangeText={text => this.updateValues(text, index, 1)}
+                  // onSubmitEditing={() => this.detailsInput.focus()}
+                  returnKeyType="next"
+                  placeholder={item.quantity}
+                  placeholderTextColor={'black'}
+                />
+                <Picker
+                  selectedValue={item.unit}
+                  onValueChange={unit => {
+                    this.updateValues(unit, index, 2);
+                  }}
+                  style={styles.name}>
+                  <Picker.Item label="Unit" value="unit" />
+                  <Picker.Item label="kg" value="kg" />
+                  <Picker.Item label="gm" value="gm" />
+                  <Picker.Item label="ltr" value="ltr" />
+                  <Picker.Item label="ml" value="ml" />
+                </Picker>
+              </View>
+            );
+          })}
+
+          {/* <View style={styles.switchContainer}>
             <Text style={styles.switchText}>Get Help!</Text>
             <Switch
               thumbColor="#1c76cb"
