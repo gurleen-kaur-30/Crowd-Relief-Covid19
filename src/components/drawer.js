@@ -58,25 +58,24 @@ class DrawerContent extends Component {
     );
   }
 
-  onClickDashboard(){
-    Actions.profile()
-    Actions.drawerClose()
+  onClickDashboard() {
+    Actions.profile();
+    Actions.drawerClose();
   }
 
-  onClickMapFeed(){
-    Actions.mapFeed()
-    Actions.drawerClose()
+  onClickMapFeed() {
+    Actions.mapFeed();
+    Actions.drawerClose();
   }
 
-
-  onClickEmergencyLocation(){
-    Actions.emergencylocation()
-    Actions.drawerClose()
+  onClickEmergencyLocation() {
+    Actions.emergencylocation();
+    Actions.drawerClose();
   }
 
-  onClickSettingsOption(){
-    Actions.settingsOption()
-    Actions.drawerClose()
+  onClickSettingsOption() {
+    Actions.editProfile();
+    Actions.drawerClose();
   }
 
   render() {
@@ -106,16 +105,16 @@ class DrawerContent extends Component {
           </View>
 
           <View style={styles.bar} />
-          <TouchableHighlight onPress={()=>this.onClickDashboard()}>
+          <TouchableHighlight onPress={() => this.onClickDashboard()}>
             <Text style={styles.option}>Dashboard</Text>
           </TouchableHighlight>
-          <TouchableHighlight onPress={()=> this.onClickMapFeed()}>
+          <TouchableHighlight onPress={() => this.onClickMapFeed()}>
             <Text style={styles.option}>Map / Feed</Text>
           </TouchableHighlight>
-          <TouchableHighlight onPress={()=>this.onClickEmergencyLocation()}>
+          <TouchableHighlight onPress={() => this.onClickEmergencyLocation()}>
             <Text style={styles.option}>Emergency locations</Text>
           </TouchableHighlight>
-          <TouchableHighlight onPress={()=>this.onClickSettingsOption()}>
+          <TouchableHighlight onPress={() => this.onClickSettingsOption()}>
             <Text style={styles.option}>Settings</Text>
           </TouchableHighlight>
           {/* <TouchableHighlight onPress={Actions.aboutUs}>
