@@ -4,7 +4,7 @@ import {PermissionsAndroid} from 'react-native';
 import {connect} from 'react-redux';
 import {Router} from 'react-native-router-flux';
 import {Actions, Scene, Drawer} from 'react-native-router-flux';
-import crossroads from 'crossroads';
+// import crossroads from 'crossroads';
 import {drawerWidth} from '../assets/styles/drawer_styles';
 
 import Signin from '../components/login/signin';
@@ -37,7 +37,7 @@ export default class Route extends Component {
   //Describes the functionality of the hardware back button
   onBackPress() {
     if (
-      Actions.currentScene === '_profile' ||
+      Actions.currentScene === '_mapFeed' ||
       Actions.currentScene === 'homeLogin'
     ) {
       return false;
@@ -98,8 +98,8 @@ export default class Route extends Component {
             drawerOpenRoute="DrawerOpen"
             drawerCloseRoute="DrawerClose"
             drawerToggleRoute="DrawerToggle">
-            <Scene key="profile" hideNavBar component={Profile} />
             <Scene key="mapFeed" hideNavBar component={MapFeedScreen} />
+            <Scene key="profile" hideNavBar component={Profile} />
             <Scene
               key="emergencylocation"
               hideNavBar
@@ -128,6 +128,6 @@ export default class Route extends Component {
   }
 }
 
-crossroads.addRoute('crowdalert.herokuapp.com/view/{key}', key => {
-  Actions.incident({incident_key: key});
-});
+// crossroads.addRoute('crowdalert.herokuapp.com/view/{key}', key => {
+//   Actions.incident({incident_key: key});
+// });

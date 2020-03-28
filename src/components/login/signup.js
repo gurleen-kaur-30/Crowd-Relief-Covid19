@@ -56,7 +56,7 @@ class Signup extends Component {
     // Typical usage (don't forget to compare props):
     if (!this.props.login.loading && this.props.login.signInType !== null) {
       this.showToast('Registration successful', 'success');
-      Actions.profile();
+      Actions.mapFeed();
     }
   }
 
