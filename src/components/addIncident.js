@@ -237,7 +237,7 @@ class AddIncident extends Component {
       dataArray[index] = item
 
     } else{
-      let item = {name :"", quantity: "", unit: ""}
+      let item = {name :"", quantity: "", unit: 'unit'}
       if( index2 == 0 ){
         item.name = text
       } else if( index2 == 1 ){
@@ -446,7 +446,7 @@ class AddIncident extends Component {
               {this.state.textInput.map((value) => {
                 return value
               })}
-          </View>
+            </View>
           {/* <DynamicItems/> */}
 
           {/* <View style={styles.switchContainer}>

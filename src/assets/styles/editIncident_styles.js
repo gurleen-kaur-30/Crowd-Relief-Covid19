@@ -98,10 +98,15 @@ export const styles = StyleSheet.create({
   },
   name:{
       height: height/20,
-      width: width/4,
+      width: width/4.5,
       borderColor: 'black', 
       borderWidth: 1,
       paddingLeft: width/50,
       paddingTop: width/50
-  }
+  },
+  pickerStyle:{
+    width: width/4.3,
+    height: height/20,
+    borderColor: 'black', 
+  },
 });

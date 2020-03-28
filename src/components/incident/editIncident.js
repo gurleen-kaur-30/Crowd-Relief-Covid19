@@ -9,6 +9,7 @@ import {
   TextInput,
   ActivityIndicator,
   Picker,
+  Button
 } from 'react-native';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
@@ -20,6 +21,7 @@ import PropTypes from 'prop-types';
 import {updateIncidentFirebase} from '../../actions/incidentsAction';
 import ImagePicker from 'react-native-image-picker';
 import {Toast} from 'native-base';
+import Icon1 from 'react-native-vector-icons/MaterialIcons'
 
 /**
  * Screen showing the edit options for the profile and personal information.
@@ -33,13 +35,17 @@ class EditIncident extends Component {
       details: this.props.incidentDetails.details,
       action: this.props.incidentDetails.action,
       category: this.props.incidentDetails.category,
-      items: this.props.incidentDetails.items,
+      items: this.props.incidentDetails.items,  
       image: {
         isPresent: this.props.incidentDetails.image.isPresent,
         base64: this.props.incidentDetails.image.base64,
         uri: this.props.incidentDetails.image.uri,
       },
     };
+
+    this.state2={
+      itemsCopy : this.state.items
+    }
   }
 
   /**
@@ -55,6 +61,10 @@ class EditIncident extends Component {
       type,
       duration,
     });
+  }
+
+  componentWillUnmount() {
+    this.setState({itemsCopy: this.state.items})
   }
 
   /**
@@ -106,15 +116,17 @@ class EditIncident extends Component {
    * Performs update
    */
   update = () => {
-    Promise.resolve(
-      this.props.updateIncidentFirebase(
-        this.props.incident.incident.key,
-        this.state,
-      ),
-    ).then(() => {
-      this.showToast('Incident updated!', 'success');
-      Actions.pop();
-    });
+    this.setState({items: itemsCopy}, () =>{
+      Promise.resolve(
+        this.props.updateIncidentFirebase(
+          this.props.incident.incident.key,
+          this.state,
+        ),
+      ).then(() => {
+        this.showToast('Incident updated!', 'success');
+        Actions.pop();
+      });
+    })
   };
 
   /**
@@ -202,6 +214,15 @@ class EditIncident extends Component {
     }
     this.setState({items: dataArray}, console.log(this.state.items));
   };
+
+  removeTextInput = (index) => {
+    let inputData = this.state2.itemsCopy;
+    inputData.splice(index, 1);
+    this.setState({
+     itemsCopy: inputData
+    });
+  };
+
 
   render() {
     console.log("items",this.state.items)
@@ -295,7 +316,7 @@ class EditIncident extends Component {
           <View style={styles.textInputHeadingContainer}>
             <Text style={styles.textInputHeading}>Items</Text>
           </View>
-          {this.state.items.map( (item, index) => {
+          {this.state2.itemsCopy && this.state2.itemsCopy.map( (item, index) => {
             return(
               <View style={styles.itemsRow}>
             <TextInput
@@ -310,7 +331,7 @@ class EditIncident extends Component {
             />
             <TextInput 
               ref={input => (this.titleInput = input)}
-              // key={String(index) + '1'}
+              key={String(index) + '1'}
               style={styles.name} 
               keyboardType={'numeric'}
               onChangeText={text => this.updateValues(text, index, 1)}
@@ -324,13 +345,15 @@ class EditIncident extends Component {
                 onValueChange={unit => {
                   this.updateValues(unit, index, 2);
                 }}
-                style={styles.name}>
+                style={styles.pickerStyle}>
                 <Picker.Item label="Unit" value="unit" />
                 <Picker.Item label="kg" value="kg" />
                 <Picker.Item label="gm" value="gm" />
                 <Picker.Item label="ltr" value="ltr" />
                 <Picker.Item label="ml" value="ml" />
-              </Picker>
+            </Picker>
+            <Icon1 name={"remove-circle"} onPress={()=>this.removeTextInput(index)} color="red" size={30}/>
+            {/* <Button title='-' style={styles.removeButton} onPress={() => this.removeTextInput(index)} /> */}
             </View>
             )
           })
