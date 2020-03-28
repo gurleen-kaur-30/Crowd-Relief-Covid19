@@ -23,6 +23,7 @@ import {styles} from '../assets/styles/addincident_styles';
 import PropTypes from 'prop-types';
 import ImagePicker from 'react-native-image-picker';
 import {Toast} from 'native-base';
+import Slider from '@react-native-community/slider';
 
 /**
  * Screen for adding an incident.
@@ -49,6 +50,7 @@ class AddIncident extends Component {
         },
         items: [],
         action: null,
+        urgency: 1,
       },
       disable: false,
       textInput: [],
@@ -76,6 +78,16 @@ class AddIncident extends Component {
         action: action,
       },
     });
+  };
+
+  updateSliderValue = urgency => {
+    this.setState({
+      incident: {
+        ...this.state.incident,
+        urgency: urgency,
+      },
+    });
+    console.log(this.state);
   };
 
   /**
@@ -425,6 +437,25 @@ class AddIncident extends Component {
             numberOfLines={4}
             returnKeyType="next"
             placeholder="Description"
+          />
+
+          <View style={styles.textInputHeadingContainer}>
+            <Text style={styles.textInputHeading}>Urgency on a scale of 5</Text>
+          </View>
+          <Slider
+            value={this.state.incident.urgency}
+            minimumTrackTintColor="#4c93f7"
+            thumbColor="#1c76cb"
+            maximumTrackTintColor="#9bd5ff"
+            thumbTouchSize={{
+              width: 100,
+              height: 100,
+            }}
+            step={1}
+            minimumValue={1}
+            maximumValue={5}
+            onSlidingComplete={urgency => this.updateSliderValue(urgency)}
+            onValueChange={urgency => this.updateSliderValue(urgency)}
           />
           <View>
             <View style={styles.row}>
