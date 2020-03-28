@@ -34,6 +34,7 @@ class EditIncident extends Component {
       title: this.props.incidentDetails.title,
       details: this.props.incidentDetails.details,
       action: this.props.incidentDetails.action,
+      urgency: this.props.incidentDetails.urgency,
       category: this.props.incidentDetails.category,
       items: this.props.incidentDetails.items,  
       image: {
@@ -189,28 +190,26 @@ class EditIncident extends Component {
 
   updateValues = (text, index, index2) => {
     let dataArray = this.state.items;
-    if( dataArray[index] ){
-      let item = dataArray[index]
-      if( index2 == 0 ){
-        item.name = text
-      } else if( index2 == 1 ){
-        item.quantity = text
-      } else{
-        item.unit = text
+    if (dataArray[index]) {
+      let item = dataArray[index];
+      if (index2 == 0) {
+        item.name = text;
+      } else if (index2 == 1) {
+        item.quantity = text;
+      } else {
+        item.unit = text;
       }
-      dataArray[index] = item
-
-    } else{
-      let item = {name :"", quantity: "", unit: ""}
-      if( index2 == 0 ){
-        item.name = text
-      } else if( index2 == 1 ){
-        item.quantity = text
-      } else{
-        item.unit = text
+      dataArray[index] = item;
+    } else {
+      let item = {name: '', quantity: '', unit: ''};
+      if (index2 == 0) {
+        item.name = text;
+      } else if (index2 == 1) {
+        item.quantity = text;
+      } else {
+        item.unit = text;
       }
-      dataArray[index] = item
-
+      dataArray[index] = item;
     }
     this.setState({items: dataArray}, console.log(this.state.items));
   };
@@ -225,7 +224,7 @@ class EditIncident extends Component {
 
 
   render() {
-    console.log("items",this.state.items)
+    console.log('items', this.state.items);
     let pickers;
     if (this.state.category == 'contribute') {
       pickers = [
@@ -312,7 +311,28 @@ class EditIncident extends Component {
             placeholder="Description"
             value={this.state.details}
           />
-          
+          <View style={styles.textInputHeadingContainer}>
+            <Text style={[styles.textInputHeading, {flex: 3}]}>
+              Urgency on a scale of 5
+            </Text>
+            <Picker
+              value={this.state.urgency}
+              selectedValue={this.state.urgency}
+              onValueChange={urgency => {
+                this.setState({urgency});
+              }}
+              style={styles.urgencypicker}>
+              {[...Array(5).keys()].map(item => {
+                return (
+                  <Picker.Item
+                    label={String(item + 1)}
+                    value={String(item + 1)}
+                    key={item}
+                  />
+                );
+              })}
+            </Picker>
+          </View>
           <View style={styles.textInputHeadingContainer}>
             <Text style={styles.textInputHeading}>Items</Text>
           </View>

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {PermissionsAndroid} from 'react-native'
+import {PermissionsAndroid} from 'react-native';
 
 import {connect} from 'react-redux';
 import {Router} from 'react-native-router-flux';
@@ -23,9 +23,9 @@ import Incident from '../components/incident/incidentScreen';
 import EditIncident from '../components/incident/editIncident';
 
 import EditProfile from '../components/profile/editProfile';
-import SettingsOption from '../components/settings';
+// import SettingsOption from '../components/settings';
 
-import AboutUs from '../components/aboutUs/aboutUs';
+// import AboutUs from '../components/aboutUs/aboutUs';
 
 const ConnectedRouter = connect()(Router);
 
@@ -46,34 +46,32 @@ export default class Route extends Component {
     return true;
   }
 
-  componentDidMount(){
-    this.checkLocationPermission()
+  componentDidMount() {
+    this.checkLocationPermission();
   }
-  getLocationPermission(){
+  getLocationPermission() {
     const granted = PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
-    )
-    console.log("granted",granted)
-    return granted
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+    );
+    console.log('granted', granted);
+    return granted;
   }
-  checkLocationPermission(){
-    console.log("checking permission")
+  checkLocationPermission() {
+    console.log('checking permission');
     PermissionsAndroid.check(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
-    )
-    .then((havePermission) => {
-        console.log(havePermission)
-        if(!havePermission){
-            console.log("not permitted")
-            this.getLocationPermission()
-            .then((granted) => {
-                if(granted == PermissionsAndroid.RESULTS.GRANTED){
-                }
-            })
-        } else if(havePermission){
-            console.log("permitted")
-        }
-    })
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+    ).then(havePermission => {
+      console.log(havePermission);
+      if (!havePermission) {
+        console.log('not permitted');
+        this.getLocationPermission().then(granted => {
+          if (granted == PermissionsAndroid.RESULTS.GRANTED) {
+          }
+        });
+      } else if (havePermission) {
+        console.log('permitted');
+      }
+    });
   }
 
   render() {
@@ -99,8 +97,7 @@ export default class Route extends Component {
             initial={!this.props.initial}
             drawerOpenRoute="DrawerOpen"
             drawerCloseRoute="DrawerClose"
-            drawerToggleRoute="DrawerToggle"
-          >
+            drawerToggleRoute="DrawerToggle">
             <Scene key="profile" hideNavBar component={Profile} />
             <Scene key="mapFeed" hideNavBar component={MapFeedScreen} />
             <Scene
@@ -109,7 +106,7 @@ export default class Route extends Component {
               component={EmergencyPlaces}
             />
           </Drawer>
-          <Scene key="settingsOption" hideNavBar component={SettingsOption} />
+          {/* <Scene key="settingsOption" hideNavBar component={SettingsOption} /> */}
           {/* <Scene key="aboutUs" hideNavBar component={AboutUs} /> */}
           <Scene
             back={true}

@@ -201,15 +201,17 @@ export const fbSignIn = () => {
  * This function is used for google login and storing the user in firebase.
  * @return If success, log in with google else trigger alerts.
  */
-export const googleSignin = (data) => {
+export const googleSignin = data => {
   return dispatch => {
     dispatch(loginLoading(true));
-        const credential = firebase.auth.GoogleAuthProvider.credential(
-          data.idToken,
-          data.accessToken,
-        );
-        // Login with the credential
-      firebase.auth().signInWithCredential(credential)
+    const credential = firebase.auth.GoogleAuthProvider.credential(
+      data.idToken,
+      data.accessToken,
+    );
+    // Login with the credential
+    firebase
+      .auth()
+      .signInWithCredential(credential)
       .then(data => {
         dispatch(getUserAuthFirebase(data.user, 'google'));
         dispatch(addUserFirebase(userFirebaseStructure(data.user)));

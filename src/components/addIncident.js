@@ -11,9 +11,7 @@ import {
   ActivityIndicator,
   Picker,
   Button,
-  CheckBox,
 } from 'react-native';
-import {AccessToken, LoginManager, LoginButton} from 'react-native-fbsdk';
 import {Header, Title, Left, Body, Switch, Right, Card} from 'native-base';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import {bindActionCreators} from 'redux';
@@ -50,6 +48,7 @@ class AddIncident extends Component {
         },
         items: [],
         action: null,
+        urgency: 1,
       },
       disable: false,
       textInput: [],
@@ -77,6 +76,16 @@ class AddIncident extends Component {
         action: action,
       },
     });
+  };
+
+  updateUrgency = urgency => {
+    this.setState({
+      incident: {
+        ...this.state.incident,
+        urgency: urgency,
+      },
+    });
+    console.log(this.state);
   };
 
   /**
@@ -225,35 +234,30 @@ class AddIncident extends Component {
 
   addValues = (text, index, index2) => {
     let dataArray = this.state.incident.items;
-    if( dataArray[index] ){
-      let item = dataArray[index]
-      if( index2 == 0 ){
-        item.name = text
-      } else if( index2 == 1 ){
-        item.quantity = text
-      } else{
-        item.unit = text
+    console.log(text, index, index2);
+    if (dataArray[index]) {
+      console.log('Hai index');
+      let item = dataArray[index];
+      if (index2 == 0) {
+        item.name = text;
+      } else if (index2 == 1) {
+        item.quantity = text;
+      } else {
+        item.unit = text;
       }
-      dataArray[index] = item
-
-    } else{
-      let item = {name :"", quantity: "", unit: 'unit'}
-      if( index2 == 0 ){
-        item.name = text
-      } else if( index2 == 1 ){
-        item.quantity = text
-      } else{
-        item.unit = text
-      }
-      dataArray[index] = item
-
+      dataArray[index] = item;
+    } else {
+      console.log('No index');
+      let item = {name: '', quantity: '', unit: 'kg'};
+      dataArray[index] = item;
     }
     this.setState({
-        incident: {
-          ...this.state.incident,
-          items: dataArray,
-        },
-      }, console.log(this.state.incident));
+      incident: {
+        ...this.state.incident,
+        items: dataArray,
+      },
+    });
+    console.log(this.state.incident.items[index]);
   };
 
   removeTextInput = () => {
@@ -271,49 +275,46 @@ class AddIncident extends Component {
     console.log(this.state.incident);
   };
 
-
-  //function to add TextInput dynamically
   addTextInput = index => {
-    console.log(index)
     let textInput = this.state.textInput;
+    this.addValues(null, index, null);
+    // console.log(this.state.incident.items[index]);
     textInput.push(
-      <View style={styles.itemsRow}>
-      <TextInput
-        key={index}  
-        onChangeText={text => this.addValues(text, index, 0)}
-        onSubmitEditing={() => this.detailsInput.focus()}
-        keyboardType="email-address"
-        returnKeyType="next"
-        placeholder="Item" 
-        style={styles.name}
-      />
-      <TextInput 
-        ref={input => (this.titleInput = input)}
-        key={String(index) + '1'}
-        style={styles.name} 
-        keyboardType={'numeric'}
-        onChangeText={text => this.addValues(text, index, 1)}
-        onSubmitEditing={() => this.detailsInput.focus()}
-        keyboardType="numeric"
-        returnKeyType="next"
-        placeholder="Quantity"
-      />
-      <Picker
-          selectedValue={this.state.incident.items[index]? this.state.incident.items[index]:"unit"}
-          onValueChange={unit => {
-            this.addValues(unit, index, 2);
+      <View style={styles.itemsRow} key={index}>
+        <TextInput
+          ref={input => (this.nameInput = input)}
+          onChangeText={text => this.addValues(text, index, 0)}
+          onSubmitEditing={() => this.quantityInput.focus()}
+          keyboardType="email-address"
+          returnKeyType="next"
+          placeholder="Item name"
+          style={styles.name}
+        />
+        <TextInput
+          ref={input => (this.quantityInput = input)}
+          style={styles.name}
+          onChangeText={text => this.addValues(text, index, 1)}
+          keyboardType="numeric"
+          returnKeyType="next"
+          placeholder="Quantity"
+        />
+        <Picker
+          selectedValue={this.state.incident.items[index].unit}
+          onValueChange={text => {
+            this.addValues(text, index, 2);
           }}
           style={styles.name}>
-          <Picker.Item label="Unit" value="unit" />
           <Picker.Item label="kg" value="kg" />
           <Picker.Item label="gm" value="gm" />
+          <Picker.Item label="units" value="units" />
           <Picker.Item label="ltr" value="ltr" />
           <Picker.Item label="ml" value="ml" />
         </Picker>
-      </View>
-    
+      </View>,
     );
-    this.setState({textInput});
+    this.setState({
+      textInput: textInput,
+    });
   };
 
   render() {
@@ -331,6 +332,7 @@ class AddIncident extends Component {
         <Picker.Item label="Delivered" value="delivered" key="delivered" />,
       ];
     }
+    console.log(this.state.incident.items);
 
     return (
       <View style={styles.container}>
@@ -434,51 +436,47 @@ class AddIncident extends Component {
             returnKeyType="next"
             placeholder="Description"
           />
-            <View>
-              <View style= {styles.row}>
-                <View style={{margin: 10}}>
-              <Button title='Add Item' onPress={() => this.addTextInput(this.state.textInput.length)} />
+
+          <View style={styles.textInputHeadingContainer}>
+            <Text style={[styles.textInputHeading, {flex: 3}]}>
+              Urgency on a scale of 5
+            </Text>
+            <Picker
+              selectedValue={this.state.incident.urgency}
+              onValueChange={urgency => {
+                this.updateUrgency(urgency);
+              }}
+              style={styles.urgencypicker}>
+              {[...Array(5).keys()].map(item => {
+                return (
+                  <Picker.Item
+                    label={String(item + 1)}
+                    value={String(item + 1)}
+                    key={item}
+                  />
+                );
+              })}
+            </Picker>
+          </View>
+          <View>
+            <View style={styles.row}>
+              <View style={{margin: 10}}>
+                <Button
+                  title="Add Item"
+                  onPress={() => this.addTextInput(this.state.textInput.length)}
+                />
               </View>
               <View style={{margin: 10}}>
-              <Button title='Remove Item' onPress={() => this.removeTextInput()} />
+                <Button
+                  title="Remove Item"
+                  onPress={() => this.removeTextInput()}
+                />
               </View>
-              </View>
-              {this.state.textInput.map((value) => {
-                return value
-              })}
             </View>
-          {/* <DynamicItems/> */}
-
-          {/* <View style={styles.switchContainer}>
-            <Text style={styles.switchText}>Get Help!</Text>
-            <Switch
-              thumbColor="#1c76cb"
-              onValueChange={getHelp => {
-                this.setState({
-                  incident: {
-                    ...this.state.incident,
-                    getHelp: getHelp,
-                  },
-                });
-              }}
-              value={this.state.incident.getHelp}
-            />
+            {this.state.textInput.map(value => {
+              return value;
+            })}
           </View>
-          <View style={styles.switchContainer}>
-            <Text style={styles.switchText}>Share Publicly!</Text>
-            <Switch
-              thumbColor="#1c76cb"
-              onValueChange={visible => {
-                this.setState({
-                  incident: {
-                    ...this.state.incident,
-                    visible: visible,
-                  },
-                });
-              }}
-              value={this.state.incident.visible}
-            />
-          </View> */}
           {this.props.incident.loading && (
             <ActivityIndicator size="large" color="black" />
           )}

@@ -21,7 +21,7 @@ import {
   Left,
   Body,
   Right,
-  Picker
+  Picker,
 } from 'native-base';
 import {styles} from '../../assets/styles/incident_styles';
 import getDirections from 'react-native-google-maps-directions';
@@ -173,6 +173,16 @@ class Incident extends Component {
             </Card>
             <Card style={styles.card}>
               <CardItem>
+                <Text style={styles.titleTextHeader}>Urgency</Text>
+              </CardItem>
+              <CardItem>
+                <Text style={styles.titleTextDescription}>
+                  {incidentDetails.urgency}
+                </Text>
+              </CardItem>
+            </Card>
+            <Card style={styles.card}>
+              <CardItem>
                 <Text style={styles.titleTextHeader}>Title</Text>
               </CardItem>
               <CardItem>
@@ -194,51 +204,33 @@ class Incident extends Component {
               </Card>
             ) : null}
             <Card style={styles.card}>
-            <CardItem>
-                  <Text style={styles.titleTextHeader}>Items</Text>
-            </CardItem>
-            {this.props.incident.incident.value.items && this.props.incident.incident.value.items.map( (item, index) => {
-                return(
-                  <View style={styles.itemsRow}>
-                  <TextInput
-                    key={index}  
-                    // onSubmitEditing={() => this.detailsInput.focus()}
-                    keyboardType="email-address"
-                    returnKeyType="next"
-                    placeholder={item.name}
-                    editable={false}
-                    style={styles.name}
-                    placeholderTextColor={"black"}
-                  />
-                  <TextInput 
-                    ref={input => (this.titleInput = input)}
-                    key={String(index) + '1'}
-                    style={styles.name} 
-                    keyboardType={'numeric'}
-                    onChangeText={text => this.updateValues(text, index, 1)}
-                    // onSubmitEditing={() => this.detailsInput.focus()}
-                    keyboardType="numeric"
-                    returnKeyType="next"
-                    editable={false}
-                    placeholder={item.quantity}
-                    placeholderTextColor={"black"}
-                  />
-                    <TextInput 
-                      ref={input => (this.titleInput = input)}
-                      key={String(index) + '1'}
-                      style={styles.name} 
-                      returnKeyType="next"
-                      editable={false}
-                      placeholder={item.unit}
-                      placeholderTextColor={"black"}
-                  />
-                  
-                  </View>
-                  )
-                })
-            }
+              <CardItem>
+                <Text style={styles.titleTextHeader}>Items</Text>
+              </CardItem>
+              {this.props.incident.incident.value.items &&
+                this.props.incident.incident.value.items.map((item, index) => {
+                  return (
+                    <View style={styles.itemsRow} key={index}>
+                      <TextInput
+                        placeholder={item.name}
+                        editable={false}
+                        placeholderTextColor={'black'}
+                      />
+                      <TextInput
+                        placeholder={item.quantity}
+                        editable={false}
+                        placeholderTextColor={'black'}
+                      />
+                      <TextInput
+                        placeholder={item.unit}
+                        editable={false}
+                        placeholderTextColor={'black'}
+                      />
+                    </View>
+                  );
+                })}
             </Card>
-           
+
             <Card style={styles.card}>
               <CardItem>
                 <MapView
