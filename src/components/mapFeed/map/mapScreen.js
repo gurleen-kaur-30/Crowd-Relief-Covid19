@@ -28,6 +28,7 @@ import {
   updateIndvNotification,
   updateDomain,
 } from '../../../actions/incidentsAction';
+import {getAllItems} from '../../../actions/itemsActions';
 import {styles, searchBarStyle} from '../../../assets/styles/map_styles.js';
 import {styles as filterStyles} from '../../../assets/styles/filter_styles';
 import {styles as loadingStyle} from '../../../assets/styles/mapFeed_styles';
@@ -52,6 +53,7 @@ class MapScreen extends Component {
   UNSAFE_componentWillMount() {
     this.props.getAllIncidents();
     this.props.getEmergencyPlaces(this.props.settings.emergency_radius);
+    this.props.getAllItems();
   }
 
   UNSAFE_componentWillUpdate(nextProps) {
@@ -174,7 +176,11 @@ class MapScreen extends Component {
   );
 
   render() {
-    if (this.props.emergencyPlaces.loading || this.props.incident.loading) {
+    if (
+      this.props.emergencyPlaces.loading ||
+      this.props.incident.loading ||
+      this.props.items.loading
+    ) {
       return (
         <View style={loadingStyle.loaderContainer}>
           <Image
@@ -252,7 +258,7 @@ MapScreen.propTypes = {
   settings: PropTypes.object,
   setLocationOnCustomSearch: PropTypes.func.isRequired,
   getAllIncidents: PropTypes.func.isRequired,
-  getAllIncidents: PropTypes.func.isRequired,
+  getAllItems: PropTypes.func.isRequired,
   getEmergencyPlaces: PropTypes.func.isRequired,
   updateIndvNotification: PropTypes.func.isRequired,
 };
@@ -268,6 +274,7 @@ function matchDispatchToProps(dispatch) {
     {
       setLocationOnCustomSearch: setLocationOnCustomSearch,
       getAllIncidents: getAllIncidents,
+      getAllItems: getAllItems,
       getEmergencyPlaces: getEmergencyPlaces,
       updateDomain: updateDomain,
       updateIndvNotification: updateIndvNotification,
@@ -288,6 +295,7 @@ const mapStateToProps = state => ({
   all_incidents: state.incident.all_incidents,
   incident: state.incident,
   settings: state.settings,
+  items: state.items,
 });
 
 export default connect(mapStateToProps, matchDispatchToProps)(MapScreen);
