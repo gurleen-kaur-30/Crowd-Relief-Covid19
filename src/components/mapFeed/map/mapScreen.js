@@ -2,12 +2,9 @@ import React, {Component} from 'react';
 import {
   Text,
   View,
-  Platform,
   TouchableHighlight,
   TouchableOpacity,
-  Keyboard,
-  ActivityIndicator,
-  Picker,
+  CheckBox,
   Modal,
   Image,
 } from 'react-native';
@@ -34,7 +31,10 @@ import {styles as filterStyles} from '../../../assets/styles/filter_styles';
 import {styles as loadingStyle} from '../../../assets/styles/mapFeed_styles';
 import {GooglePlacesAutocomplete} from '../../googleSearchBar';
 import {SideDrawer} from '../../sideMenu';
-import {getEmergencyPlaces} from '../../../actions/emergencyPlacesAction';
+import {
+  getEmergencyPlaces,
+  updateShow,
+} from '../../../actions/emergencyPlacesAction';
 var PushNotification = require('react-native-push-notification');
 var haversine = require('haversine-distance');
 
@@ -172,6 +172,15 @@ class MapScreen extends Component {
           </TouchableOpacity>
         ))}
       </View>
+      <View>
+        <Text>Show EmergencyPlaces</Text>
+        <CheckBox
+          value={this.props.emergencyPlaces.show}
+          onValueChange={() =>
+            this.props.updateShow(!this.props.emergencyPlaces.show)
+          }
+        />
+      </View>
     </View>
   );
 
@@ -260,6 +269,7 @@ MapScreen.propTypes = {
   getAllIncidents: PropTypes.func.isRequired,
   getAllItems: PropTypes.func.isRequired,
   getEmergencyPlaces: PropTypes.func.isRequired,
+  updateShow: PropTypes.func.isRequired,
   updateIndvNotification: PropTypes.func.isRequired,
 };
 
@@ -276,6 +286,7 @@ function matchDispatchToProps(dispatch) {
       getAllIncidents: getAllIncidents,
       getAllItems: getAllItems,
       getEmergencyPlaces: getEmergencyPlaces,
+      updateShow: updateShow,
       updateDomain: updateDomain,
       updateIndvNotification: updateIndvNotification,
     },

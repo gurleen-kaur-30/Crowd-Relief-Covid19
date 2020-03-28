@@ -3,6 +3,7 @@ import {
   EMERGENCY_PLACES_POLICE_STATIONS,
   EMERGENCY_PLACES_LOADING,
   NEARBY_PLACES_GOOGLE_URL,
+  TOGGLE_EMERGENCY_PLACES,
 } from './types';
 import {handleError} from './errorAction';
 import Config from 'react-native-config';
@@ -72,6 +73,19 @@ export const getEmergencyPlaces = radius => {
     });
   };
 };
+
+export const updateShow = bool => {
+  return dispatch => {
+    dispatch(updateShowHelper(bool));
+  };
+};
+
+export function updateShowHelper(bool) {
+  return {
+    type: TOGGLE_EMERGENCY_PLACES,
+    show: bool,
+  };
+}
 
 /**
  * Updates list of hospitals found near a user to redux store.

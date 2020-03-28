@@ -156,9 +156,8 @@ class MapContainer extends Component {
         Point: ['latitude', 'longitude'],
       });
       const cluster = new supercluster({
-        radius: 60,
-        maxZoom: 16,
-        nodeSize: 64,
+        radius: 45,
+        maxZoom: 13,
       });
       cluster.load(items.features);
       return cluster;
@@ -207,14 +206,13 @@ class MapContainer extends Component {
         itemsIncident[i]['leaves'] = clusterIncident.getLeaves(
           itemsIncident[i].properties.cluster_id,
           (limit = 10),
-          (offset = 0),
         );
       }
     }
 
     // clustering of emergency places.
-    const clusterEmergencyPlaces = this._createCluster(emergencyPlaces);
     var itemsEmergencyPlaces = null;
+    const clusterEmergencyPlaces = this._createCluster(emergencyPlaces);
     itemsEmergencyPlaces = clusterEmergencyPlaces.getClusters(
       [
         this.southwest.longitude,
@@ -231,7 +229,6 @@ class MapContainer extends Component {
         itemsEmergencyPlaces[i]['leaves'] = clusterEmergencyPlaces.getLeaves(
           itemsEmergencyPlaces[i].properties.cluster_id,
           (limit = 10),
-          (offset = 0),
         );
       }
     }
@@ -389,12 +386,16 @@ class MapContainer extends Component {
             ),
           )}
           {/* Maps emergency places */}
-          {this.state.clustersPlaces.map((item, i) =>
-            item.properties.cluster === true ? (
-              <Cluster key={i} item={item} type={'places'} />
-            ) : (
-              <MapMarker key={i} item={item} />
-            ),
+          {this.props.emergencyPlaces.show ? (
+            this.state.clustersPlaces.map((item, i) =>
+              item.properties.cluster === true ? (
+                <Cluster key={i} item={item} type={'places'} />
+              ) : (
+                <MapMarker key={i} item={item} />
+              ),
+            )
+          ) : (
+            <View></View>
           )}
           {/* Maps current location */}
           <Marker.Animated
