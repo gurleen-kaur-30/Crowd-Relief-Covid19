@@ -10,9 +10,9 @@ import {
   Keyboard,
   ActivityIndicator,
   Picker,
+  Button,
   CheckBox,
 } from 'react-native';
-import {AccessToken, LoginManager, LoginButton} from 'react-native-fbsdk';
 import {Header, Title, Left, Body, Switch, Right, Card} from 'native-base';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import {bindActionCreators} from 'redux';
@@ -48,11 +48,12 @@ class AddIncident extends Component {
           base64: '',
           uri: '',
         },
-        item: [],
+        items: [],
         action: null,
         urgency: 1,
       },
       disable: false,
+      textInput: [],
     };
   }
 
@@ -233,6 +234,91 @@ class AddIncident extends Component {
     });
   };
 
+  addValues = (text, index, index2) => {
+    let dataArray = this.state.incident.items;
+    console.log(text, index, index2);
+    if (dataArray[index]) {
+      console.log('Hai index');
+      let item = dataArray[index];
+      if (index2 == 0) {
+        item.name = text;
+      } else if (index2 == 1) {
+        item.quantity = text;
+      } else {
+        item.unit = text;
+      }
+      dataArray[index] = item;
+    } else {
+      console.log('No index');
+      let item = {name: '', quantity: '', unit: 'kg'};
+      dataArray[index] = item;
+    }
+    this.setState({
+      incident: {
+        ...this.state.incident,
+        items: dataArray,
+      },
+    });
+    console.log(this.state.incident.items[index]);
+  };
+
+  removeTextInput = () => {
+    let textInput = this.state.textInput;
+    let inputData = this.state.incident.items;
+    textInput.pop();
+    inputData.pop();
+    this.setState({
+      incident: {
+        ...this.state.incident,
+        items: inputData,
+      },
+      textInput,
+    });
+    console.log(this.state.incident);
+  };
+
+  addTextInput = index => {
+    let textInput = this.state.textInput;
+    this.addValues(null, index, null);
+    // console.log(this.state.incident.items[index]);
+    textInput.push(
+      <View style={styles.itemsRow} key={index}>
+        <TextInput
+          ref={input => (this.nameInput = input)}
+          onChangeText={text => this.addValues(text, index, 0)}
+          onSubmitEditing={() => this.quantityInput.focus()}
+          keyboardType="email-address"
+          returnKeyType="next"
+          placeholder="Item name"
+          style={styles.name}
+        />
+        <TextInput
+          ref={input => (this.quantityInput = input)}
+          style={styles.name}
+          onChangeText={text => this.addValues(text, index, 1)}
+          keyboardType="numeric"
+          returnKeyType="next"
+          placeholder="Quantity"
+        />
+        <Picker
+          selectedValue={this.state.incident.items[index].unit}
+          onValueChange={text => {
+            this.addValues(text, index, 2);
+          }}
+          style={styles.name}>
+          <Picker.Item label="kg" value="kg" />
+          <Picker.Item label="gm" value="gm" />
+          <Picker.Item label="units" value="units" />
+          <Picker.Item label="ltr" value="ltr" />
+          <Picker.Item label="ml" value="ml" />
+        </Picker>
+      </View>,
+    );
+    this.setState({
+      textInput: textInput,
+    });
+  };
+
   render() {
     let pickers;
     if (this.state.incident.category == 'contribute') {
@@ -248,6 +334,7 @@ class AddIncident extends Component {
         <Picker.Item label="Delivered" value="delivered" key="delivered" />,
       ];
     }
+    console.log(this.state.incident.items);
 
     return (
       <View style={styles.container}>
@@ -370,6 +457,25 @@ class AddIncident extends Component {
             onSlidingComplete={urgency => this.updateSliderValue(urgency)}
             onValueChange={urgency => this.updateSliderValue(urgency)}
           />
+          <View>
+            <View style={styles.row}>
+              <View style={{margin: 10}}>
+                <Button
+                  title="Add Item"
+                  onPress={() => this.addTextInput(this.state.textInput.length)}
+                />
+              </View>
+              <View style={{margin: 10}}>
+                <Button
+                  title="Remove Item"
+                  onPress={() => this.removeTextInput()}
+                />
+              </View>
+            </View>
+            {this.state.textInput.map(value => {
+              return value;
+            })}
+          </View>
           {this.props.incident.loading && (
             <ActivityIndicator size="large" color="black" />
           )}
@@ -377,7 +483,7 @@ class AddIncident extends Component {
             disabled={this.state.disable}
             style={styles.updateButton}
             onPress={() => this.handleAddIncident()}>
-            <Text style={styles.updateText}> Add </Text>
+            <Text style={styles.updateText}> Add Incident</Text>
           </TouchableOpacity>
         </ScrollView>
       </View>

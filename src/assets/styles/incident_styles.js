@@ -35,6 +35,7 @@ export const styles = StyleSheet.create({
   card: {
     marginLeft: width / 40,
     width: width * 0.95,
+    paddingBottom: 20
   },
   fabButtonIcon: {
     alignSelf: 'center',
@@ -74,4 +75,32 @@ export const styles = StyleSheet.create({
     position: 'absolute',
     right: 10,
   },
+  itemsRow:{
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    paddingTop: height/25
+   },
+    buttonView: {
+    flexDirection: 'row'
+    },
+    textInput: {
+        height: 40,
+        borderColor: 'black', 
+        borderWidth: 1,
+        margin: 20
+    },
+    row:{
+        flexDirection: 'row',
+        justifyContent: 'center'
+    },
+    name:{
+      height: height/20,
+      width: width/4,
+      borderWidth: 1,
+      backgroundColor: "white",
+      paddingLeft: width/50,
+      paddingTop: width/50,
+      color:"black"
+    }
 });

@@ -77,6 +77,7 @@ export const getAllIncidents = () => {
                   title: child.val().title,
                   action: child.val().action,
                   urgency: child.val().urgency,
+                  items: child.val().items,
                   details: child.val().details,
                   category: child.val().category,
                   timestamp: child.val().timestamp,
@@ -124,16 +125,17 @@ export const getUserIncidents = userID => {
       .equalTo(userID)
       .on('value', function(snapshot) {
         dispatch(incidentsLoading(true));
-        var items = [];
+        var incident = [];
         snapshot.forEach(child => {
           if (child.val().visible) {
-            items.push({
+            incident.push({
               key: child.key,
               value: {
                 title: child.val().title,
                 action: child.val().action,
                 urgency: child.val().urgency,
                 details: child.val().details,
+                items: child.val().items,
                 category: child.val().category,
                 timestamp: child.val().timestamp,
                 coordinates: child.val().location.coordinates,
@@ -141,7 +143,7 @@ export const getUserIncidents = userID => {
             });
           }
         });
-        dispatch(userIncidents(items));
+        dispatch(userIncidents(incident));
         dispatch(incidentsLoading(false));
       });
   };

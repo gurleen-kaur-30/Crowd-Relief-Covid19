@@ -80,5 +80,32 @@ export const styles = StyleSheet.create({
 	},
 	updateText: {
 		color: 'white'
-	}
+	},
+	itemsRow:{
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
+        paddingTop: height/25
+    },
+    buttonView: {
+    flexDirection: 'row'
+    },
+    textInput: {
+        height: 40,
+        borderColor: 'black', 
+        borderWidth: 1,
+        margin: 20
+    },
+    row:{
+        flexDirection: 'row',
+        justifyContent: 'center'
+    },
+    name:{
+        height: height/20,
+        width: width/4,
+        borderColor: 'black', 
+		borderWidth: 1,
+		paddingLeft: width/50,
+		paddingTop: width/50
+    }
 });
