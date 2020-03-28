@@ -6,18 +6,20 @@ import incidentReducer from './incidentReducer';
 import emergencyPlacesReducer from './emergencyPlacesReducer';
 import settingsReducer from './settingsReducer';
 import slidesReducer from './slidesReducer';
+import itemsReducer from './itemsReducer';
 
 // Collection of all the reducers with keys to gathers their
 // results into a single state object.
 const allReducers = {
-	login: loginReducer,
-	scene: sceneReducer,
-	location: locationReducer,
-	error: errorReducer,
-	incident: incidentReducer,
-	emergencyPlaces: emergencyPlacesReducer,
-	settings: settingsReducer,
-	slides: slidesReducer
+  login: loginReducer,
+  scene: sceneReducer,
+  location: locationReducer,
+  error: errorReducer,
+  incident: incidentReducer,
+  emergencyPlaces: emergencyPlacesReducer,
+  settings: settingsReducer,
+  slides: slidesReducer,
+  items: itemsReducer,
 };
 
 export default allReducers;
