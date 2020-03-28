@@ -20,6 +20,7 @@ import PropTypes from 'prop-types';
 import {updateIncidentFirebase} from '../../actions/incidentsAction';
 import ImagePicker from 'react-native-image-picker';
 import {Toast} from 'native-base';
+import Slider from '@react-native-community/slider';
 
 /**
  * Screen showing the edit options for the profile and personal information.
@@ -32,6 +33,7 @@ class EditIncident extends Component {
       title: this.props.incidentDetails.title,
       details: this.props.incidentDetails.details,
       action: this.props.incidentDetails.action,
+      urgency: this.props.incidentDetails.urgency,
       category: this.props.incidentDetails.category,
       image: {
         isPresent: this.props.incidentDetails.image.isPresent,
@@ -142,6 +144,13 @@ class EditIncident extends Component {
       );
     }
   }
+
+  updateSliderValue = urgency => {
+    this.setState({
+      urgency: urgency,
+    });
+    console.log(this.state);
+  };
 
   /**
    * This function provides options for adding incident image, and updates the image object.
@@ -260,6 +269,24 @@ class EditIncident extends Component {
             style={styles.textInput}
             placeholder="Description"
             value={this.state.details}
+          />
+          <View style={styles.textInputHeadingContainer}>
+            <Text style={styles.textInputHeading}>Urgency on a scale of 5</Text>
+          </View>
+          <Slider
+            value={this.state.urgency}
+            minimumTrackTintColor="#4c93f7"
+            thumbColor="#1c76cb"
+            maximumTrackTintColor="#9bd5ff"
+            thumbTouchSize={{
+              width: 100,
+              height: 100,
+            }}
+            step={1}
+            minimumValue={1}
+            maximumValue={5}
+            onSlidingComplete={urgency => this.updateSliderValue(urgency)}
+            onValueChange={urgency => this.updateSliderValue(urgency)}
           />
           {/* <View style={styles.switchContainer}>
             <Text style={styles.switchText}>Get Help!</Text>

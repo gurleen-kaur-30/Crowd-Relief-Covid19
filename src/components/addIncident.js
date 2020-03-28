@@ -50,7 +50,7 @@ class AddIncident extends Component {
         },
         item: [],
         action: null,
-        urgency: null,
+        urgency: 1,
       },
       disable: false,
     };
@@ -175,7 +175,6 @@ class AddIncident extends Component {
       this.state.incident.title === null ||
       this.state.incident.details === null ||
       this.state.incident.category === null ||
-      this.state.incident.urgency === null ||
       this.state.incident.action === null
     ) {
       this.showToast('Please dont leave any field blank');
@@ -357,6 +356,7 @@ class AddIncident extends Component {
             <Text style={styles.textInputHeading}>Urgency on a scale of 5</Text>
           </View>
           <Slider
+            value={this.state.incident.urgency}
             minimumTrackTintColor="#4c93f7"
             thumbColor="#1c76cb"
             maximumTrackTintColor="#9bd5ff"
@@ -370,36 +370,6 @@ class AddIncident extends Component {
             onSlidingComplete={urgency => this.updateSliderValue(urgency)}
             onValueChange={urgency => this.updateSliderValue(urgency)}
           />
-          {/* <View style={styles.switchContainer}>
-            <Text style={styles.switchText}>Get Help!</Text>
-            <Switch
-              thumbColor="#1c76cb"
-              onValueChange={getHelp => {
-                this.setState({
-                  incident: {
-                    ...this.state.incident,
-                    getHelp: getHelp,
-                  },
-                });
-              }}
-              value={this.state.incident.getHelp}
-            />
-          </View>
-          <View style={styles.switchContainer}>
-            <Text style={styles.switchText}>Share Publicly!</Text>
-            <Switch
-              thumbColor="#1c76cb"
-              onValueChange={visible => {
-                this.setState({
-                  incident: {
-                    ...this.state.incident,
-                    visible: visible,
-                  },
-                });
-              }}
-              value={this.state.incident.visible}
-            />
-          </View> */}
           {this.props.incident.loading && (
             <ActivityIndicator size="large" color="black" />
           )}

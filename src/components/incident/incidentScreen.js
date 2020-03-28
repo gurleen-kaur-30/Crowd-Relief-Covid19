@@ -171,6 +171,16 @@ class Incident extends Component {
             </Card>
             <Card style={styles.card}>
               <CardItem>
+                <Text style={styles.titleTextHeader}>Urgency</Text>
+              </CardItem>
+              <CardItem>
+                <Text style={styles.titleTextDescription}>
+                  {incidentDetails.urgency}
+                </Text>
+              </CardItem>
+            </Card>
+            <Card style={styles.card}>
+              <CardItem>
                 <Text style={styles.titleTextHeader}>Title</Text>
               </CardItem>
               <CardItem>
