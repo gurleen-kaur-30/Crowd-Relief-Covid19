@@ -70,7 +70,7 @@ class HomeLogin extends Component {
         type: 'success',
         duration: 2000,
       });
-      Actions.profile();
+      Actions.mapFeed();
     }
   }
 

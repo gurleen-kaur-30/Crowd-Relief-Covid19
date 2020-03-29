@@ -28,7 +28,7 @@ import getDirections from 'react-native-google-maps-directions';
 import {Actions} from 'react-native-router-flux';
 import DeleteButtonIncident from './navBarButtons/deleteIncident.js';
 import EditButtonIncident from './navBarButtons/editIncidentButton.js';
-import ShareButtonIncident from './navBarButtons/shareIncidentButton.js';
+// import ShareButtonIncident from './navBarButtons/shareIncidentButton.js';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {getIndvIncident} from '../../actions/incidentsAction.js';
 import IconDirection from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -133,7 +133,7 @@ class Incident extends Component {
             <Right>
               <EditButtonIncident key={1} />
               <DeleteButtonIncident key={2} toggleLoader={this.toggleLoader} />
-              <ShareButtonIncident key={3} />
+              {/* <ShareButtonIncident key={3} /> */}
             </Right>
           </Header>
           <ScrollView

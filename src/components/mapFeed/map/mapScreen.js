@@ -9,17 +9,16 @@ import {
   Image,
 } from 'react-native';
 import {Header, Left, Body} from 'native-base';
-import {Marker} from 'react-native-maps';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {Actions} from 'react-native-router-flux';
 import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import getDirections from 'react-native-google-maps-directions';
 import Config from 'react-native-config';
 import MapContainer from './mapContainer';
 import {getMarkerImage, categories} from '../../../utils/categoryUtil.js';
 import {setLocationOnCustomSearch} from '../../../actions/locationAction';
+import {watchCurrLocation} from '../../../actions/locationAction';
 import {
   getAllIncidents,
   updateIndvNotification,
@@ -37,6 +36,7 @@ import {
 } from '../../../actions/emergencyPlacesAction';
 var PushNotification = require('react-native-push-notification');
 var haversine = require('haversine-distance');
+import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
 
 /**
  * Map screen showing google maps with search location and add incident feature
@@ -54,6 +54,27 @@ class MapScreen extends Component {
     this.props.getAllIncidents();
     this.props.getEmergencyPlaces(this.props.settings.emergency_radius);
     this.props.getAllItems();
+    //Used to check if location services are enabled and
+    //if not than asks to enables them by redirecting to location settings.
+    if (Platform.OS === 'android') {
+      // LocationServicesDialogBox.checkLocationServicesIsEnabled({
+      //   message:
+      //     '<h2>Please enable GPS!</h2>\
+      //       CrowdAlert wants to change your Location settings',
+      //   ok: 'Ok',
+      //   cancel: 'No',
+      //   providerListener: true,
+      // }).then(success => {
+      //   this.props.watchCurrLocation();
+      // });
+      RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({
+        interval: 10000,
+        fastInterval: 5000,
+      }).then(data => {
+        this.props.watchCurrLocation();
+      });
+    }
+    this.props.watchCurrLocation();
   }
 
   UNSAFE_componentWillUpdate(nextProps) {
@@ -269,6 +290,7 @@ MapScreen.propTypes = {
   getAllIncidents: PropTypes.func.isRequired,
   getAllItems: PropTypes.func.isRequired,
   getEmergencyPlaces: PropTypes.func.isRequired,
+  watchCurrLocation: PropTypes.func.isRequired,
   updateShow: PropTypes.func.isRequired,
   updateIndvNotification: PropTypes.func.isRequired,
 };
@@ -289,6 +311,7 @@ function matchDispatchToProps(dispatch) {
       updateShow: updateShow,
       updateDomain: updateDomain,
       updateIndvNotification: updateIndvNotification,
+      watchCurrLocation: watchCurrLocation,
     },
     dispatch,
   );
