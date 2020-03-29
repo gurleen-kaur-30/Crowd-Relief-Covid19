@@ -1,21 +1,27 @@
 import {
-	LATEST_INCIDENT_ADDED,
-	ALL_INCIDENTS,
-	INCIDENTS_LOADING,
-	USERS_INCIDENTS,
-	VIEW_INCIDENT,
-	NOTIFICATION_INCIDENTS,
-	TOGGLE_DOMAINS
+  LATEST_INCIDENT_ADDED,
+  ALL_INCIDENTS,
+  INCIDENTS_LOADING,
+  USERS_INCIDENTS,
+  VIEW_INCIDENT,
+  NOTIFICATION_INCIDENTS,
+  TOGGLE_DOMAINS,
+  TOGGLE_NEARBY_CONTRIBUTE,
+  TOGGLE_NEARBY_RELIEF,
 } from '../actions/types';
 
 const INITIAL_STATE = {
-	all_incidents: null,
-	loading: false,
-	user_incidents: null,
-	incident: null,
-	isLoggedIn: false,
-	notificationStack: {},
-	domain: 'all'
+  all_incidents: null,
+  loading: false,
+  user_incidents: null,
+  incident: null,
+  isLoggedIn: false,
+  notificationStack: {},
+  domain: 'all',
+  nearby: {
+    relief: false,
+    contribute: false,
+  },
 };
 
 /**
@@ -27,44 +33,54 @@ const INITIAL_STATE = {
  * @return {state} Based on action the function changes the state and rerenders
  */
 export default function(state = INITIAL_STATE, action) {
-	let result = Object.assign({}, state);
-	switch (action.type) {
-		case LATEST_INCIDENT_ADDED:
-			return {
-				...result
-			};
-		case ALL_INCIDENTS:
-			return {
-				...result,
-				all_incidents: action.all_incidents
-			};
-		case INCIDENTS_LOADING:
-			return {
-				...result,
-				loading: action.loading
-			};
-		case USERS_INCIDENTS:
-			return {
-				...result,
-				user_incidents: action.user_incidents
-			};
-		case VIEW_INCIDENT:
-			return {
-				...result,
-				incident: action.incident,
-				isLoggedIn: action.isLoggedIn
-			};
-		case NOTIFICATION_INCIDENTS:
-			return {
-				...result,
-				notificationStack: action.notificationStack
-			};
-		case TOGGLE_DOMAINS:
-			return {
-				...result,
-				domain: action.domain
-			};
-		default:
-			return state;
-	}
+  let result = Object.assign({}, state);
+  switch (action.type) {
+    case LATEST_INCIDENT_ADDED:
+      return {
+        ...result,
+      };
+    case ALL_INCIDENTS:
+      return {
+        ...result,
+        all_incidents: action.all_incidents,
+      };
+    case INCIDENTS_LOADING:
+      return {
+        ...result,
+        loading: action.loading,
+      };
+    case USERS_INCIDENTS:
+      return {
+        ...result,
+        user_incidents: action.user_incidents,
+      };
+    case VIEW_INCIDENT:
+      return {
+        ...result,
+        incident: action.incident,
+        isLoggedIn: action.isLoggedIn,
+      };
+    case NOTIFICATION_INCIDENTS:
+      return {
+        ...result,
+        notificationStack: action.notificationStack,
+      };
+    case TOGGLE_DOMAINS:
+      return {
+        ...result,
+        domain: action.domain,
+      };
+    case TOGGLE_NEARBY_CONTRIBUTE:
+      return {
+        ...result,
+        nearby: action.nearby,
+      };
+    case TOGGLE_NEARBY_RELIEF:
+      return {
+        ...result,
+        nearby: action.nearby,
+      };
+    default:
+      return state;
+  }
 }

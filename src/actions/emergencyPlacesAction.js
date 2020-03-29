@@ -76,16 +76,12 @@ export const getEmergencyPlaces = radius => {
 
 export const updateShow = bool => {
   return dispatch => {
-    dispatch(updateShowHelper(bool));
+    dispatch({
+      type: TOGGLE_EMERGENCY_PLACES,
+      show: bool,
+    });
   };
 };
-
-export function updateShowHelper(bool) {
-  return {
-    type: TOGGLE_EMERGENCY_PLACES,
-    show: bool,
-  };
-}
 
 /**
  * Updates list of hospitals found near a user to redux store.

@@ -22,6 +22,8 @@ import {
   getAllIncidents,
   updateIndvNotification,
   updateDomain,
+  updateNearbyContributeToggle,
+  updateNearbyReliefToggle,
 } from '../../../actions/incidentsAction';
 import {getAllItems} from '../../../actions/itemsActions';
 import {styles, searchBarStyle} from '../../../assets/styles/map_styles.js';
@@ -205,20 +207,31 @@ class MapScreen extends Component {
       <View>
         <Text>Show nearby relief places</Text>
         <CheckBox
-        // value={this.props.emergencyPlaces.show}
-        // onValueChange={() =>
-        //   this.props.updateShow(!this.props.emergencyPlaces.show)
-        // }
+          value={this.props.incident.nearby.relief}
+          onValueChange={() =>
+            this.props.updateNearbyReliefToggle(
+              !this.props.incident.nearby.relief,
+            )
+          }
         />
       </View>
       <View>
         <Text>Show nearby contribute places</Text>
         <CheckBox
-        // value={this.props.emergencyPlaces.show}
-        // onValueChange={() =>
-        //   this.props.updateShow(!this.props.emergencyPlaces.show)
-        // }
+          value={this.props.incident.nearby.contribute}
+          onValueChange={() =>
+            this.props.updateNearbyContributeToggle(
+              !this.props.incident.nearby.contribute,
+            )
+          }
         />
+      </View>
+      <View>
+        <TouchableOpacity
+          style={filterStyles.field}
+          onPress={() => this.closeModal()}>
+          <Text style={filterStyles.text}> Apply </Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -329,6 +342,8 @@ function matchDispatchToProps(dispatch) {
       getEmergencyPlaces: getEmergencyPlaces,
       updateShow: updateShow,
       updateDomain: updateDomain,
+      updateNearbyReliefToggle: updateNearbyReliefToggle,
+      updateNearbyContributeToggle: updateNearbyContributeToggle,
       updateIndvNotification: updateIndvNotification,
       watchCurrLocation: watchCurrLocation,
     },

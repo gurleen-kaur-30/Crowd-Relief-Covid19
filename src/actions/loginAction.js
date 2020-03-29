@@ -290,20 +290,11 @@ export const updateUserFirebase = userDetails => {
  */
 export const logout = () => {
   return dispatch => {
-    dispatch(logoutHelper());
+    dispatch({
+      type: SIGN_OUT,
+    });
   };
 };
-
-/**
- * Adds the personal user details to the redux store
- * @param {JSON} details Details of the user
- * @return returns type and user details.
- */
-function logoutHelper() {
-  return {
-    type: SIGN_OUT,
-  };
-}
 
 /**
  * Adds the personal user details to the redux store
