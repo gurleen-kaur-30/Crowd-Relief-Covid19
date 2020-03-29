@@ -202,6 +202,8 @@ dependencies {
     }
     
     implementation 'com.facebook.fresco:fresco:2.1.0'
+    implementation 'com.facebook.fresco:animated-gif:2.0.0'
+
     implementation 'com.google.android.gms:play-services-base:17.2.1'
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation "com.google.firebase:firebase-firestore:19.0.0"

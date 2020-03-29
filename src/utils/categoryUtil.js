@@ -1,11 +1,7 @@
 // Import all the Images for each category
-const road_marker = require('../assets/images/map/road.png');
-const health_marker = require('../assets/images/map/medical-icon.png');
-const fire_marker = require('../assets/images/map/fire.png');
-const flood_marker = require('../assets/images/map/floods_marker_100.png');
-const electric_marker = require('../assets/images/map/electric_marker_100.png');
-const earthquake_marker = require('../assets/images/map/earthquakes.png');
-const all_marker = require('../assets/images/map/disaster.png');
+const all_marker = require('../assets/images/map/all.png');
+const relief_marker = require('../assets/images/map/relief.png');
+const contribute_marker = require('../assets/images/map/donation.png');
 
 // Defing properties for the categories of incidents
 const categories = {
@@ -17,13 +13,13 @@ const categories = {
   relief: {
     title: 'Relief',
     category: 'relief',
-    image: road_marker,
+    image: relief_marker,
     color: '#2c3e50',
   },
   contribute: {
     title: 'Contribution',
     category: 'contribute',
-    image: fire_marker,
+    image: contribute_marker,
     color: '#ed810e',
   },
 };

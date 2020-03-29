@@ -7,7 +7,7 @@ export default class SplashScreen extends Component {
     return (
       <View style={styles.container}>
         <Image
-          source={require('../assets/images/ngo_relief.png')}
+          source={require('../assets/images/app_icon.png')}
           style={styles.logo}
         />
       </View>
