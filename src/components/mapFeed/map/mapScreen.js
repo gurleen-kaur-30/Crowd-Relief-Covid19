@@ -4,7 +4,6 @@ import {
   View,
   TouchableHighlight,
   TouchableOpacity,
-  CheckBox,
   Modal,
   Image,
 } from 'react-native';
@@ -37,6 +36,7 @@ import {
 var PushNotification = require('react-native-push-notification');
 var haversine = require('haversine-distance');
 import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
+import CheckBox from '@react-native-community/checkbox';
 
 /**
  * Map screen showing google maps with search location and add incident feature
@@ -202,6 +202,24 @@ class MapScreen extends Component {
           }
         />
       </View>
+      <View>
+        <Text>Show nearby relief places</Text>
+        <CheckBox
+        // value={this.props.emergencyPlaces.show}
+        // onValueChange={() =>
+        //   this.props.updateShow(!this.props.emergencyPlaces.show)
+        // }
+        />
+      </View>
+      <View>
+        <Text>Show nearby contribute places</Text>
+        <CheckBox
+        // value={this.props.emergencyPlaces.show}
+        // onValueChange={() =>
+        //   this.props.updateShow(!this.props.emergencyPlaces.show)
+        // }
+        />
+      </View>
     </View>
   );
 
@@ -222,57 +240,58 @@ class MapScreen extends Component {
           </Text>
         </View>
       );
+    } else {
+      return (
+        <View style={styles.container}>
+          <MapContainer />
+          <TouchableHighlight
+            underlayColor="#005b4f"
+            style={styles.filterButton}
+            onPress={() => this.openModal()}>
+            <Icon name="filter" size={27} style={styles.fabButtonIcon} />
+          </TouchableHighlight>
+          <TouchableOpacity
+            activeOpacity={0.5}
+            style={styles.addIncidentButton}
+            onPress={() => Actions.addIncident()}>
+            <Icon name="plus" size={30} style={styles.fabButtonIcon} />
+          </TouchableOpacity>
+          <Modal
+            visible={this.state.visibleModal}
+            onRequestClose={() => {
+              this.closeModal();
+            }}>
+            {this._renderModalContent()}
+          </Modal>
+          <GooglePlacesAutocomplete
+            minLength={2}
+            listViewDisplayed="auto"
+            autoFocus={false}
+            returnKeyType={'search'}
+            fetchDetails={true}
+            query={{
+              key: Config.GOOGLE_MAPS_KEY,
+              language: 'en',
+            }}
+            textInputProps={{
+              clearButtonMode: 'never',
+              ref: input => {
+                this.textInput = input;
+              },
+            }}
+            onPress={(data, details = null) => {
+              this.props.setLocationOnCustomSearch(
+                details.geometry.location.lat,
+                details.geometry.location.lng,
+                details.name,
+              );
+            }}
+            styles={searchBarStyle}
+            renderLeftButton={() => SideDrawer()}
+          />
+        </View>
+      );
     }
-    return (
-      <View style={styles.container}>
-        <MapContainer />
-        <TouchableHighlight
-          underlayColor="#005b4f"
-          style={styles.filterButton}
-          onPress={() => this.openModal()}>
-          <Icon name="filter" size={27} style={styles.fabButtonIcon} />
-        </TouchableHighlight>
-        <TouchableOpacity
-          activeOpacity={0.5}
-          style={styles.addIncidentButton}
-          onPress={() => Actions.addIncident()}>
-          <Icon name="plus" size={30} style={styles.fabButtonIcon} />
-        </TouchableOpacity>
-        <Modal
-          visible={this.state.visibleModal}
-          onRequestClose={() => {
-            this.closeModal();
-          }}>
-          {this._renderModalContent()}
-        </Modal>
-        <GooglePlacesAutocomplete
-          minLength={2}
-          listViewDisplayed="auto"
-          autoFocus={false}
-          returnKeyType={'search'}
-          fetchDetails={true}
-          query={{
-            key: Config.GOOGLE_MAPS_KEY,
-            language: 'en',
-          }}
-          textInputProps={{
-            clearButtonMode: 'never',
-            ref: input => {
-              this.textInput = input;
-            },
-          }}
-          onPress={(data, details = null) => {
-            this.props.setLocationOnCustomSearch(
-              details.geometry.location.lat,
-              details.geometry.location.lng,
-              details.name,
-            );
-          }}
-          styles={searchBarStyle}
-          renderLeftButton={() => SideDrawer()}
-        />
-      </View>
-    );
   }
 }
 

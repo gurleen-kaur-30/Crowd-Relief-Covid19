@@ -188,8 +188,8 @@ class MapContainer extends Component {
    */
   _createRegions(region, incidents, emergencyPlaces) {
     // clustering of incidents
-    const clusterIncident = this._createCluster(incidents);
     var itemsIncident = null;
+    const clusterIncident = this._createCluster(incidents);
     itemsIncident = clusterIncident.getClusters(
       [
         this.southwest.longitude,

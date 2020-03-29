@@ -9,7 +9,7 @@ const INITIAL_STATE = {
   loading: true,
   hospitals: null,
   policeStations: null,
-  show: true,
+  show: false,
 };
 
 /**
