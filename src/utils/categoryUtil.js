@@ -10,7 +10,7 @@ const all_marker = require('../assets/images/map/disaster.png');
 // Defing properties for the categories of incidents
 const categories = {
   all: {
-    title: 'All Incidents',
+    title: 'All Events',
     category: 'all',
     image: all_marker,
   },
@@ -21,7 +21,7 @@ const categories = {
     color: '#2c3e50',
   },
   contribute: {
-    title: 'Contribute',
+    title: 'Contribution',
     category: 'contribute',
     image: fire_marker,
     color: '#ed810e',

@@ -178,10 +178,13 @@ class MapScreen extends Component {
           </TouchableOpacity>
         </Left>
         <Body>
-          <Text style={filterStyles.title}>Select Incident to filter </Text>
+          <Text style={filterStyles.title}>Filter</Text>
         </Body>
       </Header>
       <View style={filterStyles.listView}>
+        <Text style={filterStyles.filterText}>
+          Choose event to filter or show on the map
+        </Text>
         {Object.keys(categories).map((key, index) => (
           <TouchableOpacity
             key={categories[key].category}
@@ -195,18 +198,22 @@ class MapScreen extends Component {
           </TouchableOpacity>
         ))}
       </View>
-      <View>
-        <Text>Show EmergencyPlaces</Text>
+      <View style={filterStyles.checkboxContainer}>
+        <Text style={filterStyles.check_box_text}>Show EmergencyPlaces</Text>
         <CheckBox
+          style={filterStyles.check_box}
           value={this.props.emergencyPlaces.show}
           onValueChange={() =>
             this.props.updateShow(!this.props.emergencyPlaces.show)
           }
         />
       </View>
-      <View>
-        <Text>Show nearby relief places</Text>
+      <View style={filterStyles.checkboxContainer}>
+        <Text style={filterStyles.check_box_text}>
+          Show nearby relief places
+        </Text>
         <CheckBox
+          style={filterStyles.check_box}
           value={this.props.incident.nearby.relief}
           onValueChange={() =>
             this.props.updateNearbyReliefToggle(
@@ -215,9 +222,12 @@ class MapScreen extends Component {
           }
         />
       </View>
-      <View>
-        <Text>Show nearby contribute places</Text>
+      <View style={filterStyles.checkboxContainer}>
+        <Text style={filterStyles.check_box_text}>
+          Show nearby contribute places
+        </Text>
         <CheckBox
+          style={filterStyles.check_box}
           value={this.props.incident.nearby.contribute}
           onValueChange={() =>
             this.props.updateNearbyContributeToggle(
@@ -226,11 +236,11 @@ class MapScreen extends Component {
           }
         />
       </View>
-      <View>
+      <View style={filterStyles.applyTextContainerOuter}>
         <TouchableOpacity
-          style={filterStyles.field}
+          style={filterStyles.applyTextContainer}
           onPress={() => this.closeModal()}>
-          <Text style={filterStyles.text}> Apply </Text>
+          <Text style={filterStyles.applyText}>Apply</Text>
         </TouchableOpacity>
       </View>
     </View>

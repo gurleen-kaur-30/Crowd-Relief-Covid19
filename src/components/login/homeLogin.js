@@ -98,10 +98,10 @@ class HomeLogin extends Component {
       <View style={styles.container}>
         <View style={styles.heading}>
           <Image
-            source={require('../../assets/images/earthquake.png')}
+            source={require('../../assets/images/ngo_relief.png')}
             style={styles.logo}
           />
-          <Text style={styles.welcome}> Crowd Alert </Text>
+          <Text style={styles.welcome}> Crowd Relief </Text>
         </View>
         {this.props.login.loading ? (
           <ActivityIndicator size={'large'} color="white" />

@@ -161,10 +161,10 @@ export const getUserIncidents = userID => {
 export const viewIncident = (incident, isLoggedIn) => {
   return dispatch => {
     dispatch({
-    type: VIEW_INCIDENT,
-    incident: incident,
-    isLoggedIn: isLoggedIn,
-  );
+      type: VIEW_INCIDENT,
+      incident: incident,
+      isLoggedIn: isLoggedIn,
+    });
   };
 };
 

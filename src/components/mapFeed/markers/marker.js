@@ -58,7 +58,7 @@ class MapMarker extends Component {
     const coords = item.geometry.coordinates;
 
     //If the marker is hospital or police station.
-    if ('name' in item.properties) {
+    if (this.props.type === 'emergencyPlaces') {
       return (
         <MapView.Marker
           coordinate={{
@@ -73,8 +73,28 @@ class MapMarker extends Component {
           }}
         />
       );
-    } else {
-      // If the marker is an incident.
+    } else if (this.props.type === 'relief') {
+      // If the marker is an relief.
+      return (
+        <MapView.Marker
+          coordinate={{
+            latitude: coords[1],
+            longitude: coords[0],
+          }}
+          pinColor={getColor(item.properties.incident.value.category)}
+          title={item.properties.incident.value.title}
+          description={item.properties.incident.value.details}
+          onCalloutPress={() => {
+            this.viewClickedIncident(item.properties.incident);
+          }}>
+          {/* <Image
+            source={getMarkerImage(item.properties.incident.value.category)}
+            style={styles.markerIcon}
+          /> */}
+        </MapView.Marker>
+      );
+    } else if (this.props.type === 'contribute') {
+      // If the marker is an contribute.
       return (
         <MapView.Marker
           coordinate={{

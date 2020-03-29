@@ -405,6 +405,7 @@ class MapContainer extends Component {
   }
 
   render() {
+    console.log(this.state);
     return (
       <View style={styles.map}>
         <MapView
@@ -419,26 +420,26 @@ class MapContainer extends Component {
           {/* Maps relief */}
           {this.state.clustersRelief.map((item, i) =>
             item.properties.cluster === true ? (
-              <Cluster key={i} item={item} type={'incidents'} />
+              <Cluster key={i} item={item} type={'relief'} />
             ) : (
-              <MapMarker key={i} item={item} />
+              <MapMarker key={i} item={item} type={'relief'} />
             ),
           )}
           {/* Maps contribute */}
           {this.state.clustersContribute.map((item, i) =>
             item.properties.cluster === true ? (
-              <Cluster key={i} item={item} type={'incidents'} />
+              <Cluster key={i} item={item} type={'contribute'} />
             ) : (
-              <MapMarker key={i} item={item} />
+              <MapMarker key={i} item={item} type={'contribute'} />
             ),
           )}
           {/* Maps emergency places */}
           {this.props.emergencyPlaces.show ? (
             this.state.clustersPlaces.map((item, i) =>
               item.properties.cluster === true ? (
-                <Cluster key={i} item={item} type={'places'} />
+                <Cluster key={i} item={item} type={'emergencyPlaces'} />
               ) : (
-                <MapMarker key={i} item={item} />
+                <MapMarker key={i} item={item} type={'emergencyPlaces'} />
               ),
             )
           ) : (
