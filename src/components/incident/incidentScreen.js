@@ -215,20 +215,44 @@ class Incident extends Component {
                         placeholder={item.name}
                         editable={false}
                         placeholderTextColor={'black'}
+                        style={styles.itemName}
                       />
                       <TextInput
                         placeholder={item.quantity}
                         editable={false}
                         placeholderTextColor={'black'}
+                        style = {styles.itemQuantity}
                       />
                       <TextInput
                         placeholder={item.unit}
                         editable={false}
                         placeholderTextColor={'black'}
+                        style = {styles.itemUnits}
                       />
-                    </View>
-                  );
-                })}
+                      {incidentDetails.category != "contribute"?
+                        item.status == 1?
+                        <Text style={[styles.statusText, {color : "green"}]}>
+                            delivered
+                        </Text>
+                        :
+                        <Text style={[styles.statusText, {color : "orange"}]}>
+                            required
+                        </Text>
+                        :
+                        item.status == 1?
+                        <Text style={[styles.statusText, {color : "green"}]}>
+                          picked
+                        </Text>
+                        :
+                        <Text style={[styles.statusText, {color : "orange"}]}>
+                            to be picked 
+                        </Text>
+                        }
+
+                      
+                            </View>
+                          );
+                      })}
             </Card>
 
             <Card style={styles.card}>
