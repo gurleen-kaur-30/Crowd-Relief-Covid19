@@ -124,9 +124,10 @@ class AddIncident extends Component {
       // }) 
 
       this.state.selectedCheckList.map((obj) => {
-          let item = {name : "" , quantity : "" , units : ""}
+          let item = {name : "" , quantity : "" , units : "", status: ""}
           item.name = obj.key
           item.quantity = obj.value.quantity
+          item.status = 0
 
           this.state.units.map((unit) => {
             if(unit.item == obj){
@@ -142,7 +143,7 @@ class AddIncident extends Component {
         incident: {
           ...this.state.incident,
           items : items,
-          category: "required"
+          category: this.props.category
         }
       }, () => {
 
@@ -209,7 +210,12 @@ class AddIncident extends Component {
             </TouchableOpacity>
           </Left>
           <Body>
+            {this.props.category == "required"?
             <Text style={styles.requirementTitle}>Add Requirement</Text>
+            :
+            <Text style={styles.requirementTitle}>Add Relief</Text>
+            }
+
           </Body>
         </Header>
         <ScrollView
@@ -239,7 +245,11 @@ class AddIncident extends Component {
             </TouchableOpacity>
           </View>
           <View style={styles.textInputHeadingContainer}>
+            {this.props.category == "required"?
             <Text style={styles.textInputHeading}>Requirement Title</Text>
+            :
+            <Text style={styles.textInputHeading}>Relief Title</Text>
+            }
           </View>
 
           <TextInput
@@ -300,14 +310,27 @@ class AddIncident extends Component {
                   placeholder={"units"}
                   onChangeText={(text) => this.addUnits(text,item) }
                 />
-                {this.state.selectedCheckList.includes(item)?
+                {this.props.category == "required" && this.state.selectedCheckList.includes(item)?
                 item.status == 1?
-                 <Text style={styles.statusText}>
-                   delivered
+                <Text style={[styles.statusText, {color : "green"}]}>
+                    delivered
                 </Text>
                 :
-                <Text style={styles.statusText}>
+                <Text style={[styles.statusText, {color : "orange"}]}>
                     not delivered
+                </Text>
+                :
+                null
+                }
+
+                {this.props.category == "relief" && this.state.selectedCheckList.includes(item)?
+                item.status == 1?
+                 <Text style={[styles.statusText, {color : "green"}]}>
+                   picked
+                </Text>
+                :
+                <Text style={[styles.statusText, {color : "orange"}]}>
+                    to be picked 
                 </Text>
                 :
                 null
