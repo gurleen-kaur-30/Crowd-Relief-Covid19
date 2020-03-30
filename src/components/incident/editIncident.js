@@ -32,20 +32,33 @@ class EditIncident extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      changedUnits:[],
-      checkboxlist: this.props.incidentDetails.items,
-      details: this.props.incidentDetails.details,
-      action: this.props.incidentDetails.action,
-      urgency: this.props.incidentDetails.urgency,
-      category: this.props.incidentDetails.category,
-      items: this.props.incidentDetails.items,
-      image: {
-        isPresent: this.props.incidentDetails.image.isPresent,
-        base64: this.props.incidentDetails.image.base64,
-        uri: this.props.incidentDetails.image.uri,
-      },
-      itemsNew: []
+      checkboxList: [],
+      incident: this.props.incidentDetails,
+      metaItems: this.props.incidentDetails.items,
     };
+  }
+
+  UNSAFE_componentWillMount() {
+    var a = [];
+    this.props.items.all_items.forEach(function(item) {
+      a.push({
+        name: item.key,
+        quantity: item.value.quantity,
+        unit: null,
+        status: 0,
+        include: false,
+      });
+    });
+    this.state.incident.items.forEach(function(item) {
+      a.forEach(function(item2) {
+        if (item.name === item2.name) {
+          item2.unit = item.unit;
+          item2.status = item.status;
+          item2.include = item.include;
+        }
+      });
+    });
+    this.setState({checkboxList: a});
   }
 
   /**
@@ -63,15 +76,12 @@ class EditIncident extends Component {
     });
   }
 
-  shouldComponentUpdate(nextProps, nextState){
-     return this.props.incident !== nextProps.incident
-  }
   /**
    * Validates the details of the incident
    * to make sure it has correct information
    */
   validateDetails() {
-    let {details} = this.state,
+    let {details} = this.state.incident,
       error = null;
 
     if (!details || details.length <= 10) {
@@ -92,16 +102,67 @@ class EditIncident extends Component {
    * Performs update
    */
   update = () => {
+    if (this.props.action) {
+      var items = this.state.metaItems;
+      var count = 0;
+      var new_action = '';
+      var visible = this.state.incident.visible;
+      items.forEach(function(item) {
+        if (item.change) {
+          item.unit = (parseInt(item.unit) - parseInt(item.change)).toString();
+          if (parseInt(item.unit) <= 0) {
+            item.status = 1;
+            item.unit = '0';
+            count += 1;
+          }
+          delete item.change;
+        }
+      });
+      if (count == items.length) {
+        if (this.state.incident.category == 'contribute') {
+          new_action = 'picked';
+        } else {
+          new_action = 'delivered';
+        }
+        visible = false;
+      } else {
+        if (this.state.incident.category == 'contribute') {
+          new_action = 'to_be_picked';
+        } else {
+          new_action = 'required';
+        }
+      }
+      this.setState({
+        incident: {
+          ...this.state.incident,
+          items: items,
+          action: new_action,
+          visible: visible,
+        },
+      });
+    } else {
+      var items2store = this.state.checkboxList.filter(function(item) {
+        if (item.include) {
+          return true;
+        }
+      });
+      this.setState({
+        incident: {
+          ...this.state.incident,
+          items: items2store,
+        },
+      });
+    }
+
     Promise.resolve(
       this.props.updateIncidentFirebase(
         this.props.incident.incident.key,
-        this.state,
+        this.state.incident,
       ),
     ).then(() => {
       this.showToast('Incident updated!', 'success');
       Actions.pop();
     });
-    this.setState({items: this.state.itemsNew})
   };
 
   /**
@@ -112,23 +173,23 @@ class EditIncident extends Component {
     // if (!this.validateTitle() || !this.validateDetails()) {
     //   return;
     // } else {
-      Alert.alert(
-        '',
-        'Do you want to update the incident details?',
-        [
-          {
-            text: 'No',
-            onPress: () => {},
-            style: 'cancel',
-          },
-          {
-            text: 'Yes',
-            onPress: this.update,
-          },
-        ],
-        {cancelable: false},
-      );
-    }
+    Alert.alert(
+      '',
+      'Do you want to update the incident details?',
+      [
+        {
+          text: 'No',
+          onPress: () => {},
+          style: 'cancel',
+        },
+        {
+          text: 'Yes',
+          onPress: this.update,
+        },
+      ],
+      {cancelable: false},
+    );
+  }
 
   /**
    * This function provides options for adding incident image, and updates the image object.
@@ -161,42 +222,40 @@ class EditIncident extends Component {
     });
   }
 
-  changeUnits(units, item){
-    let items = this.state.items
-    items.splice(items.indexOf(item),1)
-    item.unit = (parseInt(item.unit) - parseInt(units)).toString()
-    if (parseInt(item.unit) <= 0){
-      item.status = 1;
-      item.unit = "0";
-    }
-    items.push(item)
+  changeUnits(units, item) {
+    console.log(units, item);
+    let items = this.state.metaItems;
+
+    items[items.indexOf(item)]['change'] = units;
+    console.log(items);
     this.setState({
-      itemsNew : items
-    })
+      metaItems: items,
+    });
   }
+
+  addValues = (inputItem, index, index2) => {
+    let dataArray = this.state.checkboxList;
+    console.log(inputItem, index, index2);
+    let item = dataArray[index];
+    if (index2 == 0) {
+      item.include = inputItem;
+    } else if (index2 == 1) {
+      item.unit = inputItem;
+    }
+    dataArray[index] = item;
+    this.setState({
+      checkboxList: dataArray,
+    });
+    console.log(this.state.checkboxList);
+  };
 
   render() {
     console.log('state', this.state);
     console.log(this.props.action);
-    let pickers;
-    if (this.state.category == 'contribute') {
-      if (this.props.action) {
-        pickers = [<Picker.Item label="Picked" value="picked" key="picked" />];
-      } else {
-        pickers = [
-          <Picker.Item label="To be picked" value="to_pick" key="to_pick" />,
-        ];
-      }
+    if (this.props.action) {
+      var items = this.state.incident.items;
     } else {
-      if (this.props.action) {
-        pickers = [
-          <Picker.Item label="Delivered" value="delivered" key="delivered" />,
-        ];
-      } else {
-        pickers = [
-          <Picker.Item label="Required" value="required" key="required" />,
-        ];
-      }
+      var items = this.state.checkboxList;
     }
     return (
       <View style={styles.container}>
@@ -210,20 +269,22 @@ class EditIncident extends Component {
           </Left>
           <Body>
             <Text style={styles.title}>
-              Edit {this.state.category} Incident
+              Edit {this.state.incident.category} Incident
             </Text>
           </Body>
         </Header>
         <ScrollView
           keyboardShouldPersistTaps="always"
           showsVerticalScrollIndicator={false}>
-          {this.state.image.isPresent ? (
+          {this.state.incident.image.isPresent ? (
             <View style={styles.avatarContainer}>
               <Image
                 style={styles.image}
                 resizeMethod={'resize'}
                 source={{
-                  uri: 'data:image/jpeg;base64, ' + this.state.image.base64,
+                  uri:
+                    'data:image/jpeg;base64, ' +
+                    this.state.incident.image.base64,
                 }}
               />
               <TouchableOpacity onPress={() => this._cameraImage()}>
@@ -239,16 +300,10 @@ class EditIncident extends Component {
           )}
 
           <View style={styles.textInputHeadingContainer}>
-            <Text style={styles.textInputHeading}>Action to be taken</Text>
+            <Text style={styles.textInputHeading}>
+              Current Action: {this.state.incident.action}
+            </Text>
           </View>
-          <Picker
-            selectedValue={this.state.action}
-            onValueChange={action => {
-              this.setState({action});
-            }}
-            style={styles.picker}>
-            {pickers}
-          </Picker>
           <View style={styles.textInputHeadingContainer}>
             <Text style={styles.textInputHeading}>Incident Details</Text>
           </View>
@@ -260,7 +315,7 @@ class EditIncident extends Component {
             returnKeyType="next"
             style={[styles.textInput, {height: 100}]}
             placeholder="Description"
-            value={this.state.details}
+            value={this.state.incident.details}
             editable={!this.props.action}
           />
           {this.props.action ? (
@@ -271,8 +326,8 @@ class EditIncident extends Component {
                 Urgency on a scale of 5
               </Text>
               <Picker
-                value={this.state.urgency}
-                selectedValue={this.state.urgency}
+                value={this.state.incident.urgency}
+                selectedValue={this.state.incident.urgency}
                 onValueChange={urgency => {
                   this.setState({urgency});
                 }}
@@ -292,67 +347,66 @@ class EditIncident extends Component {
           <View style={styles.textInputHeadingContainer}>
             <Text style={styles.textInputHeading}>Items</Text>
           </View>
-          <View style={[styles.itemsRow, {marginLeft: -15}]}> 
-              <View style = {styles.checkbox}/>
-              <Text style= {styles.itemName}> Name </Text>
-              <Text style= {[styles.itemQuantity]}> Quantity </Text>
-              {this.state.category=="contribute"?
-                <Text style= {[styles.itemUnits]}> Units available</Text>
-                : <Text style= {styles.itemUnits}> Units required</Text>
-              }
-              {this.props.action? 
-                this.state.category=="contribute"?
-                <Text style={styles.itemUnits}> units picked </Text>
-                :
-                <Text style={[styles.itemUnits]}> units delivered </Text> 
-              :
-              null
-              }
-              
-
-          </View>
-          {this.props.incident.incident.value.items &&
-                this.props.incident.incident.value.items.map((item, index) => {
-                  return (
-                    <View style={styles.itemsRow} key={index}>
-                      {!this.props.action?
-                      <CheckBox
-                        style={styles.checkbox}
-                        color="#3a54ff"
-                        value={this.state.checkboxlist.includes(item)}
-                        // onValueChange={val => this.addValues(val, index, 0)}
-                      />
-                      :
-                      null
-                      }
-                      <TextInput
-                        placeholder={item.name}
-                        placeholderTextColor={'black'}
-                        style={styles.itemName}
-                      />
-                      <TextInput
-                        placeholder={item.quantity}
-                        placeholderTextColor={'black'}
-                        style={styles.itemQuantity}
-                      />
-                      <TextInput
-                        placeholder={item.unit}
-                        placeholderTextColor={'black'}
-                        style={styles.itemUnits}
-                      />
-                      {this.props.action?
-                      <TextInput
-                        placeholder={"units"}
-                        placeholderTextColor={'black'}
-                        style={[styles.itemUnits, {borderWidth: 1, height: 27, width: 30, marginTop: 10, paddingTop: -10, paddingBottom: -10}]}
-                        onChangeText={(text) => this.changeUnits(text, item)}
-                      />
-                      :
-                      null
-                      }
-                    </View>
-                  );
-                })}
+          {this.props.action ? (
+            <View style={[styles.itemsRow]}>
+              <Text style={styles.itemName}> Items </Text>
+              <Text style={styles.itemUnits}>Units</Text>
+              {this.props.action ? (
+                this.state.incident.category == 'contribute' ? (
+                  <Text style={styles.itemUnits}> Units picked </Text>
+                ) : (
+                  <Text style={styles.itemUnits}> Units delivered </Text>
+                )
+              ) : null}
+            </View>
+          ) : (
+            <View></View>
+          )}
+          {items &&
+            items.map((item, index) => {
+              return (
+                <View style={styles.itemsRow} key={index}>
+                  {!this.props.action ? (
+                    <CheckBox
+                      style={styles.checkbox}
+                      color="#3a54ff"
+                      value={this.state.checkboxList[index].include}
+                      onValueChange={val => this.addValues(val, index, 0)}
+                    />
+                  ) : null}
+                  <Text style={styles.checkboxTitle}>
+                    {item.name} ( {item.quantity} )
+                  </Text>
+                  <TextInput
+                    keyboardType={'numeric'}
+                    placeholder={item.unit ? item.unit : 'unit'}
+                    placeholderTextColor={item.unit ? 'black' : null}
+                    style={styles.units}
+                    editable={!this.props.action}
+                    onChangeText={text => this.addValues(text, index, 1)}
+                  />
+                  {this.props.action ? (
+                    <TextInput
+                      placeholder={'units'}
+                      keyboardType="numeric"
+                      placeholderTextColor={'black'}
+                      style={[
+                        styles.itemUnits,
+                        {
+                          borderWidth: 1,
+                          height: 27,
+                          width: 30,
+                          marginTop: 10,
+                          paddingTop: -10,
+                          paddingBottom: -10,
+                        },
+                      ]}
+                      onChangeText={text => this.changeUnits(text, item)}
+                    />
+                  ) : null}
+                </View>
+              );
+            })}
           {this.props.incident.loading && (
             <ActivityIndicator size="large" color="black" />
           )}
@@ -401,6 +455,7 @@ function matchDispatchToProps(dispatch) {
 const mapStateToProps = state => ({
   incidentDetails: state.incident.incident.value,
   incident: state.incident,
+  items: state.items,
 });
 
 export default connect(mapStateToProps, matchDispatchToProps)(EditIncident);

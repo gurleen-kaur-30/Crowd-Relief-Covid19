@@ -6,10 +6,10 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  picker: {
-    marginVertical: height / 100,
-    marginHorizontal: width / 30,
-  },
+  // picker: {
+  //   marginVertical: height / 100,
+  //   marginHorizontal: width / 30,
+  // },
   urgencypicker: {
     marginVertical: height / 100,
     marginHorizontal: width / 30,
@@ -44,11 +44,11 @@ export const styles = StyleSheet.create({
     fontSize: 20,
     color: '#fff',
   },
-  textInput: {
-    width: width * 0.9,
-    marginLeft: width / 20,
-    paddingTop: height / 300,
-  },
+  // textInput: {
+  //   width: width * 0.9,
+  //   marginLeft: width / 20,
+  //   paddingTop: height / 300,
+  // },
   textInputHeadingContainer: {
     marginLeft: width / 20,
     paddingTop: height / 40,
@@ -57,18 +57,6 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   textInputHeading: {
-    color: '#555',
-    fontWeight: 'bold',
-    fontSize: 17,
-  },
-  switchContainer: {
-    flexDirection: 'row',
-    marginHorizontal: width / 20,
-    paddingTop: height / 40,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  switchText: {
     color: '#555',
     fontWeight: 'bold',
     fontSize: 17,
@@ -88,48 +76,55 @@ export const styles = StyleSheet.create({
     flex: 10,
     flexDirection: 'row',
     paddingTop: height / 25,
-    marginHorizontal: 25
+    marginHorizontal: width / 20,
   },
-  buttonView: {
-    flexDirection: 'row',
-  },
+  // buttonView: {
+  //   flexDirection: 'row',
+  // },
   textInput: {
-      height: 40,
-      borderColor: 'black', 
-      borderWidth: 1,
-      margin: 20
+    height: 40,
+    borderColor: 'black',
+    borderWidth: 1,
+    margin: 20,
   },
-  row:{
-      flexDirection: 'row',
-      justifyContent: 'center'
-  },
-  name:{
-      height: height/20,
-      width: width/4.5,
-      borderColor: 'black', 
-      borderWidth: 1,
-      paddingLeft: width/50,
-      paddingTop: width/50
-  },
-  pickerStyle:{
-    width: width/4.3,
-    height: height/20,
-    borderColor: 'black', 
-  },
-  checkbox:{
+  // row: {
+  //   flexDirection: 'row',
+  //   justifyContent: 'center',
+  // },
+  // name: {
+  //   height: height / 20,
+  //   width: width / 4.5,
+  //   borderColor: 'black',
+  //   borderWidth: 1,
+  //   paddingLeft: width / 50,
+  //   paddingTop: width / 50,
+  // },
+  checkbox: {
     flex: 1,
-    marginTop: 10
+    marginTop: 10,
   },
-  itemName:{
+  checkboxTitle: {
+    fontFamily: 'ProductSans-Regular',
+    color: '#464646',
+    marginLeft: 8,
+    flex: 6,
+  },
+  itemName: {
+    flex: 4,
+    alignSelf: 'flex-start',
+  },
+  itemUnits: {
     flex: 3,
-    alignSelf: "flex-start"
+    alignContent: 'flex-end',
   },
-  itemQuantity:{
-    flex: 3,
-    alignContent: "center"
+  units: {
+    height: height / 20,
+    width: width / 4,
+    borderColor: 'black',
+    borderWidth: 1,
+    paddingLeft: width / 60,
+    paddingTop: 6,
+    fontSize: 16,
+    flex: 1,
   },
-  itemUnits:{
-    flex : 3,
-    alignContent: "center"
-  }
 });
