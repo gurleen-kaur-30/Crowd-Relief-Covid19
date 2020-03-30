@@ -215,11 +215,7 @@ class MapScreen extends Component {
         <CheckBox
           style={filterStyles.check_box}
           value={this.props.incident.nearby.relief}
-          onValueChange={() =>
-            this.props.updateNearbyReliefToggle(
-              !this.props.incident.nearby.relief,
-            )
-          }
+          onValueChange={bool => this.props.updateNearbyReliefToggle(bool)}
         />
       </View>
       <View style={filterStyles.checkboxContainer}>
@@ -229,11 +225,7 @@ class MapScreen extends Component {
         <CheckBox
           style={filterStyles.check_box}
           value={this.props.incident.nearby.contribute}
-          onValueChange={() =>
-            this.props.updateNearbyContributeToggle(
-              !this.props.incident.nearby.contribute,
-            )
-          }
+          onValueChange={bool => this.props.updateNearbyContributeToggle(bool)}
         />
       </View>
       <View style={filterStyles.applyTextContainerOuter}>

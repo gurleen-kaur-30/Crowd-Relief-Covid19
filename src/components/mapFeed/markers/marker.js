@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {Image, Alert} from 'react-native';
 import MapView from 'react-native-maps';
 import {getMarkerImage, getMarkerColor} from '../../../utils/categoryUtil.js';
 import {connect} from 'react-redux';
@@ -51,6 +52,31 @@ class MapMarker extends Component {
     });
   }
 
+  handleMarkerClick(item) {
+    if (this.props.type === 'relief') {
+      var s = 'deliver';
+    } else if (this.props.type === 'contribute') {
+      var s = 'pick up';
+    }
+    Alert.alert(
+      '',
+      'Do you want to view or ' + String(s) + ' ?',
+      [
+        {
+          text: 'View',
+          onPress: () => {
+            this.viewClickedIncident(item.properties.incident);
+          },
+        },
+        {
+          text: s,
+          onPress: () => {},
+        },
+      ],
+      {cancelable: true},
+    );
+  }
+
   render() {
     var item = this.props.item;
     const coords = item.geometry.coordinates;
@@ -81,10 +107,9 @@ class MapMarker extends Component {
             longitude: coords[0],
           }}
           pinColor={markerColor}
-          title={item.properties.incident.value.title}
           description={item.properties.incident.value.details}
-          onCalloutPress={() => {
-            this.viewClickedIncident(item.properties.incident);
+          onPress={() => {
+            this.handleMarkerClick(item);
           }}>
           {/* <Image
             source={getMarkerImage(item.properties.incident.value.category)}
@@ -101,10 +126,9 @@ class MapMarker extends Component {
             longitude: coords[0],
           }}
           pinColor={markerColor}
-          title={item.properties.incident.value.title}
           description={item.properties.incident.value.details}
-          onCalloutPress={() => {
-            this.viewClickedIncident(item.properties.incident);
+          onPress={() => {
+            this.handleMarkerClick(item);
           }}>
           {/* <Image
             source={getMarkerImage(item.properties.incident.value.category)}

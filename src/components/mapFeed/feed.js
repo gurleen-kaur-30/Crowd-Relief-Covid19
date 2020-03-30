@@ -94,7 +94,6 @@ class FeedScreen extends Component {
           <Text style={styles.time}>{rowData.time.time}</Text>
         </View>
         <View style={styles.infoContainer}>
-          <Text style={styles.title}>{rowData.title}</Text>
           <Text numberOfLines={2} style={styles.details}>
             {rowData.description}
           </Text>
@@ -110,7 +109,6 @@ class FeedScreen extends Component {
       this.props.incident.all_incidents.map(incident => {
         all_incidents.push({
           time: this.getTime(incident.value.timestamp),
-          title: incident.value.title,
           description: incident.value.details,
           key: incident.key,
           icon: getMarkerImage(incident.value.category),

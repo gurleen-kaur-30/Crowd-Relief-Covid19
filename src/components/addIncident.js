@@ -164,7 +164,6 @@ class AddIncident extends Component {
     }
 
     if (
-      this.state.incident.title === null ||
       this.state.incident.details === null ||
       this.state.incident.category === null ||
       this.state.incident.action === null

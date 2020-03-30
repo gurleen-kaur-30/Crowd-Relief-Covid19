@@ -76,7 +76,6 @@ export const getAllIncidents = () => {
               all_incidents.push({
                 key: child.key,
                 value: {
-                  title: child.val().title,
                   action: child.val().action,
                   urgency: child.val().urgency,
                   items: child.val().items,
@@ -133,7 +132,6 @@ export const getUserIncidents = userID => {
             incident.push({
               key: child.key,
               value: {
-                title: child.val().title,
                 action: child.val().action,
                 urgency: child.val().urgency,
                 details: child.val().details,

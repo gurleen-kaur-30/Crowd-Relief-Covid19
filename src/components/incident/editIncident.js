@@ -9,7 +9,7 @@ import {
   TextInput,
   ActivityIndicator,
   Picker,
-  Button
+  Button,
 } from 'react-native';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
@@ -21,7 +21,7 @@ import PropTypes from 'prop-types';
 import {updateIncidentFirebase} from '../../actions/incidentsAction';
 import ImagePicker from 'react-native-image-picker';
 import {Toast} from 'native-base';
-import Icon1 from 'react-native-vector-icons/MaterialIcons'
+import Icon1 from 'react-native-vector-icons/MaterialIcons';
 
 /**
  * Screen showing the edit options for the profile and personal information.
@@ -31,12 +31,11 @@ class EditIncident extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      title: this.props.incidentDetails.title,
       details: this.props.incidentDetails.details,
       action: this.props.incidentDetails.action,
       urgency: this.props.incidentDetails.urgency,
       category: this.props.incidentDetails.category,
-      items: this.props.incidentDetails.items,  
+      items: this.props.incidentDetails.items,
       image: {
         isPresent: this.props.incidentDetails.image.isPresent,
         base64: this.props.incidentDetails.image.base64,
@@ -44,9 +43,9 @@ class EditIncident extends Component {
       },
     };
 
-    this.state2={
-      itemsCopy : this.state.items
-    }
+    this.state2 = {
+      itemsCopy: this.state.items,
+    };
   }
 
   /**
@@ -65,30 +64,7 @@ class EditIncident extends Component {
   }
 
   componentWillUnmount() {
-    this.setState({itemsCopy: this.state.items})
-  }
-
-  /**
-   * Validates the title to make sure it has correct information
-   */
-  validateTitle() {
-    let {title} = this.state,
-      error = null;
-
-    if (!title || title.length <= 3) {
-      error = 'Title should be 3 or more characters';
-    }
-    // Checks for alpha numeric
-    // else if (!/^[a-z0-9\s]+$/i.test(title)) {
-    //   error = 'Title can contain only alphabets and numbers';
-    // }
-
-    if (!error) {
-      return true;
-    }
-
-    this.showToast(error);
-    return false;
+    this.setState({itemsCopy: this.state.items});
   }
 
   /**
@@ -117,7 +93,7 @@ class EditIncident extends Component {
    * Performs update
    */
   update = () => {
-    this.setState({items: itemsCopy}, () =>{
+    this.setState({items: itemsCopy}, () => {
       Promise.resolve(
         this.props.updateIncidentFirebase(
           this.props.incident.incident.key,
@@ -127,7 +103,7 @@ class EditIncident extends Component {
         this.showToast('Incident updated!', 'success');
         Actions.pop();
       });
-    })
+    });
   };
 
   /**
@@ -214,14 +190,13 @@ class EditIncident extends Component {
     this.setState({items: dataArray}, console.log(this.state.items));
   };
 
-  removeTextInput = (index) => {
+  removeTextInput = index => {
     let inputData = this.state2.itemsCopy;
     inputData.splice(index, 1);
     this.setState({
-     itemsCopy: inputData
+      itemsCopy: inputData,
     });
   };
-
 
   render() {
     console.log('items', this.state.items);
@@ -287,18 +262,6 @@ class EditIncident extends Component {
             {pickers}
           </Picker>
           <View style={styles.textInputHeadingContainer}>
-            <Text style={styles.textInputHeading}>Incident Title</Text>
-          </View>
-          <TextInput
-            ref={input => (this.titleInput = input)}
-            onChangeText={title => this.setState({title})}
-            onSubmitEditing={() => this.detailsInput.focus()}
-            returnKeyType="next"
-            style={styles.textInput}
-            placeholder="Title"
-            value={this.state.title}
-          />
-          <View style={styles.textInputHeadingContainer}>
             <Text style={styles.textInputHeading}>Incident Details</Text>
           </View>
           <TextInput
@@ -336,50 +299,55 @@ class EditIncident extends Component {
           <View style={styles.textInputHeadingContainer}>
             <Text style={styles.textInputHeading}>Items</Text>
           </View>
-          {this.state2.itemsCopy && this.state2.itemsCopy.map( (item, index) => {
-            return(
-              <View style={styles.itemsRow}>
-            <TextInput
-              key={index}  
-              onChangeText={text => this.updateValues(text, index, 0)}
-              // onSubmitEditing={() => this.detailsInput.focus()}
-              keyboardType="email-address"
-              returnKeyType="next"
-              placeholder={item.name}
-              style={styles.name}
-              placeholderTextColor={"black"}
-            />
-            <TextInput 
-              ref={input => (this.titleInput = input)}
-              key={String(index) + '1'}
-              style={styles.name} 
-              keyboardType={'numeric'}
-              onChangeText={text => this.updateValues(text, index, 1)}
-              // onSubmitEditing={() => this.detailsInput.focus()}
-              returnKeyType="next"
-              placeholder={item.quantity}
-              placeholderTextColor={"black"}
-            />
-            <Picker
-                selectedValue={item.unit}
-                onValueChange={unit => {
-                  this.updateValues(unit, index, 2);
-                }}
-                style={styles.pickerStyle}>
-                <Picker.Item label="Unit" value="unit" />
-                <Picker.Item label="kg" value="kg" />
-                <Picker.Item label="gm" value="gm" />
-                <Picker.Item label="ltr" value="ltr" />
-                <Picker.Item label="ml" value="ml" />
-            </Picker>
-            <Icon1 name={"remove-circle"} onPress={()=>this.removeTextInput(index)} color="red" size={30}/>
-            {/* <Button title='-' style={styles.removeButton} onPress={() => this.removeTextInput(index)} /> */}
-            </View>
-            )
-          })
-        }
-           
-         {/* <View style={styles.switchContainer}>
+          {this.state2.itemsCopy &&
+            this.state2.itemsCopy.map((item, index) => {
+              return (
+                <View style={styles.itemsRow}>
+                  <TextInput
+                    key={index}
+                    onChangeText={text => this.updateValues(text, index, 0)}
+                    // onSubmitEditing={() => this.detailsInput.focus()}
+                    keyboardType="email-address"
+                    returnKeyType="next"
+                    placeholder={item.name}
+                    style={styles.name}
+                    placeholderTextColor={'black'}
+                  />
+                  <TextInput
+                    ref={input => (this.titleInput = input)}
+                    key={String(index) + '1'}
+                    style={styles.name}
+                    keyboardType={'numeric'}
+                    onChangeText={text => this.updateValues(text, index, 1)}
+                    // onSubmitEditing={() => this.detailsInput.focus()}
+                    returnKeyType="next"
+                    placeholder={item.quantity}
+                    placeholderTextColor={'black'}
+                  />
+                  <Picker
+                    selectedValue={item.unit}
+                    onValueChange={unit => {
+                      this.updateValues(unit, index, 2);
+                    }}
+                    style={styles.pickerStyle}>
+                    <Picker.Item label="Unit" value="unit" />
+                    <Picker.Item label="kg" value="kg" />
+                    <Picker.Item label="gm" value="gm" />
+                    <Picker.Item label="ltr" value="ltr" />
+                    <Picker.Item label="ml" value="ml" />
+                  </Picker>
+                  <Icon1
+                    name={'remove-circle'}
+                    onPress={() => this.removeTextInput(index)}
+                    color="red"
+                    size={30}
+                  />
+                  {/* <Button title='-' style={styles.removeButton} onPress={() => this.removeTextInput(index)} /> */}
+                </View>
+              );
+            })}
+
+          {/* <View style={styles.switchContainer}>
             <Text style={styles.switchText}>Get Help!</Text>
             <Switch
               thumbColor="#1c76cb"
