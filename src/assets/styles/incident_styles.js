@@ -76,10 +76,11 @@ export const styles = StyleSheet.create({
     right: 10,
   },
   itemsRow:{
-    flex: 1,
+    flex: 8,
     flexDirection: 'row',
     justifyContent: 'space-evenly',
-    paddingTop: height/25
+    paddingTop: height/25,
+    marginLeft: 20
    },
     buttonView: {
     flexDirection: 'row'
@@ -102,5 +103,24 @@ export const styles = StyleSheet.create({
       paddingLeft: width/50,
       paddingTop: width/50,
       color:"black"
+    },
+
+    itemName:{
+      fontSize: 18,
+      flex: 2
+    },
+    itemQuantity:{
+      fontSize: 18,
+      flex: 2
+    },
+    itemUnits:{
+      fontSize: 18,
+      flex: 2
+    },
+    statusText:{
+      marginTop: 13,
+      fontSize: 14,
+      flex : 2,
+      marginRight: 10
     }
 });
