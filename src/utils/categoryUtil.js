@@ -4,7 +4,7 @@ const relief_marker = require('../assets/images/map/relief.png');
 const contribute_marker = require('../assets/images/map/donation.png');
 
 // Defing properties for the categories of incidents
-const categories = {
+export const categories = {
   all: {
     title: 'All Events',
     category: 'all',
@@ -14,24 +14,50 @@ const categories = {
     title: 'Relief',
     category: 'relief',
     image: relief_marker,
-    color: '#2c3e50',
   },
   contribute: {
     title: 'Contribution',
     category: 'contribute',
     image: contribute_marker,
-    color: '#ed810e',
   },
 };
+
+export const marker = {
+  emergencyPlaces: {
+    colors: {
+      cluster: {
+        outer: 'rgba(0,0,0,0.25)',
+        inner: 'rgba(0,0,0,1)',
+      },
+      point: 'rgba',
+    },
+  },
+  relief: {
+    colors: {
+      cluster: {
+        outer: 'rgba(180,0,0,0.25)',
+        inner: 'rgba(180,0,0,1)',
+      },
+      point: 'rgba(180,0,0,1)',
+    },
+  },
+  contribute: {
+    colors: {
+      cluster: {
+        outer: 'rgba(78, 186, 170,0.25)',
+        inner: 'rgba(78, 186, 170,1)',
+      },
+      point: 'rgba(78, 186, 170,1)',
+    },
+  },
+};
+
+// Get image for the given category
+export function getMarkerColor(category, type) {
+  return marker[category].colors[type];
+}
 
 // Get image for the given category
 export function getMarkerImage(category) {
   return categories[category].image;
 }
-
-// Get color for the given category
-export function getColor(category) {
-  return categories[category].color;
-}
-
-export {categories};

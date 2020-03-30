@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import GeoJSON from 'geojson';
 import supercluster from 'supercluster';
-import {View, TouchableOpacity, Keyboard, Platform} from 'react-native';
+import {View, TouchableOpacity, Keyboard, Platform, Image} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MapView, {Marker, AnimatedRegion} from 'react-native-maps';
 import MapMarker from '../markers/marker';
@@ -10,6 +10,7 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import {styles, searchBarStyle} from '../../../assets/styles/map_styles.js';
 var haversine = require('haversine-distance');
+import {styles as markerStyle} from '../../../assets/styles/clusterMarker_styles';
 
 /**
  * Main Map screen along with the relocation button.
@@ -457,8 +458,12 @@ class MapContainer extends Component {
                     longitude: this.props.curr_location.longitude,
                   }
                 : this.state.coordinate
-            }
-          />
+            }>
+            <Image
+              source={require('../../../assets/images/marker.png')}
+              style={markerStyle.markerIcon}
+            />
+          </Marker.Animated>
         </MapView>
 
         {/* Relocation Button */}

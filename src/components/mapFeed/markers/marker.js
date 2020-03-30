@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
-import {View, Text, Image} from 'react-native';
 import MapView from 'react-native-maps';
-import {bindActionCreators} from 'redux';
-import {getMarkerImage, getColor} from '../../../utils/categoryUtil.js';
+import {getMarkerImage, getMarkerColor} from '../../../utils/categoryUtil.js';
 import {connect} from 'react-redux';
 import {Actions} from 'react-native-router-flux';
 import getDirections from 'react-native-google-maps-directions';
@@ -56,6 +54,7 @@ class MapMarker extends Component {
   render() {
     var item = this.props.item;
     const coords = item.geometry.coordinates;
+    var markerColor = getMarkerColor(this.props.type, 'point');
 
     //If the marker is hospital or police station.
     if (this.props.type === 'emergencyPlaces') {
@@ -81,7 +80,7 @@ class MapMarker extends Component {
             latitude: coords[1],
             longitude: coords[0],
           }}
-          pinColor={getColor(item.properties.incident.value.category)}
+          pinColor={markerColor}
           title={item.properties.incident.value.title}
           description={item.properties.incident.value.details}
           onCalloutPress={() => {
@@ -101,7 +100,7 @@ class MapMarker extends Component {
             latitude: coords[1],
             longitude: coords[0],
           }}
-          pinColor={getColor(item.properties.incident.value.category)}
+          pinColor={markerColor}
           title={item.properties.incident.value.title}
           description={item.properties.incident.value.details}
           onCalloutPress={() => {

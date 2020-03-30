@@ -20,25 +20,6 @@ export const styles = StyleSheet.create({
     fontSize: 12,
     color: 'white',
   },
-  colorEmergencyPlaces: {
-    backgroundColor: 'rgba(0,0,0,1)',
-  },
-  colorEmergencyPlacesOuter: {
-    backgroundColor: 'rgba(0,0,0, 0.25)',
-  },
-  colorContribute: {
-    backgroundColor: 'rgba(36, 191, 52,1)',
-  },
-  colorContributeOuter: {
-    backgroundColor: 'rgba(36, 191, 52, 0.25)',
-  },
-
-  colorRelief: {
-    backgroundColor: 'rgba(180,0,0,1)',
-  },
-  colorReliefOuter: {
-    backgroundColor: 'rgba(180,0,0, 0.25)',
-  },
   markerIcon: {
     height: 40,
     width: 40,

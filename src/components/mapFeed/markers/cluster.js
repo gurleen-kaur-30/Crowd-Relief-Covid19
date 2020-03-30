@@ -3,6 +3,7 @@ import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import MapView from 'react-native-maps';
 import {styles} from '../../../assets/styles/clusterMarker_styles';
 import PropTypes from 'prop-types';
+import {getMarkerColor} from '../../../utils/categoryUtil.js';
 
 /**
  * It displays the individual cluster on the map.
@@ -14,6 +15,7 @@ import PropTypes from 'prop-types';
 export default Cluster = ({item, type}) => {
   const {point_count, cluster_id} = item.properties;
   const coords = item.geometry.coordinates;
+  var clusterColor = getMarkerColor(type, 'cluster');
 
   return (
     <MapView.Marker
@@ -23,23 +25,8 @@ export default Cluster = ({item, type}) => {
         console.log(item);
       }}>
       <View
-        style={[
-          styles.clusterOuter,
-          type === 'emergencyPlaces'
-            ? styles.colorEmergencyPlacesOuter
-            : type === 'relief'
-            ? styles.colorReliefOuter
-            : styles.colorContributeOuter,
-        ]}>
-        <View
-          style={[
-            styles.cluster,
-            type === 'emergencyPlaces'
-              ? styles.colorEmergencyPlaces
-              : type === 'relief'
-              ? styles.colorRelief
-              : styles.colorContribute,
-          ]}>
+        style={[styles.clusterOuter, {backgroundColor: clusterColor.outer}]}>
+        <View style={[styles.cluster, {backgroundColor: clusterColor.inner}]}>
           <TouchableOpacity>
             <Text style={styles.clusterText}>{point_count}</Text>
           </TouchableOpacity>
