@@ -2,31 +2,28 @@ import React, {Component} from 'react';
 import {
   Text,
   View,
-  Platform,
   TouchableHighlight,
   TouchableOpacity,
-  Keyboard,
-  ActivityIndicator,
-  Picker,
   Modal,
   Image,
 } from 'react-native';
 import {Header, Left, Body} from 'native-base';
-import {Marker} from 'react-native-maps';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {Actions} from 'react-native-router-flux';
 import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import getDirections from 'react-native-google-maps-directions';
 import Config from 'react-native-config';
 import MapContainer from './mapContainer';
 import {getMarkerImage, categories} from '../../../utils/categoryUtil.js';
 import {setLocationOnCustomSearch} from '../../../actions/locationAction';
+import {watchCurrLocation} from '../../../actions/locationAction';
 import {
   getAllIncidents,
   updateIndvNotification,
   updateDomain,
+  updateNearbyContributeToggle,
+  updateNearbyReliefToggle,
 } from '../../../actions/incidentsAction';
 import {getAllItems} from '../../../actions/itemsActions';
 import {styles, searchBarStyle} from '../../../assets/styles/map_styles.js';
@@ -34,9 +31,14 @@ import {styles as filterStyles} from '../../../assets/styles/filter_styles';
 import {styles as loadingStyle} from '../../../assets/styles/mapFeed_styles';
 import {GooglePlacesAutocomplete} from '../../googleSearchBar';
 import {SideDrawer} from '../../sideMenu';
-import {getEmergencyPlaces} from '../../../actions/emergencyPlacesAction';
+import {
+  getEmergencyPlaces,
+  updateShow,
+} from '../../../actions/emergencyPlacesAction';
 var PushNotification = require('react-native-push-notification');
 var haversine = require('haversine-distance');
+import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
+import CheckBox from '@react-native-community/checkbox';
 
 /**
  * Map screen showing google maps with search location and add incident feature
@@ -54,6 +56,27 @@ class MapScreen extends Component {
     this.props.getAllIncidents();
     this.props.getEmergencyPlaces(this.props.settings.emergency_radius);
     this.props.getAllItems();
+    //Used to check if location services are enabled and
+    //if not than asks to enables them by redirecting to location settings.
+    if (Platform.OS === 'android') {
+      // LocationServicesDialogBox.checkLocationServicesIsEnabled({
+      //   message:
+      //     '<h2>Please enable GPS!</h2>\
+      //       CrowdAlert wants to change your Location settings',
+      //   ok: 'Ok',
+      //   cancel: 'No',
+      //   providerListener: true,
+      // }).then(success => {
+      //   this.props.watchCurrLocation();
+      // });
+      RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({
+        interval: 10000,
+        fastInterval: 5000,
+      }).then(data => {
+        this.props.watchCurrLocation();
+      });
+    }
+    this.props.watchCurrLocation();
   }
 
   UNSAFE_componentWillUpdate(nextProps) {
@@ -155,10 +178,13 @@ class MapScreen extends Component {
           </TouchableOpacity>
         </Left>
         <Body>
-          <Text style={filterStyles.title}>Select Incident to filter </Text>
+          <Text style={filterStyles.title}>Filter</Text>
         </Body>
       </Header>
       <View style={filterStyles.listView}>
+        <Text style={filterStyles.filterText}>
+          Choose event to filter or show on the map
+        </Text>
         {Object.keys(categories).map((key, index) => (
           <TouchableOpacity
             key={categories[key].category}
@@ -171,6 +197,51 @@ class MapScreen extends Component {
             <Text style={filterStyles.text}> {categories[key].title} </Text>
           </TouchableOpacity>
         ))}
+      </View>
+      <View style={filterStyles.checkboxContainer}>
+        <Text style={filterStyles.check_box_text}>Show EmergencyPlaces</Text>
+        <CheckBox
+          style={filterStyles.check_box}
+          value={this.props.emergencyPlaces.show}
+          onValueChange={() =>
+            this.props.updateShow(!this.props.emergencyPlaces.show)
+          }
+        />
+      </View>
+      <View style={filterStyles.checkboxContainer}>
+        <Text style={filterStyles.check_box_text}>
+          Show nearby relief places
+        </Text>
+        <CheckBox
+          style={filterStyles.check_box}
+          value={this.props.incident.nearby.relief}
+          onValueChange={() =>
+            this.props.updateNearbyReliefToggle(
+              !this.props.incident.nearby.relief,
+            )
+          }
+        />
+      </View>
+      <View style={filterStyles.checkboxContainer}>
+        <Text style={filterStyles.check_box_text}>
+          Show nearby contribute places
+        </Text>
+        <CheckBox
+          style={filterStyles.check_box}
+          value={this.props.incident.nearby.contribute}
+          onValueChange={() =>
+            this.props.updateNearbyContributeToggle(
+              !this.props.incident.nearby.contribute,
+            )
+          }
+        />
+      </View>
+      <View style={filterStyles.applyTextContainerOuter}>
+        <TouchableOpacity
+          style={filterStyles.applyTextContainer}
+          onPress={() => this.closeModal()}>
+          <Text style={filterStyles.applyText}>Apply</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -192,57 +263,58 @@ class MapScreen extends Component {
           </Text>
         </View>
       );
+    } else {
+      return (
+        <View style={styles.container}>
+          <MapContainer />
+          <TouchableHighlight
+            underlayColor="#005b4f"
+            style={styles.filterButton}
+            onPress={() => this.openModal()}>
+            <Icon name="filter" size={27} style={styles.fabButtonIcon} />
+          </TouchableHighlight>
+          <TouchableOpacity
+            activeOpacity={0.5}
+            style={styles.addIncidentButton}
+            onPress={() => Actions.addIncident()}>
+            <Icon name="plus" size={30} style={styles.fabButtonIcon} />
+          </TouchableOpacity>
+          <Modal
+            visible={this.state.visibleModal}
+            onRequestClose={() => {
+              this.closeModal();
+            }}>
+            {this._renderModalContent()}
+          </Modal>
+          <GooglePlacesAutocomplete
+            minLength={2}
+            listViewDisplayed="auto"
+            autoFocus={false}
+            returnKeyType={'search'}
+            fetchDetails={true}
+            query={{
+              key: Config.GOOGLE_MAPS_KEY,
+              language: 'en',
+            }}
+            textInputProps={{
+              clearButtonMode: 'never',
+              ref: input => {
+                this.textInput = input;
+              },
+            }}
+            onPress={(data, details = null) => {
+              this.props.setLocationOnCustomSearch(
+                details.geometry.location.lat,
+                details.geometry.location.lng,
+                details.name,
+              );
+            }}
+            styles={searchBarStyle}
+            renderLeftButton={() => SideDrawer()}
+          />
+        </View>
+      );
     }
-    return (
-      <View style={styles.container}>
-        <MapContainer />
-        <TouchableHighlight
-          underlayColor="#005b4f"
-          style={styles.filterButton}
-          onPress={() => this.openModal()}>
-          <Icon name="filter" size={27} style={styles.fabButtonIcon} />
-        </TouchableHighlight>
-        <TouchableOpacity
-          activeOpacity={0.5}
-          style={styles.addIncidentButton}
-          onPress={() => Actions.addIncident()}>
-          <Icon name="plus" size={30} style={styles.fabButtonIcon} />
-        </TouchableOpacity>
-        <Modal
-          visible={this.state.visibleModal}
-          onRequestClose={() => {
-            this.closeModal();
-          }}>
-          {this._renderModalContent()}
-        </Modal>
-        <GooglePlacesAutocomplete
-          minLength={2}
-          listViewDisplayed="auto"
-          autoFocus={false}
-          returnKeyType={'search'}
-          fetchDetails={true}
-          query={{
-            key: Config.GOOGLE_MAPS_KEY,
-            language: 'en',
-          }}
-          textInputProps={{
-            clearButtonMode: 'never',
-            ref: input => {
-              this.textInput = input;
-            },
-          }}
-          onPress={(data, details = null) => {
-            this.props.setLocationOnCustomSearch(
-              details.geometry.location.lat,
-              details.geometry.location.lng,
-              details.name,
-            );
-          }}
-          styles={searchBarStyle}
-          renderLeftButton={() => SideDrawer()}
-        />
-      </View>
-    );
   }
 }
 
@@ -260,6 +332,8 @@ MapScreen.propTypes = {
   getAllIncidents: PropTypes.func.isRequired,
   getAllItems: PropTypes.func.isRequired,
   getEmergencyPlaces: PropTypes.func.isRequired,
+  watchCurrLocation: PropTypes.func.isRequired,
+  updateShow: PropTypes.func.isRequired,
   updateIndvNotification: PropTypes.func.isRequired,
 };
 
@@ -276,8 +350,12 @@ function matchDispatchToProps(dispatch) {
       getAllIncidents: getAllIncidents,
       getAllItems: getAllItems,
       getEmergencyPlaces: getEmergencyPlaces,
+      updateShow: updateShow,
       updateDomain: updateDomain,
+      updateNearbyReliefToggle: updateNearbyReliefToggle,
+      updateNearbyContributeToggle: updateNearbyContributeToggle,
       updateIndvNotification: updateIndvNotification,
+      watchCurrLocation: watchCurrLocation,
     },
     dispatch,
   );

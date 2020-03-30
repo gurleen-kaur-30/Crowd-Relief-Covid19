@@ -1,41 +1,63 @@
 // Import all the Images for each category
-const road_marker = require('../assets/images/map/road.png');
-const health_marker = require('../assets/images/map/medical-icon.png');
-const fire_marker = require('../assets/images/map/fire.png');
-const flood_marker = require('../assets/images/map/floods_marker_100.png');
-const electric_marker = require('../assets/images/map/electric_marker_100.png');
-const earthquake_marker = require('../assets/images/map/earthquakes.png');
-const all_marker = require('../assets/images/map/disaster.png');
+const all_marker = require('../assets/images/map/all.png');
+const relief_marker = require('../assets/images/map/relief.png');
+const contribute_marker = require('../assets/images/map/donation.png');
 
 // Defing properties for the categories of incidents
-const categories = {
+export const categories = {
   all: {
-    title: 'All Incidents',
+    title: 'All Events',
     category: 'all',
     image: all_marker,
   },
   relief: {
     title: 'Relief',
     category: 'relief',
-    image: road_marker,
-    color: '#2c3e50',
+    image: relief_marker,
   },
   contribute: {
-    title: 'Contribute',
+    title: 'Contribution',
     category: 'contribute',
-    image: fire_marker,
-    color: '#ed810e',
+    image: contribute_marker,
   },
 };
+
+export const marker = {
+  emergencyPlaces: {
+    colors: {
+      cluster: {
+        outer: 'rgba(0,0,0,0.25)',
+        inner: 'rgba(0,0,0,1)',
+      },
+      point: 'rgba',
+    },
+  },
+  relief: {
+    colors: {
+      cluster: {
+        outer: 'rgba(180,0,0,0.25)',
+        inner: 'rgba(180,0,0,1)',
+      },
+      point: 'rgba(180,0,0,1)',
+    },
+  },
+  contribute: {
+    colors: {
+      cluster: {
+        outer: 'rgba(78, 186, 170,0.25)',
+        inner: 'rgba(78, 186, 170,1)',
+      },
+      point: 'rgba(78, 186, 170,1)',
+    },
+  },
+};
+
+// Get image for the given category
+export function getMarkerColor(category, type) {
+  return marker[category].colors[type];
+}
 
 // Get image for the given category
 export function getMarkerImage(category) {
   return categories[category].image;
 }
-
-// Get color for the given category
-export function getColor(category) {
-  return categories[category].color;
-}
-
-export {categories};

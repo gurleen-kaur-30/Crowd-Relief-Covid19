@@ -4,12 +4,10 @@ import {
   Text,
   View,
   ScrollView,
-  TouchableOpacity,
   TouchableHighlight,
   ActivityIndicator,
   FlatList,
   Platform,
-  SafeAreaView,
 } from 'react-native';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
@@ -18,7 +16,6 @@ import {styles} from '../../assets/styles/profile_styles';
 import PropTypes from 'prop-types';
 import {getUserIncidents} from '../../actions/incidentsAction';
 import {watchCurrLocation} from '../../actions/locationAction';
-import {getColor} from '../../utils/categoryUtil';
 var PushNotification = require('react-native-push-notification');
 import {Header, Title, Left, Body} from 'native-base';
 import {SideDrawer} from '../sideMenu';
@@ -51,9 +48,8 @@ class Profile extends Component {
       }).then(data => {
         this.props.watchCurrLocation();
       });
-    } else {
-      this.props.watchCurrLocation();
     }
+    this.props.watchCurrLocation();
 
     //Configures the push notification
     PushNotification.configure({

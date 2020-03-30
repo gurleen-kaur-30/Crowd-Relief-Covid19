@@ -1,21 +1,16 @@
 import React, {Component} from 'react';
 import GeoJSON from 'geojson';
 import supercluster from 'supercluster';
-import {
-  ActivityIndicator,
-  View,
-  TouchableOpacity,
-  Keyboard,
-  Platform,
-} from 'react-native';
+import {View, TouchableOpacity, Keyboard, Platform, Image} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MapView, {Marker, AnimatedRegion} from 'react-native-maps';
 import MapMarker from '../markers/marker';
 import Cluster from '../markers/cluster';
 import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
 import PropTypes from 'prop-types';
 import {styles, searchBarStyle} from '../../../assets/styles/map_styles.js';
+var haversine = require('haversine-distance');
+import {styles as markerStyle} from '../../../assets/styles/clusterMarker_styles';
 
 /**
  * Main Map screen along with the relocation button.
@@ -26,7 +21,8 @@ class MapContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      clustersIncidents: [],
+      clustersRelief: [],
+      clustersContribute: [],
       clustersPlaces: [],
       curr_region: {
         latitude: this.props.curr_location.latitude,
@@ -91,16 +87,56 @@ class MapContainer extends Component {
     });
     for (var i = 0; i < incidents_marker.length; i++) {
       var obj = {
-        latitude: null,
-        longitude: null,
-        incident: null,
+        latitude: incidents_marker[i].value.coordinates.latitude,
+        longitude: incidents_marker[i].value.coordinates.longitude,
+        incident: incidents_marker[i],
       };
-      obj.latitude = incidents_marker[i].value.coordinates.latitude;
-      obj.longitude = incidents_marker[i].value.coordinates.longitude;
-      obj.incident = incidents_marker[i];
       incidents.push(obj);
     }
-    return incidents;
+    var curr_position = {
+      lat: this.props.curr_location.latitude,
+      lng: this.props.curr_location.longitude,
+    };
+
+    //near incidents filtering
+    c_incidents = [];
+    r_incidents = [];
+    if (this.props.incident.nearby.relief) {
+      r_incidents = incidents.filter(function(item) {
+        var incident_location = {
+          lat: item.latitude,
+          lng: item.longitude,
+        };
+        if (
+          haversine(curr_position, incident_location) < 50000 &&
+          item.incident.value.category === 'relief'
+        ) {
+          return true;
+        }
+      });
+    }
+    if (this.props.incident.nearby.contribute) {
+      c_incidents = incidents.filter(function(item) {
+        var incident_location = {
+          lat: item.latitude,
+          lng: item.longitude,
+        };
+        if (
+          haversine(curr_position, incident_location) < 50000 &&
+          item.incident.value.category === 'contribute'
+        ) {
+          return true;
+        }
+      });
+    }
+    if (
+      !this.props.incident.nearby.contribute &&
+      !this.props.incident.nearby.relief
+    ) {
+      return incidents;
+    } else {
+      return c_incidents.concat(r_incidents);
+    }
   }
 
   /**
@@ -113,56 +149,26 @@ class MapContainer extends Component {
     var data = this.props.emergencyPlaces.hospitals;
     for (var i = 0; i < data.length; i++) {
       var obj = {
-        latitude: null,
-        longitude: null,
-        name: null,
-        vicinity: null,
-        icon: null,
+        latitude: data[i].geometry.location.lat,
+        longitude: data[i].geometry.location.lng,
+        name: data[i].name,
+        vicinity: data[i].vicinity,
+        icon: data[i].icon,
       };
-      obj.latitude = data[i].geometry.location.lat;
-      obj.longitude = data[i].geometry.location.lng;
-      obj.name = data[i].name;
-      obj.vicinity = data[i].vicinity;
-      obj.icon = data[i].icon;
       emergencyPlaces.push(obj);
     }
     var data = this.props.emergencyPlaces.policeStations;
     for (var i = 0; i < data.length; i++) {
       var obj = {
-        latitude: null,
-        longitude: null,
-        name: null,
-        vicinity: null,
-        icon: null,
+        latitude: data[i].geometry.location.lat,
+        longitude: data[i].geometry.location.lng,
+        name: data[i].name,
+        vicinity: data[i].vicinity,
+        icon: data[i].icon,
       };
-      obj.latitude = data[i].geometry.location.lat;
-      obj.longitude = data[i].geometry.location.lng;
-      obj.name = data[i].name;
-      obj.vicinity = data[i].vicinity;
-      obj.icon = data[i].icon;
       emergencyPlaces.push(obj);
     }
     return emergencyPlaces;
-  }
-
-  /**
-   * It creates a cluster of incidents and emergency places.
-   * @param  {JSON} data Incidents or emergency places to cluster.
-   * @return {JSON}      Returns an object according to norms of geo json.
-   */
-  _createCluster(data) {
-    if (data != null) {
-      const items = GeoJSON.parse(data, {
-        Point: ['latitude', 'longitude'],
-      });
-      const cluster = new supercluster({
-        radius: 60,
-        maxZoom: 16,
-        nodeSize: 64,
-      });
-      cluster.load(items.features);
-      return cluster;
-    }
   }
 
   /**
@@ -188,34 +194,53 @@ class MapContainer extends Component {
    * @return Makes clusters.
    */
   _createRegions(region, incidents, emergencyPlaces) {
-    // clustering of incidents
-    const clusterIncident = this._createCluster(incidents);
-    var itemsIncident = null;
-    itemsIncident = clusterIncident.getClusters(
-      [
-        this.southwest.longitude,
-        this.southwest.latitude,
-        this.northeast.longitude,
-        this.northeast.latitude,
-      ],
-      this._getZoomLevel(region),
+    var relief = incidents.filter(item => {
+      if (item.incident.value.category === 'relief') {
+        return true;
+      }
+    });
+    var contribute = incidents.filter(item => {
+      if (item.incident.value.category === 'contribute') {
+        return true;
+      }
+    });
+
+    // clustering of relief
+    var itemsRelief = this._createRegionsHelper(
+      region,
+      this._createCluster(relief, {
+        radius: 60,
+        maxZoom: 16,
+      }),
+    );
+    // clustering of contribute
+    var itemsContribute = this._createRegionsHelper(
+      region,
+      this._createCluster(contribute, {
+        radius: 60,
+        maxZoom: 16,
+      }),
+    );
+    // clustering of emergency places.
+    var itemsEmergencyPlaces = this._createRegionsHelper(
+      region,
+      this._createCluster(emergencyPlaces, {
+        radius: 40,
+        maxZoom: 16,
+      }),
     );
 
-    //Gets leaves of cluster i.e individual incidents.
-    for (var i = 0; i < itemsIncident.length; i++) {
-      if ('cluster' in itemsIncident[i].properties) {
-        itemsIncident[i]['leaves'] = clusterIncident.getLeaves(
-          itemsIncident[i].properties.cluster_id,
-          (limit = 10),
-          (offset = 0),
-        );
-      }
-    }
+    this.setState({
+      curr_region: region,
+      clustersPlaces: itemsEmergencyPlaces,
+      clustersRelief: itemsRelief,
+      clustersContribute: itemsContribute,
+    });
+  }
 
-    // clustering of emergency places.
-    const clusterEmergencyPlaces = this._createCluster(emergencyPlaces);
-    var itemsEmergencyPlaces = null;
-    itemsEmergencyPlaces = clusterEmergencyPlaces.getClusters(
+  _createRegionsHelper(region, cluster) {
+    var items = null;
+    items = cluster.getClusters(
       [
         this.southwest.longitude,
         this.southwest.latitude,
@@ -226,20 +251,31 @@ class MapContainer extends Component {
     );
 
     // gets leaves of emergency places.
-    for (var i = 0; i < itemsEmergencyPlaces.length; i++) {
-      if ('cluster' in itemsEmergencyPlaces[i].properties) {
-        itemsEmergencyPlaces[i]['leaves'] = clusterEmergencyPlaces.getLeaves(
-          itemsEmergencyPlaces[i].properties.cluster_id,
+    for (var i = 0; i < items.length; i++) {
+      if ('cluster' in items[i].properties) {
+        items[i]['leaves'] = cluster.getLeaves(
+          items[i].properties.cluster_id,
           (limit = 10),
-          (offset = 0),
         );
       }
     }
-    this.setState({
-      curr_region: region,
-      clustersPlaces: itemsEmergencyPlaces,
-      clustersIncidents: itemsIncident,
-    });
+    return items;
+  }
+
+  /**
+   * It creates a cluster of incidents and emergency places.
+   * @param  {JSON} data Incidents or emergency places to cluster.
+   * @return {JSON}      Returns an object according to norms of geo json.
+   */
+  _createCluster(data, details) {
+    if (data != null) {
+      const items = GeoJSON.parse(data, {
+        Point: ['latitude', 'longitude'],
+      });
+      const cluster = new supercluster(details);
+      cluster.load(items.features);
+      return cluster;
+    }
   }
 
   /**
@@ -356,7 +392,8 @@ class MapContainer extends Component {
   UNSAFE_componentWillReceiveProps(nextProps) {
     if (
       nextProps.incident.all_incidents !== this.props.incident.all_incidents ||
-      nextProps.incident.domain !== this.props.incident.domain
+      nextProps.incident.domain !== this.props.incident.domain ||
+      nextProps.incident.nearby !== this.props.incident.nearby
     ) {
       this.onRegionChangeComplete(this.state.curr_region, nextProps);
     }
@@ -369,6 +406,7 @@ class MapContainer extends Component {
   }
 
   render() {
+    console.log(this.state);
     return (
       <View style={styles.map}>
         <MapView
@@ -380,21 +418,33 @@ class MapContainer extends Component {
             this.onRegionChangeComplete(region, null);
           }}
           style={styles.map}>
-          {/* Maps incidents */}
-          {this.state.clustersIncidents.map((item, i) =>
+          {/* Maps relief */}
+          {this.state.clustersRelief.map((item, i) =>
             item.properties.cluster === true ? (
-              <Cluster key={i} item={item} type={'incidents'} />
+              <Cluster key={i} item={item} type={'relief'} />
             ) : (
-              <MapMarker key={i} item={item} />
+              <MapMarker key={i} item={item} type={'relief'} />
+            ),
+          )}
+          {/* Maps contribute */}
+          {this.state.clustersContribute.map((item, i) =>
+            item.properties.cluster === true ? (
+              <Cluster key={i} item={item} type={'contribute'} />
+            ) : (
+              <MapMarker key={i} item={item} type={'contribute'} />
             ),
           )}
           {/* Maps emergency places */}
-          {this.state.clustersPlaces.map((item, i) =>
-            item.properties.cluster === true ? (
-              <Cluster key={i} item={item} type={'places'} />
-            ) : (
-              <MapMarker key={i} item={item} />
-            ),
+          {this.props.emergencyPlaces.show ? (
+            this.state.clustersPlaces.map((item, i) =>
+              item.properties.cluster === true ? (
+                <Cluster key={i} item={item} type={'emergencyPlaces'} />
+              ) : (
+                <MapMarker key={i} item={item} type={'emergencyPlaces'} />
+              ),
+            )
+          ) : (
+            <View></View>
           )}
           {/* Maps current location */}
           <Marker.Animated
@@ -408,8 +458,12 @@ class MapContainer extends Component {
                     longitude: this.props.curr_location.longitude,
                   }
                 : this.state.coordinate
-            }
-          />
+            }>
+            <Image
+              source={require('../../../assets/images/marker.png')}
+              style={markerStyle.markerIcon}
+            />
+          </Marker.Animated>
         </MapView>
 
         {/* Relocation Button */}

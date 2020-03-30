@@ -1,13 +1,15 @@
 import {
-	EMERGENCY_PLACES_HOSPITALS,
-	EMERGENCY_PLACES_POLICE_STATIONS,
-	EMERGENCY_PLACES_LOADING
+  EMERGENCY_PLACES_HOSPITALS,
+  EMERGENCY_PLACES_POLICE_STATIONS,
+  EMERGENCY_PLACES_LOADING,
+  TOGGLE_EMERGENCY_PLACES,
 } from '../actions/types';
 
 const INITIAL_STATE = {
-	loading: true,
-	hospitals: null,
-	policeStations: null
+  loading: true,
+  hospitals: null,
+  policeStations: null,
+  show: false,
 };
 
 /**
@@ -18,24 +20,29 @@ const INITIAL_STATE = {
  * @return Updates state in redux
  */
 export default function(state = INITIAL_STATE, action) {
-	let result = Object.assign({}, state);
-	switch (action.type) {
-		case EMERGENCY_PLACES_HOSPITALS:
-			return {
-				...result,
-				hospitals: action.hospitals
-			};
-		case EMERGENCY_PLACES_POLICE_STATIONS:
-			return {
-				...result,
-				policeStations: action.policeStations
-			};
-		case EMERGENCY_PLACES_LOADING:
-			return {
-				...result,
-				loading: action.emergencyPlacesLoading
-			};
-		default:
-			return state;
-	}
+  let result = Object.assign({}, state);
+  switch (action.type) {
+    case EMERGENCY_PLACES_HOSPITALS:
+      return {
+        ...result,
+        hospitals: action.hospitals,
+      };
+    case EMERGENCY_PLACES_POLICE_STATIONS:
+      return {
+        ...result,
+        policeStations: action.policeStations,
+      };
+    case EMERGENCY_PLACES_LOADING:
+      return {
+        ...result,
+        loading: action.emergencyPlacesLoading,
+      };
+    case TOGGLE_EMERGENCY_PLACES:
+      return {
+        ...result,
+        show: action.show,
+      };
+    default:
+      return state;
+  }
 }
