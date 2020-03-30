@@ -17,6 +17,7 @@ import Icon from 'react-native-vector-icons/EvilIcons';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {addIncidentToFirebase} from '../actions/incidentsAction';
+import {getAllItems} from '../actions/itemsActions';
 import {Actions} from 'react-native-router-flux';
 import {styles} from '../assets/styles/addincident_styles';
 import PropTypes from 'prop-types';
@@ -52,9 +53,16 @@ class AddIncident extends Component {
       },
       disable: false,
       textInput: [],
+      quantityInput: [],
+      items : this.props.items,
+      item: "choose item"
     };
+
   }
 
+  componentWillMount(){
+    this.props.getAllItems()
+  }
   /**
    * Updates category of incident chosen by user.
    * @param  {string} category The category selected by the user.
@@ -240,6 +248,8 @@ class AddIncident extends Component {
       let item = dataArray[index];
       if (index2 == 0) {
         item.name = text;
+        this.setState({item: text})
+        this.addQuantityTextInput(text,index)
       } else if (index2 == 1) {
         item.quantity = text;
       } else {
@@ -281,15 +291,20 @@ class AddIncident extends Component {
     // console.log(this.state.incident.items[index]);
     textInput.push(
       <View style={styles.itemsRow} key={index}>
-        <TextInput
-          ref={input => (this.nameInput = input)}
-          onChangeText={text => this.addValues(text, index, 0)}
-          onSubmitEditing={() => this.quantityInput.focus()}
-          keyboardType="email-address"
-          returnKeyType="next"
-          placeholder="Item name"
-          style={styles.name}
-        />
+          <Picker
+            selectedValue={(this.state.incidents && this.state.incidents.items && this.state.incidents.items[index].name) || 'choose item'}
+            onValueChange={text => {
+              this.addValues(text, index, 0);
+          }}
+          style={styles.name}>
+        {this.state.items && this.state.items.map( (item, index) => {
+          return(
+            <Picker.Item label={item.key} value={item.key} key={index + 1} />
+          )
+         })
+        }
+        </Picker>
+{/* 
         <TextInput
           ref={input => (this.quantityInput = input)}
           style={styles.name}
@@ -304,18 +319,46 @@ class AddIncident extends Component {
             this.addValues(text, index, 2);
           }}
           style={styles.name}>
-          <Picker.Item label="kg" value="kg" />
-          <Picker.Item label="gm" value="gm" />
-          <Picker.Item label="units" value="units" />
+          <Picker.Item label="kg" value="kg" key = "kg"/>
+          <Picker.Item label="gm" value="gm" key ="gm"/>
+          <Picker.Item label="units" value="units" key ="units"/>
           <Picker.Item label="ltr" value="ltr" />
           <Picker.Item label="ml" value="ml" />
-        </Picker>
+        </Picker> */}
       </View>,
     );
     this.setState({
       textInput: textInput,
     });
   };
+
+  addQuantityTextInput (key,index){
+    let quantityInput = this.state.quantityInput
+    quantityInput.push(
+        <Picker
+        selectedValue={(this.state.incidents && this.state.incidents.items && this.state.incidents.items[index].name) || 'choose item'}
+        onValueChange={text => {
+          this.addValues(text, index, 1);
+          }}
+          style={styles.name}>
+        {this.state.items && this.state.items.map( (item, index) => {
+          return(
+          item.key == key?
+            item.value && item.value.quantity.map((quantity,index2) => {
+              return(
+                <Picker.Item label={quantity} value={quantity} key={index2 + 1} />
+              )
+            })
+            : null
+          )
+        })
+        }
+        </Picker>
+    )
+    this.setState({
+      quantityInput: quantityInput
+    })
+  }
 
   render() {
     let pickers;
@@ -473,9 +516,18 @@ class AddIncident extends Component {
                 />
               </View>
             </View>
+            <View style={{flexDirection: "row"}}>
+            <View>
             {this.state.textInput.map(value => {
               return value;
             })}
+            </View>
+            <View>
+             {this.state.quantityInput.map(value => {
+              return value;
+            })}
+            </View>
+            </View>
           </View>
           {this.props.incident.loading && (
             <ActivityIndicator size="large" color="black" />
@@ -512,6 +564,7 @@ function matchDispatchToProps(dispatch) {
   return bindActionCreators(
     {
       addIncidentToFirebase: addIncidentToFirebase,
+      getAllItems: getAllItems
     },
     dispatch,
   );
@@ -527,6 +580,7 @@ const mapStateToProps = state => ({
   login: state.login,
   location: state.location,
   incident: state.incident,
+  items: state.items.all_items
 });
 
 export default connect(mapStateToProps, matchDispatchToProps)(AddIncident);

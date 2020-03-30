@@ -402,6 +402,11 @@ class EditIncident extends Component {
           {this.props.incident.loading && (
             <ActivityIndicator size="large" color="black" />
           )}
+          <Button
+            title="Add Item"
+            style={styles.addButton}
+            onPress={() => this.addTextInput(this.state.textInput.length)}
+          />
           <TouchableOpacity
             style={styles.updateButton}
             onPress={() => this.handleUpdate()}>

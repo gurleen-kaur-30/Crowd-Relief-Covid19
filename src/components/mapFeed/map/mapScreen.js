@@ -204,10 +204,19 @@ class MapScreen extends Component {
         </TouchableHighlight>
         <TouchableOpacity
           activeOpacity={0.5}
-          style={styles.addIncidentButton}
+          style={styles.addRequirementButton}
           onPress={() => Actions.addIncident()}>
           <Icon name="plus" size={30} style={styles.fabButtonIcon} />
         </TouchableOpacity>
+        <Text style={styles.fabText}> Requirement</Text>
+
+        <TouchableOpacity
+          activeOpacity={0.5}
+          style={styles.addReliefButton}
+          onPress={() => Actions.addIncident()}>
+          <Icon name="plus" size={30} style={styles.fabButtonIcon} />
+        </TouchableOpacity>
+        <Text style={styles.fabText2}> Relief</Text>
         <Modal
           visible={this.state.visibleModal}
           onRequestClose={() => {

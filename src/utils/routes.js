@@ -16,7 +16,7 @@ import DrawerContent from '../components/drawer';
 import Profile from '../components/profile/profile';
 
 import MapFeedScreen from '../components/mapFeed/mapFeedTabular';
-import AddIncident from '../components/addIncident';
+import AddIncident from '../components/addRequirement';
 import EmergencyPlaces from '../components/emergencyPlaces/emergencyPlacesTabular';
 
 import Incident from '../components/incident/incidentScreen';

@@ -40,3 +40,4 @@ export const SHOW_INTRO = 'SHOW_INTRO';
 //Items
 export const ALL_ITEMS = 'ALL_ITEMS';
 export const ITEMS_LOADING = 'ITEMS_LOADING';
+export const ITEM_CHANGED = 'ITEM_CHANGED'

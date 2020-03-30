@@ -1,4 +1,4 @@
-import {ALL_ITEMS, ITEMS_LOADING} from './types';
+import {ALL_ITEMS, ITEMS_LOADING, ITEM_CHANGED} from './types';
 import {handleError} from './errorAction';
 import firebase from 'react-native-firebase';
 import {Toast} from 'native-base';
@@ -43,4 +43,11 @@ function retrieveAllItems(data) {
     type: ALL_ITEMS,
     all_items: data,
   };
+}
+
+export function itemChanged(index) {
+  return{
+    type: ITEM_CHANGED,
+    index: index 
+  }
 }

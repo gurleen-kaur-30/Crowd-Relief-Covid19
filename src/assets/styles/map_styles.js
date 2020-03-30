@@ -54,17 +54,29 @@ const styles = StyleSheet.create({
     left: width / 25,
     bottom: height / 23,
   },
-  addIncidentButton: {
+  addReliefButton: {
     width: width / 7.5,
     height: width / 7.5,
     backgroundColor: '#4ebaaa',
     justifyContent: 'center',
-    position: 'absolute',
-    right: width / 20,
+    right: width / 3.2,
     bottom: height / 25,
     elevation: 15,
     borderRadius: 35,
+    position: 'absolute',
   },
+  addRequirementButton: {
+    width: width / 7.5,
+    height: width / 7.5,
+    right: width / 1.65,
+    bottom: height / 25,
+    elevation: 15,
+    borderRadius: 35,
+    backgroundColor: 'red',
+    justifyContent: 'center',
+    position: 'absolute',
+  },
+
   filterButton: {
     width: width / 8.5,
     height: width / 8.5,
@@ -80,6 +92,22 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     color: '#fff',
   },
+  fabText:{
+    color: "red",
+    position: 'absolute',
+    top: height*0.85,
+    left: width*0.19,
+    fontWeight: "bold",
+    fontSize: 18
+  },
+  fabText2:{
+    color: "green",
+    position: 'absolute',
+    top: height*0.85,
+    left: width*0.56,
+    fontWeight: "bold",
+    fontSize: 18,
+  }
 });
 
 export {searchBarStyle, styles};
