@@ -77,6 +77,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingTop: height / 25,
     marginHorizontal: width / 20,
+    alignItems: 'center',
   },
   // buttonView: {
   //   flexDirection: 'row',
@@ -101,7 +102,7 @@ export const styles = StyleSheet.create({
   // },
   checkbox: {
     flex: 1,
-    marginTop: 10,
+    // marginTop: 10,
   },
   checkboxTitle: {
     fontFamily: 'ProductSans-Regular',

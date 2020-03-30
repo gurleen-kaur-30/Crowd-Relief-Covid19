@@ -319,7 +319,11 @@ class EditIncident extends Component {
             editable={!this.props.action}
           />
           {this.props.action ? (
-            <View></View>
+            <View style={styles.textInputHeadingContainer}>
+              <Text style={styles.textInputHeading}>
+                Urgency level: {this.state.incident.urgency}
+              </Text>
+            </View>
           ) : (
             <View style={styles.textInputHeadingContainer}>
               <Text style={[styles.textInputHeading, {flex: 3}]}>
@@ -381,7 +385,7 @@ class EditIncident extends Component {
                     keyboardType={'numeric'}
                     placeholder={item.unit ? item.unit : 'unit'}
                     placeholderTextColor={item.unit ? 'black' : null}
-                    style={styles.units}
+                    style={!this.props.action ? styles.units : styles.itemUnits}
                     editable={!this.props.action}
                     onChangeText={text => this.addValues(text, index, 1)}
                   />
@@ -394,11 +398,6 @@ class EditIncident extends Component {
                         styles.itemUnits,
                         {
                           borderWidth: 1,
-                          height: 27,
-                          width: 30,
-                          marginTop: 10,
-                          paddingTop: -10,
-                          paddingBottom: -10,
                         },
                       ]}
                       onChangeText={text => this.changeUnits(text, item)}
