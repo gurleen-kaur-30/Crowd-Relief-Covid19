@@ -240,29 +240,34 @@ class EditIncident extends Component {
             style={[styles.textInput, {height: 100}]}
             placeholder="Description"
             value={this.state.details}
+            editable={!this.props.action}
           />
-          <View style={styles.textInputHeadingContainer}>
-            <Text style={[styles.textInputHeading, {flex: 3}]}>
-              Urgency on a scale of 5
-            </Text>
-            <Picker
-              value={this.state.urgency}
-              selectedValue={this.state.urgency}
-              onValueChange={urgency => {
-                this.setState({urgency});
-              }}
-              style={styles.urgencypicker}>
-              {[...Array(5).keys()].map(item => {
-                return (
-                  <Picker.Item
-                    label={String(item + 1)}
-                    value={String(item + 1)}
-                    key={item}
-                  />
-                );
-              })}
-            </Picker>
-          </View>
+          {this.props.action ? (
+            <View></View>
+          ) : (
+            <View style={styles.textInputHeadingContainer}>
+              <Text style={[styles.textInputHeading, {flex: 3}]}>
+                Urgency on a scale of 5
+              </Text>
+              <Picker
+                value={this.state.urgency}
+                selectedValue={this.state.urgency}
+                onValueChange={urgency => {
+                  this.setState({urgency});
+                }}
+                style={styles.urgencypicker}>
+                {[...Array(5).keys()].map(item => {
+                  return (
+                    <Picker.Item
+                      label={String(item + 1)}
+                      value={String(item + 1)}
+                      key={item}
+                    />
+                  );
+                })}
+              </Picker>
+            </View>
+          )}
           <View style={styles.textInputHeadingContainer}>
             <Text style={styles.textInputHeading}>Items</Text>
           </View>

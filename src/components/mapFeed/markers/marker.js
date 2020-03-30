@@ -4,11 +4,9 @@ import MapView from 'react-native-maps';
 import {getMarkerImage, getMarkerColor} from '../../../utils/categoryUtil.js';
 import {connect} from 'react-redux';
 import {Actions} from 'react-native-router-flux';
-import {bindActionCreators} from 'redux';
 import getDirections from 'react-native-google-maps-directions';
 import PropTypes from 'prop-types';
 import {styles} from '../../../assets/styles/clusterMarker_styles';
-import {getIndvIncident} from '../../../actions/incidentsAction.js';
 
 /**
  * Class for displaying individual marker on map
@@ -31,14 +29,17 @@ class MapMarker extends Component {
   }
 
   editClickedIncident(item) {
-    if (
-      this.props.incident.incident !== null
-        ? item.key !== this.props.incident.incident.key
-        : true
-    ) {
-      this.props.getIndvIncident(this.props.incident_key);
-    }
-    Actions.editIncident({action: true});
+    // if (
+    //   this.props.incident.incident !== null
+    //     ? item.key !== this.props.incident.incident.key
+    //     : true
+    // ) {
+    //   this.props.getIndvIncident(this.props.incident_key);
+    //   if (!this.props.incident.loading) {
+    //     Actions.editIncident({action: true});
+    //   }
+    // }
+    Actions.incident({incident_key: item.key, skip2edit: true});
   }
 
   /**
@@ -84,7 +85,7 @@ class MapMarker extends Component {
         {
           text: s,
           onPress: () => {
-            this.editClickedIncident(item);
+            this.editClickedIncident(item.properties.incident);
           },
         },
       ],
@@ -163,15 +164,6 @@ MapMarker.propTypes = {
   user: PropTypes.object,
 };
 
-function matchDispatchToProps(dispatch) {
-  return bindActionCreators(
-    {
-      getIndvIncident: getIndvIncident,
-    },
-    dispatch,
-  );
-}
-
 /**
  * Mapping state to props so that state variables can be used
  * through props in children components.
@@ -183,4 +175,4 @@ const mapStateToProps = state => ({
   incident: state.incident,
 });
 
-export default connect(mapStateToProps, matchDispatchToProps)(MapMarker);
+export default connect(mapStateToProps, null)(MapMarker);
