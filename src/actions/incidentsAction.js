@@ -6,6 +6,8 @@ import {
   VIEW_INCIDENT,
   NOTIFICATION_INCIDENTS,
   TOGGLE_DOMAINS,
+  TOGGLE_NEARBY_RELIEF,
+  TOGGLE_NEARBY_CONTRIBUTE,
 } from './types';
 import {handleError} from './errorAction';
 import firebase from 'react-native-firebase';
@@ -158,7 +160,11 @@ export const getUserIncidents = userID => {
  */
 export const viewIncident = (incident, isLoggedIn) => {
   return dispatch => {
-    dispatch(viewIncidentHelper(incident, isLoggedIn));
+    dispatch({
+      type: VIEW_INCIDENT,
+      incident: incident,
+      isLoggedIn: isLoggedIn,
+    });
   };
 };
 
@@ -217,6 +223,30 @@ export const getIndvIncident = key => {
   };
 };
 
+export const updateNearbyReliefToggle = bool => {
+  return dispatch => {
+    dispatch({
+      type: TOGGLE_NEARBY_RELIEF,
+      nearby: {
+        ...store.getState().incident.nearby,
+        relief: bool,
+      },
+    });
+  };
+};
+
+export const updateNearbyContributeToggle = bool => {
+  return dispatch => {
+    dispatch({
+      type: TOGGLE_NEARBY_CONTRIBUTE,
+      nearby: {
+        ...store.getState().incident.nearby,
+        contribute: bool,
+      },
+    });
+  };
+};
+
 /**
  * Updates the incident category domain for filtering them on the map
  * @param  {String} domain Incident category for filtering.
@@ -224,34 +254,12 @@ export const getIndvIncident = key => {
  */
 export const updateDomain = domain => {
   return dispatch => {
-    dispatch(updateDomainHelper(domain));
+    dispatch({
+      type: TOGGLE_DOMAINS,
+      domain: domain,
+    });
   };
 };
-
-/**
- * Helper function for updating the incident category.
- * @param  {String} domain Incident category for filtering.
- */
-export function updateDomainHelper(domain) {
-  return {
-    type: TOGGLE_DOMAINS,
-    domain: domain,
-  };
-}
-
-/**
- * Called when an incident is clicked to be viewed for its details
- * @param  {JSON} incident Incident details
- * @param  {Boolean} bool     Store the state whether the current
- * incident being viewed is of the logged in user or not
- */
-export function viewIncidentHelper(incident, bool) {
-  return {
-    type: VIEW_INCIDENT,
-    incident: incident,
-    isLoggedIn: bool,
-  };
-}
 
 /**
  * Called when user specific incidents are retrieved

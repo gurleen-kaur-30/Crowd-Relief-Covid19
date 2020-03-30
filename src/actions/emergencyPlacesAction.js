@@ -3,6 +3,7 @@ import {
   EMERGENCY_PLACES_POLICE_STATIONS,
   EMERGENCY_PLACES_LOADING,
   NEARBY_PLACES_GOOGLE_URL,
+  TOGGLE_EMERGENCY_PLACES,
 } from './types';
 import {handleError} from './errorAction';
 import Config from 'react-native-config';
@@ -69,6 +70,15 @@ export const getEmergencyPlaces = radius => {
         .catch(error => {
           dispatch(handleError(error));
         });
+    });
+  };
+};
+
+export const updateShow = bool => {
+  return dispatch => {
+    dispatch({
+      type: TOGGLE_EMERGENCY_PLACES,
+      show: bool,
     });
   };
 };

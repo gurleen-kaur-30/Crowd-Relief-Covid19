@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
-import {View, Text, Image} from 'react-native';
 import MapView from 'react-native-maps';
-import {bindActionCreators} from 'redux';
-import {getMarkerImage} from '../../../utils/categoryUtil.js';
+import {getMarkerImage, getMarkerColor} from '../../../utils/categoryUtil.js';
 import {connect} from 'react-redux';
 import {Actions} from 'react-native-router-flux';
 import getDirections from 'react-native-google-maps-directions';
@@ -56,9 +54,10 @@ class MapMarker extends Component {
   render() {
     var item = this.props.item;
     const coords = item.geometry.coordinates;
+    var markerColor = getMarkerColor(this.props.type, 'point');
 
     //If the marker is hospital or police station.
-    if ('name' in item.properties) {
+    if (this.props.type === 'emergencyPlaces') {
       return (
         <MapView.Marker
           coordinate={{
@@ -73,23 +72,44 @@ class MapMarker extends Component {
           }}
         />
       );
-    } else {
-      // If the marker is an incident.
+    } else if (this.props.type === 'relief') {
+      // If the marker is an relief.
       return (
         <MapView.Marker
           coordinate={{
             latitude: coords[1],
             longitude: coords[0],
           }}
+          pinColor={markerColor}
           title={item.properties.incident.value.title}
           description={item.properties.incident.value.details}
           onCalloutPress={() => {
             this.viewClickedIncident(item.properties.incident);
           }}>
-          <Image
+          {/* <Image
             source={getMarkerImage(item.properties.incident.value.category)}
             style={styles.markerIcon}
-          />
+          /> */}
+        </MapView.Marker>
+      );
+    } else if (this.props.type === 'contribute') {
+      // If the marker is an contribute.
+      return (
+        <MapView.Marker
+          coordinate={{
+            latitude: coords[1],
+            longitude: coords[0],
+          }}
+          pinColor={markerColor}
+          title={item.properties.incident.value.title}
+          description={item.properties.incident.value.details}
+          onCalloutPress={() => {
+            this.viewClickedIncident(item.properties.incident);
+          }}>
+          {/* <Image
+            source={getMarkerImage(item.properties.incident.value.category)}
+            style={styles.markerIcon}
+          /> */}
         </MapView.Marker>
       );
     }

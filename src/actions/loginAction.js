@@ -164,7 +164,7 @@ export const fbSignIn = () => {
   return dispatch => {
     // We specify in an array what we want to access from a user profile.
     dispatch(loginLoading(true));
-    LoginManager.logInWithReadPermissions(['public_profile', 'email'])
+    LoginManager.logInWithPermissions(['public_profile', 'email'])
       .then(result => {
         if (result.isCancelled) {
           return Promise.reject(new Error('The user cancelled the request'));
@@ -178,7 +178,7 @@ export const fbSignIn = () => {
           data.accessToken,
         );
         // Login with the fb credential
-        return firebase.auth().signInAndRetrieveDataWithCredential(credential);
+        return firebase.auth().signInWithCredential(credential);
       })
       .then(data => {
         dispatch(getUserAuthFirebase(data.user, 'facebook'));
@@ -290,20 +290,11 @@ export const updateUserFirebase = userDetails => {
  */
 export const logout = () => {
   return dispatch => {
-    dispatch(logoutHelper());
+    dispatch({
+      type: SIGN_OUT,
+    });
   };
 };
-
-/**
- * Adds the personal user details to the redux store
- * @param {JSON} details Details of the user
- * @return returns type and user details.
- */
-function logoutHelper() {
-  return {
-    type: SIGN_OUT,
-  };
-}
 
 /**
  * Adds the personal user details to the redux store
