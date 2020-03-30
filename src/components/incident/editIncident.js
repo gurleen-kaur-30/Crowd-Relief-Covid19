@@ -140,6 +140,16 @@ class EditIncident extends Component {
           visible: visible,
         },
       });
+
+      Promise.resolve(
+        this.props.updateIncidentFirebase(
+          this.props.incident.incident.key,
+          this.state.incident,
+        ),
+      ).then(() => {
+        this.showToast('Incident updated!', 'success');
+        Actions.pop();
+      });
     } else {
       var items2store = this.state.checkboxList.filter(function(item) {
         if (item.include) {
@@ -152,17 +162,21 @@ class EditIncident extends Component {
           items: items2store,
         },
       });
-    }
 
-    Promise.resolve(
-      this.props.updateIncidentFirebase(
-        this.props.incident.incident.key,
-        this.state.incident,
-      ),
-    ).then(() => {
-      this.showToast('Incident updated!', 'success');
-      Actions.pop();
-    });
+      if (items2store.length !== 0) {
+        Promise.resolve(
+          this.props.updateIncidentFirebase(
+            this.props.incident.incident.key,
+            this.state.incident,
+          ),
+        ).then(() => {
+          this.showToast('Incident updated!', 'success');
+          Actions.pop();
+        });
+      } else {
+        this.showToast('Please select atleast 1 item');
+      }
+    }
   };
 
   /**
@@ -367,46 +381,48 @@ class EditIncident extends Component {
           ) : (
             <View></View>
           )}
-          {items &&
-            items.map((item, index) => {
-              return (
-                <View style={styles.itemsRow} key={index}>
-                  {!this.props.action ? (
-                    <CheckBox
-                      style={styles.checkbox}
-                      color="#3a54ff"
-                      value={this.state.checkboxList[index].include}
-                      onValueChange={val => this.addValues(val, index, 0)}
-                    />
-                  ) : null}
-                  <Text style={styles.checkboxTitle}>
-                    {item.name} ( {item.quantity} )
-                  </Text>
-                  <TextInput
-                    keyboardType={'numeric'}
-                    placeholder={item.unit ? item.unit : 'unit'}
-                    placeholderTextColor={item.unit ? 'black' : null}
-                    style={!this.props.action ? styles.units : styles.itemUnits}
-                    editable={!this.props.action}
-                    onChangeText={text => this.addValues(text, index, 1)}
+          {items.map((item, index) => {
+            return (
+              <View style={styles.itemsRow} key={index}>
+                {!this.props.action ? (
+                  <CheckBox
+                    style={styles.checkbox}
+                    color="#3a54ff"
+                    value={this.state.checkboxList[index].include}
+                    onValueChange={val => this.addValues(val, index, 0)}
                   />
-                  {this.props.action ? (
-                    <TextInput
-                      placeholder={'units'}
-                      keyboardType="numeric"
-                      placeholderTextColor={'black'}
-                      style={[
-                        styles.itemUnits,
-                        {
-                          borderWidth: 1,
-                        },
-                      ]}
-                      onChangeText={text => this.changeUnits(text, item)}
-                    />
-                  ) : null}
-                </View>
-              );
-            })}
+                ) : null}
+                <Text style={styles.checkboxTitle}>
+                  {item.name} ( {item.quantity} )
+                </Text>
+                <TextInput
+                  keyboardType={'numeric'}
+                  placeholder={'unit'}
+                  value={item.unit}
+                  placeholderTextColor={item.unit ? 'black' : null}
+                  style={!this.props.action ? styles.units : styles.itemUnits}
+                  editable={!this.props.action}
+                  onChangeText={text => this.addValues(text, index, 1)}
+                />
+                {this.props.action ? (
+                  <TextInput
+                    placeholder={'units'}
+                    keyboardType="numeric"
+                    placeholderTextColor={'black'}
+                    style={[
+                      styles.itemUnits,
+                      {
+                        borderWidth: 1,
+                      },
+                    ]}
+                    onChangeText={text => this.changeUnits(text, item)}
+                  />
+                ) : (
+                  <View></View>
+                )}
+              </View>
+            );
+          })}
           {this.props.incident.loading && (
             <ActivityIndicator size="large" color="black" />
           )}

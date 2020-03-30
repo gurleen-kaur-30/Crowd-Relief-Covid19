@@ -60,7 +60,7 @@ class AddIncident extends Component {
       a.push({
         name: item.key,
         quantity: item.value.quantity,
-        unit: null,
+        unit: 0,
         status: 0,
         include: false,
       });
@@ -145,11 +145,15 @@ class AddIncident extends Component {
       },
     });
     console.log(this.state.incident);
-    this.props
-      .addIncidentToFirebase(this.state.incident) // waits till incident details are updated in redux
-      .then(result => {
-        Actions.pop(); // set markers on map page to result from firebase.
-      });
+    if (items2store.length !== 0) {
+      this.props
+        .addIncidentToFirebase(this.state.incident) // waits till incident details are updated in redux
+        .then(result => {
+          Actions.pop(); // set markers on map page to result from firebase.
+        });
+    } else {
+      this.showToast('Please select atleast 1 item');
+    }
   };
 
   /**

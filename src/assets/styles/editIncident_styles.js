@@ -6,10 +6,6 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  // picker: {
-  //   marginVertical: height / 100,
-  //   marginHorizontal: width / 30,
-  // },
   urgencypicker: {
     marginVertical: height / 100,
     marginHorizontal: width / 30,
@@ -44,11 +40,6 @@ export const styles = StyleSheet.create({
     fontSize: 20,
     color: '#fff',
   },
-  // textInput: {
-  //   width: width * 0.9,
-  //   marginLeft: width / 20,
-  //   paddingTop: height / 300,
-  // },
   textInputHeadingContainer: {
     marginLeft: width / 20,
     paddingTop: height / 40,
@@ -79,9 +70,6 @@ export const styles = StyleSheet.create({
     marginHorizontal: width / 20,
     alignItems: 'center',
   },
-  // buttonView: {
-  //   flexDirection: 'row',
-  // },
   textInput: {
     height: 40,
     borderColor: 'black',
@@ -102,10 +90,9 @@ export const styles = StyleSheet.create({
   // },
   checkbox: {
     flex: 1,
-    // marginTop: 10,
   },
   checkboxTitle: {
-    fontFamily: 'ProductSans-Regular',
+    // fontFamily: 'ProductSans-Regular',
     color: '#464646',
     marginLeft: 8,
     flex: 6,
@@ -116,7 +103,8 @@ export const styles = StyleSheet.create({
   },
   itemUnits: {
     flex: 3,
-    alignContent: 'flex-end',
+    // alignContent: 'center',
+    width: width / 3,
   },
   units: {
     height: height / 20,
