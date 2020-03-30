@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
   addReliefButton: {
     width: width / 7.5,
     height: width / 7.5,
-    backgroundColor: '#4ebaaa',
+    backgroundColor: 'rgba(180, 0, 0,1)',
     justifyContent: 'center',
     right: width / 3.2,
     bottom: height / 25,
@@ -72,14 +72,14 @@ const styles = StyleSheet.create({
     bottom: height / 25,
     elevation: 15,
     borderRadius: 35,
-    backgroundColor: 'rgba(180,0,0,1)',
+    backgroundColor: 'rgba(78, 186, 170,1)',
     justifyContent: 'center',
     position: 'absolute',
   },
   filterButton: {
     width: width / 8.5,
     height: width / 8.5,
-    backgroundColor: '#4ebaaa',
+    backgroundColor: 'rgba(78, 186, 170,1)',
     borderRadius: 30,
     elevation: 6,
     justifyContent: 'center',
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   fabText: {
-    color: 'red',
+    color: 'rgba(78,186,170,1)',
     position: 'absolute',
     top: height * 0.85,
     left: width * 0.19,
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   fabText2: {
-    color: 'green',
+    color: 'rgba(180,0,0,1)',
     position: 'absolute',
     top: height * 0.85,
     left: width * 0.56,
