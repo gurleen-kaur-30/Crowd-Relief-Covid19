@@ -261,29 +261,34 @@ class EditIncident extends Component {
             style={[styles.textInput, {height: 100}]}
             placeholder="Description"
             value={this.state.details}
+            editable={!this.props.action}
           />
-          <View style={styles.textInputHeadingContainer}>
-            <Text style={[styles.textInputHeading, {flex: 3}]}>
-              Urgency on a scale of 5
-            </Text>
-            <Picker
-              value={this.state.urgency}
-              selectedValue={this.state.urgency}
-              onValueChange={urgency => {
-                this.setState({urgency});
-              }}
-              style={styles.urgencypicker}>
-              {[...Array(5).keys()].map(item => {
-                return (
-                  <Picker.Item
-                    label={String(item + 1)}
-                    value={String(item + 1)}
-                    key={item}
-                  />
-                );
-              })}
-            </Picker>
-          </View>
+          {this.props.action ? (
+            <View></View>
+          ) : (
+            <View style={styles.textInputHeadingContainer}>
+              <Text style={[styles.textInputHeading, {flex: 3}]}>
+                Urgency on a scale of 5
+              </Text>
+              <Picker
+                value={this.state.urgency}
+                selectedValue={this.state.urgency}
+                onValueChange={urgency => {
+                  this.setState({urgency});
+                }}
+                style={styles.urgencypicker}>
+                {[...Array(5).keys()].map(item => {
+                  return (
+                    <Picker.Item
+                      label={String(item + 1)}
+                      value={String(item + 1)}
+                      key={item}
+                    />
+                  );
+                })}
+              </Picker>
+            </View>
+          )}
           <View style={styles.textInputHeadingContainer}>
             <Text style={styles.textInputHeading}>Items</Text>
           </View>
@@ -295,7 +300,7 @@ class EditIncident extends Component {
                 <Text style= {[styles.itemUnits]}> Units available</Text>
                 : <Text style= {styles.itemUnits}> Units required</Text>
               }
-              {true? 
+              {this.props.action? 
                 this.state.category=="contribute"?
                 <Text style={styles.itemUnits}> units picked </Text>
                 :
@@ -310,7 +315,7 @@ class EditIncident extends Component {
                 this.props.incident.incident.value.items.map((item, index) => {
                   return (
                     <View style={styles.itemsRow} key={index}>
-                      {!true?
+                      {!this.props.action?
                       <CheckBox
                         style={styles.checkbox}
                         color="#3a54ff"
@@ -335,7 +340,7 @@ class EditIncident extends Component {
                         placeholderTextColor={'black'}
                         style={styles.itemUnits}
                       />
-                      {true?
+                      {this.props.action?
                       <TextInput
                         placeholder={"units"}
                         placeholderTextColor={'black'}

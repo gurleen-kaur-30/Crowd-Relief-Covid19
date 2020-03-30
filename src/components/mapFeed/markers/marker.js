@@ -31,14 +31,17 @@ class MapMarker extends Component {
   }
 
   editClickedIncident(item) {
-    if (
-      this.props.incident.incident !== null
-        ? item.key !== this.props.incident.incident.key
-        : true
-    ) {
-      this.props.getIndvIncident(this.props.incident_key);
-    }
-    Actions.editIncident({action: true});
+    // if (
+    //   this.props.incident.incident !== null
+    //     ? item.key !== this.props.incident.incident.key
+    //     : true
+    // ) {
+    //   this.props.getIndvIncident(this.props.incident_key);
+    //   if (!this.props.incident.loading) {
+    //     Actions.editIncident({action: true});
+    //   }
+    // }
+    Actions.incident({incident_key: item.key, skip2edit: true});
   }
 
   /**
@@ -84,7 +87,7 @@ class MapMarker extends Component {
         {
           text: s,
           onPress: () => {
-            this.editClickedIncident(item);
+            this.editClickedIncident(item.properties.incident);
           },
         },
       ],

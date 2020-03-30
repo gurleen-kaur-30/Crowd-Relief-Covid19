@@ -71,6 +71,9 @@ class Incident extends Component {
     ) {
       this.props.getIndvIncident(this.props.incident_key);
     }
+    if (this.props.skip2edit && !this.props.incident.loading) {
+      Actions.editIncident({action: true});
+    }
   }
 
   //Handles the navigation by opening the Google Maps

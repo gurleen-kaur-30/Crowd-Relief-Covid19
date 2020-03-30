@@ -150,23 +150,6 @@ export const getUserIncidents = userID => {
 };
 
 /**
- * Stores the current incident viewed along with the state of
- * 'If that incident belongs to the signed in user or not'.
- * @param  {JSON}  incident   Current Incident being viewed
- * @param  {Boolean} isLoggedIn Store the state whether the current
- * incident being viewed is of the logged in user or not
- */
-export const viewIncident = (incident, isLoggedIn) => {
-  return dispatch => {
-    dispatch({
-      type: VIEW_INCIDENT,
-      incident: incident,
-      isLoggedIn: isLoggedIn,
-    });
-  };
-};
-
-/**
  *  Called when the user updates his details
  *  Also updates the firebase and the redux store
  * @param  {JSON} userDetails Details of the user
@@ -211,13 +194,30 @@ export const getIndvIncident = key => {
           key: snap.key,
           value: snap._value,
         };
-        if (item.value.user_id === store.getState().login.userDetails.email) {
-          dispatch(viewIncident(item, true));
-        } else {
-          dispatch(viewIncident(item, false));
-        }
+        // if (item.value.user_id === store.getState().login.userDetails.email) {
+        dispatch(viewIncident(item, true));
+        // } else {
+        //   dispatch(viewIncident(item, false));
+        // }
         dispatch(incidentsLoading(false));
       });
+  };
+};
+
+/**
+ * Stores the current incident viewed along with the state of
+ * 'If that incident belongs to the signed in user or not'.
+ * @param  {JSON}  incident   Current Incident being viewed
+ * @param  {Boolean} isLoggedIn Store the state whether the current
+ * incident being viewed is of the logged in user or not
+ */
+export const viewIncident = (incident, isLoggedIn) => {
+  return dispatch => {
+    dispatch({
+      type: VIEW_INCIDENT,
+      incident: incident,
+      isLoggedIn: isLoggedIn,
+    });
   };
 };
 
