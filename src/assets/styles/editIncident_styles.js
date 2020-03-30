@@ -85,10 +85,10 @@ export const styles = StyleSheet.create({
     color: 'white',
   },
   itemsRow: {
-    flex: 1,
+    flex: 10,
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
     paddingTop: height / 25,
+    marginHorizontal: 25
   },
   buttonView: {
     flexDirection: 'row',
@@ -116,4 +116,20 @@ export const styles = StyleSheet.create({
     height: height/20,
     borderColor: 'black', 
   },
+  checkbox:{
+    flex: 1,
+    marginTop: 10
+  },
+  itemName:{
+    flex: 3,
+    alignSelf: "flex-start"
+  },
+  itemQuantity:{
+    flex: 3,
+    alignContent: "center"
+  },
+  itemUnits:{
+    flex : 3,
+    alignContent: "center"
+  }
 });
