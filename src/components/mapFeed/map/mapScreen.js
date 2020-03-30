@@ -17,7 +17,10 @@ import Config from 'react-native-config';
 import MapContainer from './mapContainer';
 import {getMarkerImage, categories} from '../../../utils/categoryUtil.js';
 import {setLocationOnCustomSearch} from '../../../actions/locationAction';
-import {watchCurrLocation} from '../../../actions/locationAction';
+import {
+  watchCurrLocation,
+  getCurrLocation,
+} from '../../../actions/locationAction';
 import {
   getAllIncidents,
   updateIndvNotification,
@@ -74,9 +77,11 @@ class MapScreen extends Component {
         fastInterval: 5000,
       }).then(data => {
         this.props.watchCurrLocation();
+        this.props.getCurrLocation();
       });
     }
     this.props.watchCurrLocation();
+    this.props.getCurrLocation();
   }
 
   UNSAFE_componentWillUpdate(nextProps) {
@@ -265,27 +270,6 @@ class MapScreen extends Component {
             onPress={() => this.openModal()}>
             <Icon name="filter" size={27} style={styles.fabButtonIcon} />
           </TouchableHighlight>
-          <TouchableOpacity
-            activeOpacity={0.5}
-            style={styles.addRequirementButton}
-            onPress={() =>
-              Actions.addIncident({
-                action: 'to_be_picked',
-                category: 'contribute',
-              })
-            }>
-            <Icon name="plus" size={30} style={styles.fabButtonIcon} />
-          </TouchableOpacity>
-          <Text style={styles.fabText}> Contribute</Text>
-          <TouchableOpacity
-            activeOpacity={0.5}
-            style={styles.addReliefButton}
-            onPress={() =>
-              Actions.addIncident({action: 'required', category: 'relief'})
-            }>
-            <Icon name="plus" size={30} style={styles.fabButtonIcon} />
-          </TouchableOpacity>
-          <Text style={styles.fabText2}> Relief</Text>
           <Modal
             visible={this.state.visibleModal}
             onRequestClose={() => {
@@ -319,6 +303,32 @@ class MapScreen extends Component {
             styles={searchBarStyle}
             renderLeftButton={() => SideDrawer()}
           />
+          <TouchableOpacity
+            activeOpacity={0.5}
+            onPress={() =>
+              Actions.addIncident({
+                action: 'to_be_picked',
+                category: 'contribute',
+              })
+            }
+            style={[styles.fabContainer, styles.fabContainer2]}>
+            <Text style={styles.fabText}> Contribute</Text>
+            <View style={[styles.fabButton, styles.fabButton2]}>
+              <Icon name="plus" size={30} style={styles.fabButtonIcon} />
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() =>
+              Actions.addIncident({action: 'required', category: 'relief'})
+            }
+            activeOpacity={0.5}
+            style={styles.fabContainer}>
+            <Text style={styles.fabText}> Relief</Text>
+
+            <View style={styles.fabButton}>
+              <Icon name="plus" size={30} style={styles.fabButtonIcon} />
+            </View>
+          </TouchableOpacity>
         </View>
       );
     }
@@ -340,6 +350,7 @@ MapScreen.propTypes = {
   getAllItems: PropTypes.func.isRequired,
   getEmergencyPlaces: PropTypes.func.isRequired,
   watchCurrLocation: PropTypes.func.isRequired,
+  getCurrLocation: PropTypes.func.isRequired,
   updateShow: PropTypes.func.isRequired,
   updateIndvNotification: PropTypes.func.isRequired,
 };
@@ -363,6 +374,7 @@ function matchDispatchToProps(dispatch) {
       updateNearbyContributeToggle: updateNearbyContributeToggle,
       updateIndvNotification: updateIndvNotification,
       watchCurrLocation: watchCurrLocation,
+      getCurrLocation: getCurrLocation,
     },
     dispatch,
   );

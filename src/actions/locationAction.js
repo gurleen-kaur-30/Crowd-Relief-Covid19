@@ -32,6 +32,31 @@ export const watchCurrLocation = () => {
   };
 };
 
+export const getCurrLocation = () => {
+  return dispatch => {
+    return new Promise((resolve, reject) => {
+      Geolocation.getCurrentPosition(
+        position => {
+          let data = {};
+          data.latitude = parseFloat(position.coords.latitude);
+          data.longitude = parseFloat(position.coords.longitude);
+          resolve(dispatch(set_currLocation(data)));
+        },
+        error => {
+          reject(dispatch(handleError(error)));
+          console.log(error.message);
+        },
+        // {
+        // 	enableHighAccuracy: true,
+        // 	timeout: 20000,
+        // 	maximumAge: 1000,
+        // 	distanceFilter: 10
+        // }
+      );
+    });
+  };
+};
+
 /**
  * This function is called to update the location co-ordinates of
  * custom location by communicating changes to redux via set_location.

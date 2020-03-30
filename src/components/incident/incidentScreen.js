@@ -157,8 +157,6 @@ class Incident extends Component {
             <Card style={styles.card}>
               <CardItem>
                 <Text style={styles.titleTextHeader}>Action</Text>
-              </CardItem>
-              <CardItem>
                 <Text style={styles.titleTextDescription}>
                   {incidentDetails.action}
                 </Text>
@@ -167,8 +165,6 @@ class Incident extends Component {
             <Card style={styles.card}>
               <CardItem>
                 <Text style={styles.titleTextHeader}>Category</Text>
-              </CardItem>
-              <CardItem>
                 <Text style={styles.titleTextDescription}>
                   {incidentDetails.category}
                 </Text>
@@ -177,8 +173,6 @@ class Incident extends Component {
             <Card style={styles.card}>
               <CardItem>
                 <Text style={styles.titleTextHeader}>Urgency</Text>
-              </CardItem>
-              <CardItem>
                 <Text style={styles.titleTextDescription}>
                   {incidentDetails.urgency}
                 </Text>

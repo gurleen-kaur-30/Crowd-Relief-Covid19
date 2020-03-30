@@ -25,8 +25,7 @@ const userFirebaseStructure = data => {
       base64: '',
     },
     phone_no: '',
-    emergency_contact_name: '',
-    emergency_contact_phone_no: '',
+    agency: '',
   };
 };
 

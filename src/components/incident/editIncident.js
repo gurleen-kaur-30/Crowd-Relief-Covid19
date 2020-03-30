@@ -269,7 +269,8 @@ class EditIncident extends Component {
           </Left>
           <Body>
             <Text style={styles.title}>
-              Edit {this.state.incident.category} Incident
+              {this.props.action ? this.state.incident.category : 'Edit'}{' '}
+              incident
             </Text>
           </Body>
         </Header>

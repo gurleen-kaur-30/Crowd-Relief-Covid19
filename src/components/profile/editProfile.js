@@ -31,8 +31,7 @@ class EditProfile extends Component {
       email: this.props.user.email,
       phone_no: this.props.user.phone_no,
       photo: this.props.user.photo,
-      emergency_contact_name: this.props.user.emergency_contact_name,
-      emergency_contact_phone_no: this.props.user.emergency_contact_phone_no,
+      agency: this.props.user.agency,
       isChanged: false,
     };
   }
@@ -106,7 +105,7 @@ class EditProfile extends Component {
   validateAllNames() {
     return ![
       {key: 'name', label: 'Name', isRequired: true},
-      {key: 'emergency_contact_name', label: 'Emergency contact name'},
+      {key: 'agency', label: 'Agency Name'},
     ].some(i => !this.validateName(i.key, i.label, i.isRequired));
   }
 
@@ -115,13 +114,9 @@ class EditProfile extends Component {
    * Returns false in case validation fails
    */
   validateAllPhoneNumbers() {
-    return ![
-      {key: 'phone_no', label: 'Phone number', isRequired: true},
-      {
-        key: 'emergency_contact_phone_no',
-        label: 'Emergency contact phone number',
-      },
-    ].some(i => !this.validatePhoneNumber(i.key, i.label, i.isRequired));
+    return ![{key: 'phone_no', label: 'Phone number', isRequired: true}].some(
+      i => !this.validatePhoneNumber(i.key, i.label, i.isRequired),
+    );
   }
 
   /**
@@ -281,7 +276,7 @@ class EditProfile extends Component {
               autoCorrect={false}
               ref={input => (this.phoneNoInput = input)}
               onChangeText={phone_no => this.handleInput('phone_no', phone_no)}
-              onSubmitEditing={() => this.emergencyContactNameInput.focus()}
+              onSubmitEditing={() => this.agencyNameInput.focus()}
               keyboardType="phone-pad"
               returnKeyType="next"
               style={styles.textInput}
@@ -292,45 +287,17 @@ class EditProfile extends Component {
           </View>
           <View style={styles.valueItem}>
             <View style={styles.valueTextContainer}>
-              <Text style={styles.valueText}>Emergency Contact Name</Text>
+              <Text style={styles.valueText}>Agency Name</Text>
             </View>
             <TextInput
               autoCorrect={false}
-              ref={input => (this.emergencyContactNameInput = input)}
-              onChangeText={emergency_contact_name =>
-                this.handleInput(
-                  'emergency_contact_name',
-                  emergency_contact_name,
-                )
-              }
-              onSubmitEditing={() => this.emergencyContactPhoneInput.focus()}
+              ref={input => (this.agencyNameInput = input)}
+              onChangeText={agency => this.handleInput('agency', agency)}
               returnKeyType="next"
               style={styles.textInput}
               underlineColorAndroid="transparent"
-              placeholder="Contact Name"
-              value={this.state.emergency_contact_name}
-            />
-          </View>
-          <View style={styles.valueItem}>
-            <View style={styles.valueTextContainer}>
-              <Text style={styles.valueText}>Emergency Contact Number</Text>
-            </View>
-            <TextInput
-              autoCapitalize="none"
-              autoCorrect={false}
-              ref={input => (this.emergencyContactPhoneInput = input)}
-              onChangeText={emergency_contact_phone_no =>
-                this.handleInput(
-                  'emergency_contact_phone_no',
-                  emergency_contact_phone_no,
-                )
-              }
-              keyboardType="phone-pad"
-              returnKeyType="next"
-              style={styles.textInput}
-              underlineColorAndroid="transparent"
-              placeholder="Contact Number"
-              value={this.state.emergency_contact_phone_no}
+              placeholder="Agency Name"
+              value={this.state.agency}
             />
           </View>
           {this.props.updateLoading && (
