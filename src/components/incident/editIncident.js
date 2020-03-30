@@ -42,10 +42,6 @@ class EditIncident extends Component {
         uri: this.props.incidentDetails.image.uri,
       },
     };
-
-    this.state2 = {
-      itemsCopy: this.state.items,
-    };
   }
 
   /**
@@ -61,10 +57,6 @@ class EditIncident extends Component {
       type,
       duration,
     });
-  }
-
-  componentWillUnmount() {
-    this.setState({itemsCopy: this.state.items});
   }
 
   /**
@@ -93,16 +85,14 @@ class EditIncident extends Component {
    * Performs update
    */
   update = () => {
-    this.setState({items: itemsCopy}, () => {
-      Promise.resolve(
-        this.props.updateIncidentFirebase(
-          this.props.incident.incident.key,
-          this.state,
-        ),
-      ).then(() => {
-        this.showToast('Incident updated!', 'success');
-        Actions.pop();
-      });
+    Promise.resolve(
+      this.props.updateIncidentFirebase(
+        this.props.incident.incident.key,
+        this.state,
+      ),
+    ).then(() => {
+      this.showToast('Incident updated!', 'success');
+      Actions.pop();
     });
   };
 
@@ -164,53 +154,28 @@ class EditIncident extends Component {
     });
   }
 
-  updateValues = (text, index, index2) => {
-    let dataArray = this.state.items;
-    if (dataArray[index]) {
-      let item = dataArray[index];
-      if (index2 == 0) {
-        item.name = text;
-      } else if (index2 == 1) {
-        item.quantity = text;
-      } else {
-        item.unit = text;
-      }
-      dataArray[index] = item;
-    } else {
-      let item = {name: '', quantity: '', unit: ''};
-      if (index2 == 0) {
-        item.name = text;
-      } else if (index2 == 1) {
-        item.quantity = text;
-      } else {
-        item.unit = text;
-      }
-      dataArray[index] = item;
-    }
-    this.setState({items: dataArray}, console.log(this.state.items));
-  };
-
-  removeTextInput = index => {
-    let inputData = this.state2.itemsCopy;
-    inputData.splice(index, 1);
-    this.setState({
-      itemsCopy: inputData,
-    });
-  };
-
   render() {
-    console.log('items', this.state.items);
+    console.log('state', this.state);
+    console.log(this.props.action);
     let pickers;
     if (this.state.category == 'contribute') {
-      pickers = [
-        <Picker.Item label="To be picked" value="to_pick" key="to_pick" />,
-        <Picker.Item label="Picked" value="picked" key="picked" />,
-      ];
+      if (this.props.action) {
+        pickers = [<Picker.Item label="Picked" value="picked" key="picked" />];
+      } else {
+        pickers = [
+          <Picker.Item label="To be picked" value="to_pick" key="to_pick" />,
+        ];
+      }
     } else {
-      pickers = [
-        <Picker.Item label="Required" value="required" key="required" />,
-        <Picker.Item label="Delivered" value="delivered" key="delivered" />,
-      ];
+      if (this.props.action) {
+        pickers = [
+          <Picker.Item label="Delivered" value="delivered" key="delivered" />,
+        ];
+      } else {
+        pickers = [
+          <Picker.Item label="Required" value="required" key="required" />,
+        ];
+      }
     }
     return (
       <View style={styles.container}>
@@ -223,7 +188,9 @@ class EditIncident extends Component {
             </TouchableOpacity>
           </Left>
           <Body>
-            <Text style={styles.title}>Edit Incident</Text>
+            <Text style={styles.title}>
+              Edit {this.state.category} Incident
+            </Text>
           </Body>
         </Header>
         <ScrollView
@@ -270,7 +237,7 @@ class EditIncident extends Component {
             ref={input => (this.detailsInput = input)}
             onChangeText={details => this.setState({details})}
             returnKeyType="next"
-            style={styles.textInput}
+            style={[styles.textInput, {height: 100}]}
             placeholder="Description"
             value={this.state.details}
           />
@@ -299,82 +266,9 @@ class EditIncident extends Component {
           <View style={styles.textInputHeadingContainer}>
             <Text style={styles.textInputHeading}>Items</Text>
           </View>
-          {this.state2.itemsCopy &&
-            this.state2.itemsCopy.map((item, index) => {
-              return (
-                <View style={styles.itemsRow}>
-                  <TextInput
-                    key={index}
-                    onChangeText={text => this.updateValues(text, index, 0)}
-                    // onSubmitEditing={() => this.detailsInput.focus()}
-                    keyboardType="email-address"
-                    returnKeyType="next"
-                    placeholder={item.name}
-                    style={styles.name}
-                    placeholderTextColor={'black'}
-                  />
-                  <TextInput
-                    ref={input => (this.titleInput = input)}
-                    key={String(index) + '1'}
-                    style={styles.name}
-                    keyboardType={'numeric'}
-                    onChangeText={text => this.updateValues(text, index, 1)}
-                    // onSubmitEditing={() => this.detailsInput.focus()}
-                    returnKeyType="next"
-                    placeholder={item.quantity}
-                    placeholderTextColor={'black'}
-                  />
-                  <Picker
-                    selectedValue={item.unit}
-                    onValueChange={unit => {
-                      this.updateValues(unit, index, 2);
-                    }}
-                    style={styles.pickerStyle}>
-                    <Picker.Item label="Unit" value="unit" />
-                    <Picker.Item label="kg" value="kg" />
-                    <Picker.Item label="gm" value="gm" />
-                    <Picker.Item label="ltr" value="ltr" />
-                    <Picker.Item label="ml" value="ml" />
-                  </Picker>
-                  <Icon1
-                    name={'remove-circle'}
-                    onPress={() => this.removeTextInput(index)}
-                    color="red"
-                    size={30}
-                  />
-                  {/* <Button title='-' style={styles.removeButton} onPress={() => this.removeTextInput(index)} /> */}
-                </View>
-              );
-            })}
-
-          {/* <View style={styles.switchContainer}>
-            <Text style={styles.switchText}>Get Help!</Text>
-            <Switch
-              thumbColor="#1c76cb"
-              onValueChange={getHelp => {
-                this.setState({getHelp: getHelp});
-              }}
-              value={this.state.getHelp}
-            />
-          </View>
-          <View style={styles.switchContainer}>
-            <Text style={styles.switchText}>Share Publicly!</Text>
-            <Switch
-              thumbColor="#1c76cb"
-              onValueChange={visible => {
-                this.setState({visible: visible});
-              }}
-              value={this.state.visible}
-            />
-          </View>  */}
           {this.props.incident.loading && (
             <ActivityIndicator size="large" color="black" />
           )}
-          <Button
-            title="Add Item"
-            style={styles.addButton}
-            onPress={() => this.addTextInput(this.state.textInput.length)}
-          />
           <TouchableOpacity
             style={styles.updateButton}
             onPress={() => this.handleUpdate()}>
