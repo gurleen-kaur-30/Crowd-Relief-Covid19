@@ -4,9 +4,11 @@ import MapView from 'react-native-maps';
 import {getMarkerImage, getMarkerColor} from '../../../utils/categoryUtil.js';
 import {connect} from 'react-redux';
 import {Actions} from 'react-native-router-flux';
+import {bindActionCreators} from 'redux';
 import getDirections from 'react-native-google-maps-directions';
 import PropTypes from 'prop-types';
 import {styles} from '../../../assets/styles/clusterMarker_styles';
+import {getIndvIncident} from '../../../actions/incidentsAction.js';
 
 /**
  * Class for displaying individual marker on map
@@ -26,6 +28,17 @@ class MapMarker extends Component {
    */
   viewClickedIncident(item) {
     Actions.incident({incident_key: item.key}); // Navigates to incident page
+  }
+
+  editClickedIncident(item) {
+    if (
+      this.props.incident.incident !== null
+        ? item.key !== this.props.incident.incident.key
+        : true
+    ) {
+      this.props.getIndvIncident(this.props.incident_key);
+    }
+    Actions.editIncident({action: true});
   }
 
   /**
@@ -70,7 +83,9 @@ class MapMarker extends Component {
         },
         {
           text: s,
-          onPress: () => {},
+          onPress: () => {
+            this.editClickedIncident(item);
+          },
         },
       ],
       {cancelable: true},
@@ -148,6 +163,15 @@ MapMarker.propTypes = {
   user: PropTypes.object,
 };
 
+function matchDispatchToProps(dispatch) {
+  return bindActionCreators(
+    {
+      getIndvIncident: getIndvIncident,
+    },
+    dispatch,
+  );
+}
+
 /**
  * Mapping state to props so that state variables can be used
  * through props in children components.
@@ -156,6 +180,7 @@ MapMarker.propTypes = {
  */
 const mapStateToProps = state => ({
   user: state.login.userDetails,
+  incident: state.incident,
 });
 
-export default connect(mapStateToProps, null)(MapMarker);
+export default connect(mapStateToProps, matchDispatchToProps)(MapMarker);

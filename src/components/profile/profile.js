@@ -20,7 +20,6 @@ var PushNotification = require('react-native-push-notification');
 import {Header, Title, Left, Body} from 'native-base';
 import {SideDrawer} from '../sideMenu';
 import ProfileIncident from './profileIncident';
-// import LocationServicesDialogBox from 'react-native-android-location-services-dialog-box';
 import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
 
 /**
@@ -32,16 +31,6 @@ class Profile extends Component {
     //Used to check if location services are enabled and
     //if not than asks to enables them by redirecting to location settings.
     if (Platform.OS === 'android') {
-      // LocationServicesDialogBox.checkLocationServicesIsEnabled({
-      //   message:
-      //     '<h2>Please enable GPS!</h2>\
-      //       CrowdAlert wants to change your Location settings',
-      //   ok: 'Ok',
-      //   cancel: 'No',
-      //   providerListener: true,
-      // }).then(success => {
-      //   this.props.watchCurrLocation();
-      // });
       RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({
         interval: 10000,
         fastInterval: 5000,
