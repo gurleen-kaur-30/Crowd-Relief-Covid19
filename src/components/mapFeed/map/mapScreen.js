@@ -205,15 +205,21 @@ class MapScreen extends Component {
         <TouchableOpacity
           activeOpacity={0.5}
           style={styles.addRequirementButton}
-          onPress={() => Actions.addIncident({category : "required"})}>
+          onPress={() =>
+            Actions.addIncident({
+              action: 'to_be_picked',
+              category: 'contribute',
+            })
+          }>
           <Icon name="plus" size={30} style={styles.fabButtonIcon} />
         </TouchableOpacity>
-        <Text style={styles.fabText}> Requirement</Text>
-
+        <Text style={styles.fabText}> Contribute</Text>
         <TouchableOpacity
           activeOpacity={0.5}
           style={styles.addReliefButton}
-          onPress={() => Actions.addIncident({category : "relief"})}>
+          onPress={() =>
+            Actions.addIncident({action: 'required', category: 'relief'})
+          }>
           <Icon name="plus" size={30} style={styles.fabButtonIcon} />
         </TouchableOpacity>
         <Text style={styles.fabText2}> Relief</Text>

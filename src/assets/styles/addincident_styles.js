@@ -15,7 +15,7 @@ export const styles = StyleSheet.create({
     marginHorizontal: width / 30,
     width: width / 4,
   },
-  requirementTitle: {
+  title: {
     marginLeft: width / 35,
     fontWeight: 'bold',
     fontSize: 25,
@@ -48,7 +48,7 @@ export const styles = StyleSheet.create({
     fontSize: 20,
     color: '#fff',
   },
-  textInput: {
+  textInputDetails: {
     width: width * 0.9,
     marginLeft: width / 20,
     paddingTop: height / 300,
@@ -102,7 +102,7 @@ export const styles = StyleSheet.create({
     borderColor: 'black',
     borderWidth: 1,
     margin: 20,
-    fontSize: 17.5
+    fontSize: 17.5,
   },
   row: {
     flexDirection: 'row',
@@ -116,34 +116,34 @@ export const styles = StyleSheet.create({
     paddingLeft: width / 60,
     paddingTop: 6,
     fontSize: 16,
-    flex : 1
+    flex: 1,
   },
-  checkbox:{
+  checkbox: {
     marginRight: 15,
     alignSelf: 'flex-start',
     height: 20,
     width: 10,
-    color:"#3a5ff4",
+    color: '#3a5ff4',
     marginTop: 5,
-    flex : 1
+    flex: 1,
   },
-  checkboxTitle : {
-      fontFamily : 'ProductSans-Regular',
-      fontSize : 19,
-      color : '#464646',
-      marginLeft : 8,
-      flex : 6
-    },
-  itemList:{
+  checkboxTitle: {
+    fontFamily: 'ProductSans-Regular',
+    fontSize: 19,
+    color: '#464646',
+    marginLeft: 8,
+    flex: 6,
+  },
+  itemList: {
     marginLeft: 15,
     marginTop: 20,
-    flexDirection: "row",
+    flexDirection: 'row',
     flex: 10,
-    marginRight: 20
+    marginRight: 20,
   },
-  statusText:{
+  statusText: {
     marginLeft: 20,
-    flex : 2,
-    color : "orange"
-  }
+    flex: 2,
+    color: 'orange',
+  },
 });

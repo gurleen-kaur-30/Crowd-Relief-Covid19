@@ -72,11 +72,10 @@ const styles = StyleSheet.create({
     bottom: height / 25,
     elevation: 15,
     borderRadius: 35,
-    backgroundColor: 'red',
+    backgroundColor: 'rgba(180,0,0,1)',
     justifyContent: 'center',
     position: 'absolute',
   },
-
   filterButton: {
     width: width / 8.5,
     height: width / 8.5,
@@ -92,22 +91,22 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     color: '#fff',
   },
-  fabText:{
-    color: "red",
+  fabText: {
+    color: 'red',
     position: 'absolute',
-    top: height*0.85,
-    left: width*0.19,
-    fontWeight: "bold",
-    fontSize: 18
-  },
-  fabText2:{
-    color: "green",
-    position: 'absolute',
-    top: height*0.85,
-    left: width*0.56,
-    fontWeight: "bold",
+    top: height * 0.85,
+    left: width * 0.19,
+    fontWeight: 'bold',
     fontSize: 18,
-  }
+  },
+  fabText2: {
+    color: 'green',
+    position: 'absolute',
+    top: height * 0.85,
+    left: width * 0.56,
+    fontWeight: 'bold',
+    fontSize: 18,
+  },
 });
 
 export {searchBarStyle, styles};

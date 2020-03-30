@@ -10,19 +10,18 @@ import {
   Keyboard,
   ActivityIndicator,
   Picker,
-  Button,
 } from 'react-native';
 import {Header, Title, Left, Body, Switch, Right, Card} from 'native-base';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {addIncidentToFirebase} from '../actions/incidentsAction';
-import {getAllItems} from '../actions/itemsActions';
 import {Actions} from 'react-native-router-flux';
 import {styles} from '../assets/styles/addincident_styles';
 import PropTypes from 'prop-types';
 import ImagePicker from 'react-native-image-picker';
 import {Toast} from 'native-base';
+import CheckBox from '@react-native-community/checkbox';
 
 /**
  * Screen for adding an incident.
@@ -33,14 +32,13 @@ class AddIncident extends Component {
     super(props);
     this.state = {
       incident: {
-        title: null,
         details: null,
         visible: true,
         timestamp: new Date().toString(),
         location: {
           coordinates: this.props.location.curr_coordinates,
         },
-        category: null,
+        category: this.props.category,
         user_id: this.props.login.userDetails.email,
         image: {
           isPresent: false,
@@ -48,21 +46,28 @@ class AddIncident extends Component {
           uri: '',
         },
         items: [],
-        action: null,
+        action: this.props.action,
         urgency: 1,
       },
       disable: false,
-      textInput: [],
-      quantityInput: [],
-      items : this.props.items,
-      item: "choose item"
+      checkboxList: [],
     };
-
   }
 
-  componentWillMount(){
-    this.props.getAllItems()
+  UNSAFE_componentWillMount() {
+    var a = [];
+    this.props.items.all_items.forEach(function(item) {
+      a.push({
+        name: item.key,
+        quantity: item.value.quantity,
+        unit: null,
+        status: 0,
+        include: false,
+      });
+    });
+    this.setState({checkboxList: a});
   }
+
   /**
    * Updates category of incident chosen by user.
    * @param  {string} category The category selected by the user.
@@ -73,15 +78,6 @@ class AddIncident extends Component {
       incident: {
         ...this.state.incident,
         category: category,
-      },
-    });
-  };
-
-  updateAction = action => {
-    this.setState({
-      incident: {
-        ...this.state.incident,
-        action: action,
       },
     });
   };
@@ -112,29 +108,6 @@ class AddIncident extends Component {
   }
 
   /**
-   * Validates the title to make sure it has correct information
-   */
-  validateTitle() {
-    let {title} = this.state.incident,
-      error = null;
-
-    if (!title || title.length <= 3) {
-      error = 'Title should be 3 or more characters';
-    }
-    // Checks for alpha numeric
-    else if (!/^[a-z0-9\s]+$/i.test(title)) {
-      error = 'Title can contain only alphabets and numbers';
-    }
-
-    if (!error) {
-      return true;
-    }
-
-    this.showToast(error);
-    return false;
-  }
-
-  /**
    * Validates the details of the incident
    * to make sure it has correct information
    */
@@ -160,6 +133,18 @@ class AddIncident extends Component {
    * Add the incident to firebase
    */
   addIncident = () => {
+    var items2store = this.state.checkboxList.filter(function(item) {
+      if (item.include) {
+        return true;
+      }
+    });
+    this.setState({
+      incident: {
+        ...this.state.incident,
+        items: items2store,
+      },
+    });
+    console.log(this.state.incident);
     this.props
       .addIncidentToFirebase(this.state.incident) // waits till incident details are updated in redux
       .then(result => {
@@ -174,7 +159,7 @@ class AddIncident extends Component {
     Keyboard.dismiss();
 
     // Validate the title and the details
-    if (!this.validateTitle() || !this.validateDetails()) {
+    if (!this.validateDetails()) {
       return;
     }
 
@@ -240,143 +225,23 @@ class AddIncident extends Component {
     });
   };
 
-  addValues = (text, index, index2) => {
-    let dataArray = this.state.incident.items;
-    console.log(text, index, index2);
-    if (dataArray[index]) {
-      console.log('Hai index');
-      let item = dataArray[index];
-      if (index2 == 0) {
-        item.name = text;
-        this.setState({item: text})
-        this.addQuantityTextInput(text,index)
-      } else if (index2 == 1) {
-        item.quantity = text;
-      } else {
-        item.unit = text;
-      }
-      dataArray[index] = item;
-    } else {
-      console.log('No index');
-      let item = {name: '', quantity: '', unit: 'kg'};
-      dataArray[index] = item;
+  addValues = (inputItem, index, index2) => {
+    let dataArray = this.state.checkboxList;
+    console.log(inputItem, index, index2);
+    let item = dataArray[index];
+    if (index2 == 0) {
+      item.include = inputItem;
+    } else if (index2 == 1) {
+      item.unit = inputItem;
     }
+    dataArray[index] = item;
     this.setState({
-      incident: {
-        ...this.state.incident,
-        items: dataArray,
-      },
+      checkboxList: dataArray,
     });
-    console.log(this.state.incident.items[index]);
+    console.log(this.state.checkboxList);
   };
-
-  removeTextInput = () => {
-    let textInput = this.state.textInput;
-    let inputData = this.state.incident.items;
-    textInput.pop();
-    inputData.pop();
-    this.setState({
-      incident: {
-        ...this.state.incident,
-        items: inputData,
-      },
-      textInput,
-    });
-    console.log(this.state.incident);
-  };
-
-  addTextInput = index => {
-    let textInput = this.state.textInput;
-    this.addValues(null, index, null);
-    // console.log(this.state.incident.items[index]);
-    textInput.push(
-      <View style={styles.itemsRow} key={index}>
-          <Picker
-            selectedValue={(this.state.incidents && this.state.incidents.items && this.state.incidents.items[index].name) || 'choose item'}
-            onValueChange={text => {
-              this.addValues(text, index, 0);
-          }}
-          style={styles.name}>
-        {this.state.items && this.state.items.map( (item, index) => {
-          return(
-            <Picker.Item label={item.key} value={item.key} key={index + 1} />
-          )
-         })
-        }
-        </Picker>
-{/* 
-        <TextInput
-          ref={input => (this.quantityInput = input)}
-          style={styles.name}
-          onChangeText={text => this.addValues(text, index, 1)}
-          keyboardType="numeric"
-          returnKeyType="next"
-          placeholder="Quantity"
-        />
-        <Picker
-          selectedValue={this.state.incident.items[index].unit}
-          onValueChange={text => {
-            this.addValues(text, index, 2);
-          }}
-          style={styles.name}>
-          <Picker.Item label="kg" value="kg" key = "kg"/>
-          <Picker.Item label="gm" value="gm" key ="gm"/>
-          <Picker.Item label="units" value="units" key ="units"/>
-          <Picker.Item label="ltr" value="ltr" />
-          <Picker.Item label="ml" value="ml" />
-        </Picker> */}
-      </View>,
-    );
-    this.setState({
-      textInput: textInput,
-    });
-  };
-
-  addQuantityTextInput (key,index){
-    let quantityInput = this.state.quantityInput
-    quantityInput.push(
-        <Picker
-        selectedValue={(this.state.incidents && this.state.incidents.items && this.state.incidents.items[index].name) || 'choose item'}
-        onValueChange={text => {
-          this.addValues(text, index, 1);
-          }}
-          style={styles.name}>
-        {this.state.items && this.state.items.map( (item, index) => {
-          return(
-          item.key == key?
-            item.value && item.value.quantity.map((quantity,index2) => {
-              return(
-                <Picker.Item label={quantity} value={quantity} key={index2 + 1} />
-              )
-            })
-            : null
-          )
-        })
-        }
-        </Picker>
-    )
-    this.setState({
-      quantityInput: quantityInput
-    })
-  }
 
   render() {
-    let pickers;
-    if (this.state.incident.category == 'contribute') {
-      pickers = [
-        <Picker.Item label="Choose" value={null} key="null" />,
-        <Picker.Item label="To be picked" value="to_pick" key="to_pick" />,
-        <Picker.Item label="Picked" value="picked" key="picked" />,
-      ];
-    } else {
-      pickers = [
-        <Picker.Item label="Choose" value={null} key="null" />,
-        <Picker.Item label="Required" value="required" key="required" />,
-        <Picker.Item label="Delivered" value="delivered" key="delivered" />,
-      ];
-    }
-    console.log(this.state.incident.items);
-
     return (
       <View style={styles.container}>
         <Header androidStatusBarColor="#1c76cb">
@@ -418,54 +283,21 @@ class AddIncident extends Component {
             </TouchableOpacity>
           </View>
           <View style={styles.textInputHeadingContainer}>
-            <Text style={styles.textInputHeading}>Kind of incident</Text>
+            <Text style={styles.textInputHeading}>
+              Kind of incident: {this.state.incident.category}
+            </Text>
           </View>
-          <Picker
-            selectedValue={this.state.incident.category}
-            onValueChange={category => {
-              this.updateCategory(category);
-            }}
-            style={styles.picker}>
-            <Picker.Item label="Relief" value="relief" />
-            <Picker.Item label="Contribution" value="contribute" />
-          </Picker>
           <View style={styles.textInputHeadingContainer}>
-            <Text style={styles.textInputHeading}>Action to be taken</Text>
+            <Text style={styles.textInputHeading}>
+              Action to be taken: {this.state.incident.action}
+            </Text>
           </View>
-          <Picker
-            selectedValue={this.state.incident.action}
-            onValueChange={action => {
-              this.updateAction(action);
-            }}
-            style={styles.picker}>
-            {pickers}
-          </Picker>
-          <View style={styles.textInputHeadingContainer}>
-            <Text style={styles.textInputHeading}>Incident Title</Text>
-          </View>
-
-          <TextInput
-            style={styles.textInput}
-            ref={input => (this.titleInput = input)}
-            onChangeText={title =>
-              this.setState({
-                incident: {
-                  ...this.state.incident,
-                  title: title,
-                },
-              })
-            }
-            onSubmitEditing={() => this.detailsInput.focus()}
-            keyboardType="email-address"
-            returnKeyType="next"
-            placeholder="Title"
-          />
           <View style={styles.textInputHeadingContainer}>
             <Text style={styles.textInputHeading}>Incident Details</Text>
           </View>
           <TextInput
             ref={input => (this.detailsInput = input)}
-            style={styles.textInput}
+            style={[styles.textInput, {height: 100}]}
             onChangeText={details =>
               this.setState({
                 incident: {
@@ -494,41 +326,34 @@ class AddIncident extends Component {
                 return (
                   <Picker.Item
                     label={String(item + 1)}
-                    value={String(item + 1)}
+                    value={item + 1}
                     key={item}
                   />
                 );
               })}
             </Picker>
           </View>
-          <View>
-            <View style={styles.row}>
-              <View style={{margin: 10}}>
-                <Button
-                  title="Add Item"
-                  onPress={() => this.addTextInput(this.state.textInput.length)}
+          {this.state.checkboxList.map((item, index) => {
+            return (
+              <View style={styles.itemList} key={index}>
+                <CheckBox
+                  style={styles.checkbox}
+                  color="#3a54ff"
+                  value={this.state.checkboxList[index].include}
+                  onValueChange={val => this.addValues(val, index, 0)}
+                />
+                <Text style={styles.checkboxTitle}>
+                  {item.name} ( {item.quantity} )
+                </Text>
+                <TextInput
+                  keyboardType="numeric"
+                  style={styles.name}
+                  placeholder={'units'}
+                  onChangeText={text => this.addValues(text, index, 1)}
                 />
               </View>
-              <View style={{margin: 10}}>
-                <Button
-                  title="Remove Item"
-                  onPress={() => this.removeTextInput()}
-                />
-              </View>
-            </View>
-            <View style={{flexDirection: "row"}}>
-            <View>
-            {this.state.textInput.map(value => {
-              return value;
-            })}
-            </View>
-            <View>
-             {this.state.quantityInput.map(value => {
-              return value;
-            })}
-            </View>
-            </View>
-          </View>
+            );
+          })}
           {this.props.incident.loading && (
             <ActivityIndicator size="large" color="black" />
           )}
@@ -564,7 +389,6 @@ function matchDispatchToProps(dispatch) {
   return bindActionCreators(
     {
       addIncidentToFirebase: addIncidentToFirebase,
-      getAllItems: getAllItems
     },
     dispatch,
   );
@@ -580,7 +404,7 @@ const mapStateToProps = state => ({
   login: state.login,
   location: state.location,
   incident: state.incident,
-  items: state.items.all_items
+  items: state.items,
 });
 
 export default connect(mapStateToProps, matchDispatchToProps)(AddIncident);
