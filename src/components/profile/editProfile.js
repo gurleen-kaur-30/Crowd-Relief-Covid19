@@ -17,7 +17,7 @@ import PropTypes from 'prop-types';
 import {updateUserFirebase} from '../../actions/loginAction';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import {Header, Title, Left, Body, Toast} from 'native-base';
-import ImagePicker from 'react-native-image-picker';
+import ImagePicker from 'react-native-image-crop-picker';
 
 /**
  * Screen showing the edit options for the profile and personal information.
@@ -186,23 +186,27 @@ class EditProfile extends Component {
         path: 'images',
       },
     };
-    ImagePicker.showImagePicker(options, response => {
-      if (response.error) {
-        this.showToast('ImagePicker Error: ' + response.error);
-      } else if (response.didCancel) {
-      } else if (response.customButton) {
-        this.showToast('User tapped custom button: ' + response.customButton);
-      } else {
-        this.setState({
-          photo: {
-            url: '',
-            base64: response.data,
-          },
-        });
-        this.showToast('Image Added!', 'success');
-        this.handleInput('isChanged', true);
-      }
+    ImagePicker.openPicker({
+      cropping: false,
+      compressImageQuality: 0.8,
+      compressImageMaxWidth: width,
+      compressImageMaxHeight: height,
+      includeBase64: true,
+    }).then(image => {
+      console.log(image);
     });
+
+    // this.setState({
+    //   isChanged: true,
+    //   user: {
+    //     ...this.state.user,
+    //     photo: {
+    //       url: '',
+    //       uri: response.uri,
+    //     },
+    //   },
+    // });
+    this.showToast('Image Added!', 'success');
   };
 
   render() {
