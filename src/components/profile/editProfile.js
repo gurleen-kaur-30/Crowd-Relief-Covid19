@@ -27,11 +27,13 @@ class EditProfile extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: this.props.user.name,
-      email: this.props.user.email,
-      phone_no: this.props.user.phone_no,
-      photo: this.props.user.photo,
-      agency: this.props.user.agency,
+      user: {
+        name: this.props.user.name,
+        email: this.props.user.email,
+        phone_no: this.props.user.phone_no,
+        photo: this.props.user.photo,
+        agency: this.props.user.agency,
+      },
       isChanged: false,
     };
   }
@@ -55,7 +57,7 @@ class EditProfile extends Component {
    * Validates the phone number
    */
   validatePhoneNumber(type, label, isRequired = false) {
-    let phoneNumber = this.state[type],
+    let phoneNumber = this.state.user[type],
       error = null,
       // In case the user enter the emergency contact number
       // then we need to validate it
@@ -79,7 +81,7 @@ class EditProfile extends Component {
    * Validates the name type
    */
   validateName(type, label, isRequired = false) {
-    let name = this.state[type],
+    let name = this.state.user[type],
       error = null;
 
     if (isRequired && (!name || name.length <= 3)) {
@@ -120,33 +122,11 @@ class EditProfile extends Component {
   }
 
   /**
-   * Validates the email entered by the user
-   * against an acceptable regex pattern
-   *
-   */
-  validateEmail() {
-    let {email} = this.state;
-
-    if (email === '') {
-      this.showToast("You can't leave the email field blank!");
-      return false;
-    } else {
-      var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-      if (!email.match(mailformat)) {
-        this.showToast('Please check your email format');
-        return false;
-      } else {
-        return true;
-      }
-    }
-  }
-
-  /**
    * Update the user details in firebase
    * and show a toast on success
    */
   update = () => {
-    this.props.updateUserFirebase(this.state).then(() => {
+    this.props.updateUserFirebase(this.state.user).then(() => {
       this.showToast('Profile Updated', 'success');
       Actions.pop();
     });
@@ -155,7 +135,6 @@ class EditProfile extends Component {
   handleUpdate() {
     if (
       !this.validateAllNames() ||
-      !this.validateEmail() ||
       !this.validateAllPhoneNumbers() ||
       !this.state.isChanged
     ) {
@@ -169,7 +148,7 @@ class EditProfile extends Component {
    * handle input change across TextInput
    */
   handleInput(name, value) {
-    const state = this.state;
+    const state = this.state.user;
     state[name] = value;
     this.setState({...state, isChanged: true});
   }
@@ -194,9 +173,12 @@ class EditProfile extends Component {
         this.showToast('User tapped custom button: ' + response.customButton);
       } else {
         this.setState({
-          photo: {
-            url: '',
-            base64: response.data,
+          user: {
+            ...this.state.user,
+            photo: {
+              url: '',
+              base64: response.data,
+            },
           },
         });
         this.showToast('Image Added!', 'success');
@@ -206,6 +188,7 @@ class EditProfile extends Component {
   };
 
   render() {
+    var user = this.state.user;
     return (
       <View style={styles.container}>
         <Header androidStatusBarColor="#1c76cb">
@@ -229,14 +212,13 @@ class EditProfile extends Component {
               style={styles.avatar}
               resizeMethod={'resize'}
               source={
-                this.state.photo.url === ''
-                  ? this.state.photo.base64 === ''
+                user.photo.url === ''
+                  ? user.photo.base64 === ''
                     ? require('../../assets/images/boy.png')
                     : {
-                        uri:
-                          'data:image/jpeg;base64, ' + this.state.photo.base64,
+                        uri: 'data:image/jpeg;base64, ' + user.photo.base64,
                       }
-                  : {uri: this.state.photo.url}
+                  : {uri: user.photo.url}
               }
             />
             <TouchableOpacity
@@ -258,7 +240,7 @@ class EditProfile extends Component {
               style={styles.textInput}
               underlineColorAndroid="transparent"
               placeholder="Name"
-              value={this.state.name}
+              value={user.name}
             />
           </View>
 
@@ -266,7 +248,7 @@ class EditProfile extends Component {
             <View style={styles.valueTextContainer}>
               <Text style={styles.valueText}>Email</Text>
             </View>
-            <Text style={styles.textInput}>{this.state.email}</Text>
+            <Text style={styles.textInput}>{user.email}</Text>
           </View>
           <View style={styles.valueItem}>
             <View style={styles.valueTextContainer}>
@@ -282,7 +264,7 @@ class EditProfile extends Component {
               style={styles.textInput}
               underlineColorAndroid="transparent"
               placeholder="Phone No."
-              value={this.state.phone_no}
+              value={user.phone_no}
             />
           </View>
           <View style={styles.valueItem}>
@@ -297,7 +279,7 @@ class EditProfile extends Component {
               style={styles.textInput}
               underlineColorAndroid="transparent"
               placeholder="Agency Name"
-              value={this.state.agency}
+              value={user.agency}
             />
           </View>
           {this.props.updateLoading && (
