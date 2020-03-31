@@ -10,6 +10,9 @@ import {
   Keyboard,
   ActivityIndicator,
   Picker,
+  Dimensions,
+  Modal,
+  TouchableHighlight
 } from 'react-native';
 import {Header, Title, Left, Body, Switch, Right, Card} from 'native-base';
 import Icon from 'react-native-vector-icons/EvilIcons';
@@ -19,10 +22,12 @@ import {addIncidentToFirebase} from '../actions/incidentsAction';
 import {Actions} from 'react-native-router-flux';
 import {styles} from '../assets/styles/addincident_styles';
 import PropTypes from 'prop-types';
-import ImagePicker from 'react-native-image-picker';
 import {Toast} from 'native-base';
 import CheckBox from '@react-native-community/checkbox';
-import ImageResizer from 'react-native-image-resizer';
+import ImagePicker from 'react-native-image-crop-picker'
+const {width, height} = Dimensions.get('window');
+
+
 
 /**
  * Screen for adding an incident.
@@ -32,6 +37,7 @@ class AddIncident extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      modalVisible: false,
       incident: {
         details: null,
         visible: true,
@@ -199,46 +205,52 @@ class AddIncident extends Component {
    * This function provides options for adding incident image, and updates the image object.
    * @return updates the incident image.
    */
-  _cameraImage = () => {
-    var options = {
-      title: 'Select Option',
-      storageOptions: {
-        skipBackup: true,
-        path: 'images',
-      },
-    };
-    ImagePicker.showImagePicker(options, response => {
-      if (response.error) {
-        this.showToast('ImagePicker Error: ' + response.error);
-      } else if (response.didCancel) {
-      } else if (response.customButton) {
-        this.showToast('User tapped custom button: ' + response.customButton);
-      } else {
-        ImageResizer.createResizedImage(
-          response.uri,
-          100,
-          100,
-          'JPEG',
-          80,
-          (rotation = 0),
-        ).then(response => {
-          console.log(response);
-          this.setState({
-            incident: {
-              ...this.state.incident,
-              image: {
-                isPresent: true,
-                path: response.path,
-                uri: response.uri,
-              },
-            },
-          });
-        });
+  selectFromGallery = () => {
 
-        this.showToast('Image Added!', 'success');
-      }
-    });
+    ImagePicker.openPicker({ width: 300,
+      height: 400,
+      cropping: false,
+      compressImageQuality: 0.8,
+      compressImageMaxWidth	: width,
+      compressImageMaxHeight: height,
+      includeBase64: true
+    }).then ((image) => {
+      this.setState({
+        incident: {
+          ...this.state.incident,
+          image: {
+            isPresent: true,
+            mime: image.mime,
+            uri: image.data,
+          },
+        },
+      }, this.showToast('Image Added!', 'success'));
+      })  
   };
+
+  selectFromCamera = () => {
+
+    ImagePicker.openCamera({ width: 300,
+      height: 400,
+      cropping: false,
+      compressImageQuality: 0.8,
+      compressImageMaxWidth	: width,
+      compressImageMaxHeight: height,
+      includeBase64: true
+    }).then ((image) => {
+      this.setState({
+        incident: {
+          ...this.state.incident,
+          image: {
+            isPresent: true,
+            mime: image.mime,
+            uri: image.data,
+          },
+        },
+      }, this.showToast('Image Added!', 'success'));
+      })  
+  };
+
 
   addValues = (inputItem, index, index2) => {
     let dataArray = this.state.checkboxList;
@@ -260,8 +272,46 @@ class AddIncident extends Component {
     console.log(this.state.checkboxList);
   };
 
+  openGallery(){
+    this.setState({modalVisible: false}, () => this.selectFromGallery())
+  }
+  openCamera(){
+    this.setState({modalVisible: false}, () => this.selectFromCamera())
+  }
+
   render() {
     return (
+      <ScrollView>
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={this.state.modalVisible}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+          <TouchableOpacity
+              style={styles.openButton}
+              onPress={() => {
+                this.openGallery()
+              }}
+            >
+            <Text style={styles.modalText}>Choose from gallery</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.openButton}
+              onPress={() => {
+                this.openCamera()
+              }}
+            >
+              <Text style={styles.modalText}>Click Photo</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
       <View style={styles.container}>
         <Header androidStatusBarColor="#1c76cb">
           <Left>
@@ -284,11 +334,11 @@ class AddIncident extends Component {
                 style={styles.image}
                 resizeMethod={'resize'}
                 source={{
-                  uri: this.state.incident.image.uri,
+                  uri : `data:${this.state.incident.image.mime};base64,${this.state.incident.image.uri}`
                 }}
               />
             ) : null}
-            <TouchableOpacity onPress={() => this._cameraImage()}>
+            <TouchableOpacity onPress={() => this.setState({modalVisible: true})}>
               <View style={styles.cameraContainer}>
                 <Icon name="camera" size={40} color="white" />
                 {this.state.incident.image.isPresent ? (
@@ -386,6 +436,7 @@ class AddIncident extends Component {
           </TouchableOpacity>
         </ScrollView>
       </View>
+      </ScrollView>
     );
   }
 }

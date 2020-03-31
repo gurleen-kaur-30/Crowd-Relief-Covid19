@@ -17,8 +17,7 @@ import PropTypes from 'prop-types';
 import {updateUserFirebase} from '../../actions/loginAction';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import {Header, Title, Left, Body, Toast} from 'native-base';
-import ImagePicker from 'react-native-image-picker';
-import ImageResizer from 'react-native-image-resizer';
+import ImagePicker from 'react-native-image-crop-picker'
 
 /**
  * Screen showing the edit options for the profile and personal information.
@@ -166,36 +165,28 @@ class EditProfile extends Component {
         path: 'images',
       },
     };
-    ImagePicker.showImagePicker(options, response => {
-      if (response.error) {
-        this.showToast('ImagePicker Error: ' + response.error);
-      } else if (response.didCancel) {
-      } else if (response.customButton) {
-        this.showToast('User tapped custom button: ' + response.customButton);
-      } else {
-        ImageResizer.createResizedImage(
-          response.uri,
-          100,
-          100,
-          'JPEG',
-          80,
-          (rotation = 0),
-        ).then(response => {
-          console.log(response);
-          this.setState({
-            isChanged: true,
-            user: {
-              ...this.state.user,
-              photo: {
-                url: '',
-                uri: response.uri,
-              },
-            },
-          });
-        });
+    ImagePicker.openPicker({ width: 300,
+      height: 400,
+      cropping: false,
+      compressImageQuality: 0.8,
+      compressImageMaxWidth	: width,
+      compressImageMaxHeight: height,
+      includeBase64: true
+    }).then ((image) => {
+      console.log(image)
+    })
+      
+          // this.setState({
+          //   isChanged: true,
+          //   user: {
+          //     ...this.state.user,
+          //     photo: {
+          //       url: '',
+          //       uri: response.uri,
+          //     },
+          //   },
+          // });
         this.showToast('Image Added!', 'success');
-      }
-    });
   };
 
   render() {
