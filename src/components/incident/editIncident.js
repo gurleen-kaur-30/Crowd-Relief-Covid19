@@ -98,6 +98,15 @@ class EditIncident extends Component {
     return false;
   }
 
+  updateDetails(details) {
+    this.setState({
+      incident: {
+        ...this.state.incident,
+        details: details,
+      },
+    });
+  }
+
   /**
    * Performs update
    */
@@ -184,9 +193,9 @@ class EditIncident extends Component {
    * @return Updated incident
    */
   handleUpdate() {
-    // if (!this.validateTitle() || !this.validateDetails()) {
-    //   return;
-    // } else {
+    if (!this.validateDetails()) {
+      return;
+    }
     Alert.alert(
       '',
       'Do you want to update the incident details?',
@@ -225,10 +234,13 @@ class EditIncident extends Component {
         this.showToast('User tapped custom button: ' + response.customButton);
       } else {
         this.setState({
-          image: {
-            isPresent: true,
-            base64: response.data,
-            uri: response.uri,
+          incident: {
+            ...this.state.incident,
+            image: {
+              isPresent: true,
+              base64: response.data,
+              uri: response.uri,
+            },
           },
         });
         this.showToast('Image Added!', 'success');
@@ -326,7 +338,9 @@ class EditIncident extends Component {
             multiline={true}
             numberOfLines={4}
             ref={input => (this.detailsInput = input)}
-            onChangeText={details => this.setState({details})}
+            onChangeText={details => {
+              this.updateDetails(details);
+            }}
             returnKeyType="next"
             style={[styles.textInput, {height: 100}]}
             placeholder="Description"

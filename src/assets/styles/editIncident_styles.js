@@ -107,13 +107,13 @@ export const styles = StyleSheet.create({
     width: width / 3,
   },
   units: {
-    height: height / 20,
+    // height: height / 20,
     width: width / 4,
     borderColor: 'black',
     borderWidth: 1,
-    paddingLeft: width / 60,
-    paddingTop: 6,
-    fontSize: 16,
+    paddingVertical: height / 150,
+    // paddingLeft: width / 60,
+    // fontSize: 16,
     flex: 1,
   },
 });
