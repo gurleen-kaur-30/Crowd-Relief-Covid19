@@ -46,11 +46,19 @@ export const styles = StyleSheet.create({
     paddingBottom: height / 100,
     flexDirection: 'row',
     alignItems: 'center',
+    flex: 1,
   },
   textInputHeading: {
     color: '#555',
     fontWeight: 'bold',
     fontSize: 17,
+  },
+  textInputValue: {
+    color: '#555',
+    flex: 1,
+    fontSize: 17,
+    textAlign: 'right',
+    marginRight: width / 10,
   },
   updateButton: {
     alignItems: 'center',

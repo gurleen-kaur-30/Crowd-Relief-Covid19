@@ -120,6 +120,16 @@ class Incident extends Component {
       return this.getActivityIndicator();
     } else {
       var incidentDetails = this.props.incident.incident.value;
+      var action = '';
+      if (incidentDetails.action === 'to_be_picked') {
+        action = 'To be picked';
+      } else if (incidentDetails.action === 'required') {
+        action = 'Required';
+      } else if (incidentDetails.action === 'picked') {
+        action = 'Picked';
+      } else if (incidentDetails.action === 'delivered') {
+        action = 'Delivered';
+      }
       return (
         <Container style={styles.container}>
           <Header androidStatusBarColor="#1c76cb">
@@ -157,9 +167,7 @@ class Incident extends Component {
             <Card style={styles.card}>
               <CardItem>
                 <Text style={styles.titleTextHeader}>Action</Text>
-                <Text style={styles.titleTextDescription}>
-                  {incidentDetails.action}
-                </Text>
+                <Text style={styles.titleTextDescription}>{action}</Text>
               </CardItem>
             </Card>
             <Card style={styles.card}>

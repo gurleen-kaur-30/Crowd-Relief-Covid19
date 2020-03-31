@@ -84,8 +84,8 @@ class EditIncident extends Component {
     let {details} = this.state.incident,
       error = null;
 
-    if (!details || details.length <= 10) {
-      error = 'Details should be 10 or more characters.';
+    if (!details || details.length < 5) {
+      error = 'Details should be 5 or more characters.';
     } else if (details.length > 1000) {
       error = 'Details should be less than 1000 characters.';
     }
@@ -283,6 +283,19 @@ class EditIncident extends Component {
     } else {
       var items = this.state.checkboxList;
     }
+
+    var title = '';
+    if (
+      this.state.incident.action === 'to_be_picked' &&
+      this.state.incident.category === 'contribute'
+    ) {
+      title = 'Contribution to be picked';
+    } else if (
+      this.state.incident.action === 'required' &&
+      this.state.incident.category === 'relief'
+    ) {
+      title = 'Relief required';
+    }
     return (
       <View style={styles.container}>
         <Header androidStatusBarColor="#1c76cb">
@@ -294,9 +307,12 @@ class EditIncident extends Component {
             </TouchableOpacity>
           </Left>
           <Body>
-            <Text style={styles.title}>
+            {/* <Text style={styles.title}>
               {this.props.action ? this.state.incident.category : 'Edit'}{' '}
               incident
+            </Text> */}
+            <Text style={styles.title}>
+              {title} {this.props.action ? '' : ': (edit)'}
             </Text>
           </Body>
         </Header>
@@ -326,14 +342,13 @@ class EditIncident extends Component {
             </View>
           )}
 
-          <View style={styles.textInputHeadingContainer}>
-            <Text style={styles.textInputHeading}>
-              Current Action: {this.state.incident.action}
-            </Text>
+          {/* <View style={styles.textInputHeadingContainer}>
+            <Text style={styles.textInputHeading}>Current Action:</Text>
+            <Text style={styles.textInputValue}>{actionC}</Text>
           </View>
           <View style={styles.textInputHeadingContainer}>
             <Text style={styles.textInputHeading}>Incident Details</Text>
-          </View>
+          </View> */}
           <TextInput
             multiline={true}
             numberOfLines={4}

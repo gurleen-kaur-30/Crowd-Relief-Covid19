@@ -41,9 +41,16 @@ Sentry.init({
  * @extends Component
  */
 class App extends Component {
+  componentDidMount() {
+    codePush.sync({
+      updateDialog: true,
+      installMode: codePush.InstallMode.IMMEDIATE,
+    });
+    codePush.notifyApplicationReady();
+  }
+
   render() {
     return (
-      // <Text>asd</Text>
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           {isLoaded => {

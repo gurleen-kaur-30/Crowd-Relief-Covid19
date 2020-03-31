@@ -49,7 +49,6 @@ class AddIncident extends Component {
         action: this.props.action,
         urgency: 1,
       },
-      disable: false,
       checkboxList: [],
     };
   }
@@ -60,7 +59,7 @@ class AddIncident extends Component {
       a.push({
         name: item.key,
         quantity: item.value.quantity,
-        unit: 0,
+        unit: '0',
         status: 0,
         include: false,
       });
@@ -115,8 +114,8 @@ class AddIncident extends Component {
     let {details} = this.state.incident,
       error = null;
 
-    if (!details || details.length <= 10) {
-      error = 'Details should be 10 or more characters.';
+    if (!details || details.length < 5) {
+      error = 'Details should be 5 or more characters.';
     } else if (details.length > 1000) {
       error = 'Details should be less than 1000 characters.';
     }
@@ -174,7 +173,6 @@ class AddIncident extends Component {
     ) {
       this.showToast('Please dont leave any field blank');
     } else {
-      this.setState({disable: true});
       Alert.alert(
         '',
         'Are the details provided by you correct?',
@@ -245,6 +243,18 @@ class AddIncident extends Component {
   };
 
   render() {
+    var title = '';
+    if (
+      this.state.incident.action === 'to_be_picked' &&
+      this.state.incident.category === 'contribute'
+    ) {
+      title = 'Contribution to be picked';
+    } else if (
+      this.state.incident.action === 'required' &&
+      this.state.incident.category === 'relief'
+    ) {
+      title = 'Relief required';
+    }
     return (
       <View style={styles.container}>
         <Header androidStatusBarColor="#1c76cb">
@@ -256,7 +266,7 @@ class AddIncident extends Component {
             </TouchableOpacity>
           </Left>
           <Body>
-            <Text style={styles.title}>Add Incident</Text>
+            <Text style={styles.title}>{title}</Text>
           </Body>
         </Header>
         <ScrollView
@@ -285,16 +295,16 @@ class AddIncident extends Component {
               </View>
             </TouchableOpacity>
           </View>
-          <View style={styles.textInputHeadingContainer}>
-            <Text style={styles.textInputHeading}>
-              Kind of incident: {this.state.incident.category}
+          {/* <View style={styles.textInputHeadingContainer}>
+            <Text style={styles.textInputHeading}>Kind of incident:</Text>
+            <Text style={styles.textInputValue}>
+              {this.state.incident.category}
             </Text>
           </View>
           <View style={styles.textInputHeadingContainer}>
-            <Text style={styles.textInputHeading}>
-              Action to be taken: {this.state.incident.action}
-            </Text>
-          </View>
+            <Text style={styles.textInputHeading}>Action to be taken:</Text>
+            <Text style={styles.textInputValue}>{action}</Text>
+          </View> */}
           <View style={styles.textInputHeadingContainer}>
             <Text style={styles.textInputHeading}>Incident Details</Text>
           </View>
@@ -349,6 +359,11 @@ class AddIncident extends Component {
                   {item.name} ( {item.quantity} )
                 </Text>
                 <TextInput
+                  value={
+                    this.state.checkboxList[index].include
+                      ? this.state.checkboxList[index].unit
+                      : null
+                  }
                   keyboardType="numeric"
                   style={styles.name}
                   placeholder={'units'}
@@ -361,7 +376,6 @@ class AddIncident extends Component {
             <ActivityIndicator size="large" color="black" />
           )}
           <TouchableOpacity
-            disabled={this.state.disable}
             style={styles.updateButton}
             onPress={() => this.handleAddIncident()}>
             <Text style={styles.updateText}> Add Incident</Text>

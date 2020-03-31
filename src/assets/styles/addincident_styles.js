@@ -54,16 +54,25 @@ export const styles = StyleSheet.create({
     paddingTop: height / 300,
   },
   textInputHeadingContainer: {
-    marginLeft: width / 20,
+    marginHorizontal: width / 20,
     paddingTop: height / 40,
     paddingBottom: height / 100,
     flexDirection: 'row',
     alignItems: 'center',
+    flex: 1,
   },
   textInputHeading: {
     color: '#555',
     fontWeight: 'bold',
-    fontSize: 20,
+    fontSize: 19,
+    flex: 1,
+  },
+  textInputValue: {
+    color: '#555',
+    flex: 1,
+    fontSize: 19,
+    textAlign: 'right',
+    marginRight: width / 10,
   },
   switchContainer: {
     flexDirection: 'row',

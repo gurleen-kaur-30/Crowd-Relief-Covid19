@@ -256,7 +256,7 @@ class MapScreen extends Component {
             source={require('../../../assets/images/marker_jump.gif')}
           />
           <Text style={loadingStyle.loadingText}>
-            Loading your incidents & emergency places...
+            Loading Events and Emergency Places
           </Text>
         </View>
       );
