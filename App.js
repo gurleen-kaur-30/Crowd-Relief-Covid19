@@ -17,17 +17,24 @@
 
 import React, {Component} from 'react';
 import {Provider} from 'react-redux';
-import codePush from 'react-native-code-push';
 import {PersistGate} from 'redux-persist/lib/integration/react';
-import LinkedRouter from './src/utils/LinkedRouter';
-import SplashScreen from './src/components/splashScreen';
+import Config from 'react-native-config';
 
 import configureStore from './src/utils/store';
 let {store, persistor} = configureStore();
 
+import LinkedRouter from './src/utils/LinkedRouter';
+import SplashScreen from './src/components/splashScreen';
 import {StyleProvider, Root} from 'native-base';
 import getTheme from './src/assets/styles/native-base-theme/components';
 import platform from './src/assets/styles/native-base-theme/variables/platform';
+
+import * as Sentry from '@sentry/react-native';
+import codePush from 'react-native-code-push';
+
+Sentry.init({
+  dsn: Config.SENTRY_DSN,
+});
 
 /**
  * Navigator using React-Native-Router-Flux

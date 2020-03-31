@@ -12,7 +12,6 @@ import {fbSignIn, googleSignin} from '../../actions/loginAction';
 import {Actions, ActionConst} from 'react-native-router-flux';
 import {styles} from '../../assets/styles/homeScreen_styles';
 import {GoogleSignin} from '@react-native-community/google-signin';
-// import GoogleSignIn from 'react-native-google-sign-in';
 import Config from 'react-native-config';
 import PropTypes from 'prop-types';
 import {Toast} from 'native-base';
@@ -78,15 +77,6 @@ class HomeLogin extends Component {
     try {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
-      // await GoogleSignIn.configure({
-      //   scopes: [],
-      //   serverClientID: Config.GOOGLE_WEB_CLIENT_ID,
-      //   offlineAccess: true,
-      //   forceCodeForRefreshToken: true,
-      //   accountName: '',
-      //   hostedDomain: '',
-      // });
-      // const userInfo = await GoogleSignIn.signInPromise();
       this.props.googleSignin(userInfo);
     } catch (error) {
       handleError(error);
