@@ -23,9 +23,6 @@ import ImagePicker from 'react-native-image-picker';
 import {Toast} from 'native-base';
 import CheckBox from '@react-native-community/checkbox';
 import ImageResizer from 'react-native-image-resizer';
-import { NativeModules }  from "react-native";
-
-console.log(NativeModules)
 
 /**
  * Screen for adding an incident.
@@ -46,7 +43,7 @@ class AddIncident extends Component {
         user_id: this.props.login.userDetails.email,
         image: {
           isPresent: false,
-          base64: '',
+          path: '',
           uri: '',
         },
         items: [],
@@ -211,28 +208,33 @@ class AddIncident extends Component {
       },
     };
     ImagePicker.showImagePicker(options, response => {
-    
       if (response.error) {
         this.showToast('ImagePicker Error: ' + response.error);
       } else if (response.didCancel) {
       } else if (response.customButton) {
         this.showToast('User tapped custom button: ' + response.customButton);
       } else {
-        console.log(ImageResizer)
-        ImageResizer.createResizedImage(response.uri, 100, 100, 'JPEG', 80, rotation = 0).then((response) => {
-          console.log(response.path)
+        ImageResizer.createResizedImage(
+          response.uri,
+          100,
+          100,
+          'JPEG',
+          80,
+          (rotation = 0),
+        ).then(response => {
+          console.log(response);
           this.setState({
             incident: {
               ...this.state.incident,
               image: {
                 isPresent: true,
-                base64: response.path,
+                path: response.path,
                 uri: response.uri,
               },
             },
           });
-        })
-      
+        });
+
         this.showToast('Image Added!', 'success');
       }
     });
@@ -245,9 +247,9 @@ class AddIncident extends Component {
     if (index2 == 0) {
       item.include = inputItem;
     } else if (index2 == 1) {
-      if (inputItem == "-"){
-        Alert.alert("please enter a positive number")
-        this.unitTextInput.clear()
+      if (inputItem == '-') {
+        this.unitTextInput.clear();
+        Alert.alert('Please enter a positive number');
       }
       item.unit = inputItem;
     }
@@ -282,8 +284,7 @@ class AddIncident extends Component {
                 style={styles.image}
                 resizeMethod={'resize'}
                 source={{
-                  uri:
-                    this.state.incident.image.base64,
+                  uri: this.state.incident.image.uri,
                 }}
               />
             ) : null}
@@ -362,8 +363,10 @@ class AddIncident extends Component {
                   {item.name} ( {item.quantity} )
                 </Text>
                 <TextInput
-                  autoCorrect={false} 
-                  ref={input => { this.unitTextInput = input }}
+                  autoCorrect={false}
+                  ref={input => {
+                    this.unitTextInput = input;
+                  }}
                   keyboardType="numeric"
                   style={styles.name}
                   placeholder={'units'}

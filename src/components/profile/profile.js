@@ -120,7 +120,7 @@ class Profile extends Component {
             style={[
               styles.avatarOutline,
               this.props.user.photo.url === '' &&
-              this.props.user.photo.base64 === ''
+              this.props.user.photo.uri === ''
                 ? styles.noAvatarOutline
                 : null,
             ]}>
@@ -131,12 +131,10 @@ class Profile extends Component {
                 style={styles.avatar}
                 source={
                   this.props.user.photo.url === ''
-                    ? this.props.user.photo.base64 === ''
+                    ? this.props.user.photo.uri === ''
                       ? require('../../assets/images/boy.png')
                       : {
-                          uri:
-                            'data:image/jpeg;base64, ' +
-                            this.props.user.photo.base64,
+                          uri: this.props.user.photo.uri,
                         }
                     : {uri: this.props.user.photo.url}
                 }

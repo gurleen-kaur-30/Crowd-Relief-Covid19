@@ -21,7 +21,7 @@ import PropTypes from 'prop-types';
 import {updateIncidentFirebase} from '../../actions/incidentsAction';
 import ImagePicker from 'react-native-image-picker';
 import {Toast} from 'native-base';
-import Icon1 from 'react-native-vector-icons/MaterialIcons';
+import ImageResizer from 'react-native-image-resizer';
 import CheckBox from '@react-native-community/checkbox';
 
 /**
@@ -233,16 +233,27 @@ class EditIncident extends Component {
       } else if (response.customButton) {
         this.showToast('User tapped custom button: ' + response.customButton);
       } else {
-        this.setState({
-          incident: {
-            ...this.state.incident,
-            image: {
-              isPresent: true,
-              base64: response.data,
-              uri: response.uri,
+        ImageResizer.createResizedImage(
+          response.uri,
+          100,
+          100,
+          'JPEG',
+          80,
+          (rotation = 0),
+        ).then(response => {
+          console.log(response);
+          this.setState({
+            incident: {
+              ...this.state.incident,
+              image: {
+                isPresent: true,
+                path: response.path,
+                uri: response.uri,
+              },
             },
-          },
+          });
         });
+
         this.showToast('Image Added!', 'success');
       }
     });
@@ -309,9 +320,7 @@ class EditIncident extends Component {
                 style={styles.image}
                 resizeMethod={'resize'}
                 source={{
-                  uri:
-                    'data:image/jpeg;base64, ' +
-                    this.state.incident.image.base64,
+                  uri: this.state.incident.image.uri,
                 }}
               />
               <TouchableOpacity onPress={() => this._cameraImage()}>
