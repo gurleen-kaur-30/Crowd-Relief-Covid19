@@ -17,6 +17,7 @@
 
 import React, {Component} from 'react';
 import {Provider} from 'react-redux';
+import codePush from 'react-native-code-push';
 import {PersistGate} from 'redux-persist/lib/integration/react';
 import LinkedRouter from './src/utils/LinkedRouter';
 import SplashScreen from './src/components/splashScreen';
@@ -32,7 +33,7 @@ import platform from './src/assets/styles/native-base-theme/variables/platform';
  * Navigator using React-Native-Router-Flux
  * @extends Component
  */
-export default class App extends Component {
+class App extends Component {
   render() {
     return (
       // <Text>asd</Text>
@@ -57,3 +58,7 @@ export default class App extends Component {
     );
   }
 }
+
+let codePushOptions = {checkFrequency: codePush.CheckFrequency.ON_APP_RESUME};
+App = codePush(codePushOptions)(App);
+export default App;

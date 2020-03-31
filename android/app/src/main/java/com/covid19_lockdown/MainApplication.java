@@ -13,6 +13,7 @@ import com.facebook.FacebookSdk;
 import io.invertase.firebase.firestore.RNFirebaseFirestorePackage; // <-- Add this line
 import io.invertase.firebase.database.RNFirebaseDatabasePackage; // <-- Add this line
 import io.invertase.firebase.auth.RNFirebaseAuthPackage; // <-- Add this line
+import com.microsoft.codepush.react.CodePush;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -20,6 +21,11 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     public boolean getUseDeveloperSupport() {
       return BuildConfig.DEBUG;
+    }
+
+    @Override
+    protected String getJSBundleFile() {
+      return CodePush.getJSBundleFile();
     }
 
     @Override

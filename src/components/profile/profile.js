@@ -7,7 +7,6 @@ import {
   TouchableHighlight,
   ActivityIndicator,
   FlatList,
-  Platform,
 } from 'react-native';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
@@ -20,7 +19,6 @@ var PushNotification = require('react-native-push-notification');
 import {Header, Title, Left, Body} from 'native-base';
 import {SideDrawer} from '../sideMenu';
 import ProfileIncident from './profileIncident';
-import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
 
 /**
  * Screen showing the profile along with his/her incidents.
@@ -28,18 +26,6 @@ import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
  */
 class Profile extends Component {
   UNSAFE_componentWillMount() {
-    //Used to check if location services are enabled and
-    //if not than asks to enables them by redirecting to location settings.
-    if (Platform.OS === 'android') {
-      RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({
-        interval: 10000,
-        fastInterval: 5000,
-      }).then(data => {
-        this.props.watchCurrLocation();
-      });
-    }
-    this.props.watchCurrLocation();
-
     //Configures the push notification
     PushNotification.configure({
       //Called when a remote or local notification is opened or received
@@ -72,11 +58,6 @@ class Profile extends Component {
   _renderItem({item, index}) {
     return <ProfileIncident data={item} even={(index + 1) % 2 === 0} />;
   }
-
-  //   request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION).then(result => {
-  //   // …
-
-  // });
 
   render() {
     if (this.props.user === null) {
