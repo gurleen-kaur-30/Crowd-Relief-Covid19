@@ -22,6 +22,10 @@ import PropTypes from 'prop-types';
 import ImagePicker from 'react-native-image-picker';
 import {Toast} from 'native-base';
 import CheckBox from '@react-native-community/checkbox';
+import ImageResizer from 'react-native-image-resizer';
+import { NativeModules }  from "react-native";
+
+console.log(NativeModules)
 
 /**
  * Screen for adding an incident.
@@ -207,22 +211,28 @@ class AddIncident extends Component {
       },
     };
     ImagePicker.showImagePicker(options, response => {
+    
       if (response.error) {
         this.showToast('ImagePicker Error: ' + response.error);
       } else if (response.didCancel) {
       } else if (response.customButton) {
         this.showToast('User tapped custom button: ' + response.customButton);
       } else {
-        this.setState({
-          incident: {
-            ...this.state.incident,
-            image: {
-              isPresent: true,
-              base64: response.data,
-              uri: response.uri,
+        console.log(ImageResizer)
+        ImageResizer.createResizedImage(response.uri, 100, 100, 'JPEG', 80, rotation = 0).then((response) => {
+          console.log(response.path)
+          this.setState({
+            incident: {
+              ...this.state.incident,
+              image: {
+                isPresent: true,
+                base64: response.path,
+                uri: response.uri,
+              },
             },
-          },
-        });
+          });
+        })
+      
         this.showToast('Image Added!', 'success');
       }
     });
@@ -235,6 +245,10 @@ class AddIncident extends Component {
     if (index2 == 0) {
       item.include = inputItem;
     } else if (index2 == 1) {
+      if (inputItem == "-"){
+        Alert.alert("please enter a positive number")
+        this.unitTextInput.clear()
+      }
       item.unit = inputItem;
     }
     dataArray[index] = item;
@@ -269,7 +283,6 @@ class AddIncident extends Component {
                 resizeMethod={'resize'}
                 source={{
                   uri:
-                    'data:image/jpeg;base64, ' +
                     this.state.incident.image.base64,
                 }}
               />
@@ -349,6 +362,8 @@ class AddIncident extends Component {
                   {item.name} ( {item.quantity} )
                 </Text>
                 <TextInput
+                  autoCorrect={false} 
+                  ref={input => { this.unitTextInput = input }}
                   keyboardType="numeric"
                   style={styles.name}
                   placeholder={'units'}
