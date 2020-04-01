@@ -169,19 +169,21 @@ class EditProfile extends Component {
       compressImageMaxWidth: width,
       compressImageMaxHeight: height,
       includeBase64: true,
-    }).then(image => {
-      this.setState({
-        isChanged: true,
-        user: {
-          ...this.state.user,
-          photo: {
-            url: '',
-            mime: image.mime,
-            base64: image.data,
+    })
+      .then(image => {
+        this.setState({
+          isChanged: true,
+          user: {
+            ...this.state.user,
+            photo: {
+              url: '',
+              mime: image.mime,
+              base64: image.data,
+            },
           },
-        },
-      });
-    });
+        });
+      })
+      .catch(error => this.showToast(error.message));
   };
 
   selectFromCamera = () => {
@@ -191,20 +193,22 @@ class EditProfile extends Component {
       compressImageMaxWidth: width,
       compressImageMaxHeight: height,
       includeBase64: true,
-    }).then(image => {
-      console.log(image);
-      this.setState({
-        isChanged: true,
-        user: {
-          ...this.state.user,
-          photo: {
-            url: '',
-            mime: image.mime,
-            base64: image.data,
+    })
+      .then(image => {
+        console.log(image);
+        this.setState({
+          isChanged: true,
+          user: {
+            ...this.state.user,
+            photo: {
+              url: '',
+              mime: image.mime,
+              base64: image.data,
+            },
           },
-        },
-      });
-    });
+        });
+      })
+      .catch(error => this.showToast(error.message));
   };
 
   openGallery() {

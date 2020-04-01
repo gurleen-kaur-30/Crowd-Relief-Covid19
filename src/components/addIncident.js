@@ -208,22 +208,24 @@ class AddIncident extends Component {
       compressImageMaxWidth: width,
       compressImageMaxHeight: height,
       includeBase64: true,
-    }).then(image => {
-      this.setState(
-        {
-          incident: {
-            ...this.state.incident,
-            image: {
-              isPresent: true,
-              mime: image.mime,
-              base64: image.data,
-              uri: image.path,
+    })
+      .then(image => {
+        this.setState(
+          {
+            incident: {
+              ...this.state.incident,
+              image: {
+                isPresent: true,
+                mime: image.mime,
+                base64: image.data,
+                uri: image.path,
+              },
             },
           },
-        },
-        this.showToast('Image Added!', 'success'),
-      );
-    });
+          this.showToast('Image Added!', 'success'),
+        );
+      })
+      .catch(error => this.showToast(error.message));
   };
 
   selectFromCamera = () => {
@@ -233,23 +235,25 @@ class AddIncident extends Component {
       compressImageMaxWidth: width,
       compressImageMaxHeight: height,
       includeBase64: true,
-    }).then(image => {
-      console.log(image);
-      this.setState(
-        {
-          incident: {
-            ...this.state.incident,
-            image: {
-              isPresent: true,
-              mime: image.mime,
-              base64: image.data,
-              uri: image.path,
+    })
+      .then(image => {
+        console.log(image);
+        this.setState(
+          {
+            incident: {
+              ...this.state.incident,
+              image: {
+                isPresent: true,
+                mime: image.mime,
+                base64: image.data,
+                uri: image.path,
+              },
             },
           },
-        },
-        this.showToast('Image Added!', 'success'),
-      );
-    });
+          this.showToast('Image Added!', 'success'),
+        );
+      })
+      .catch(error => this.showToast(error.message));
   };
 
   addValues = (inputItem, index, index2) => {

@@ -247,7 +247,9 @@ class MapScreen extends Component {
     if (
       this.props.emergencyPlaces.loading ||
       this.props.incident.loading ||
-      this.props.items.loading
+      this.props.items.loading ||
+      this.props.all_incidents === null ||
+      this.props.items.all_items === null
     ) {
       return (
         <View style={loadingStyle.loaderContainer}>

@@ -256,22 +256,24 @@ class EditIncident extends Component {
       compressImageMaxWidth: width,
       compressImageMaxHeight: height,
       includeBase64: true,
-    }).then(image => {
-      this.setState(
-        {
-          incident: {
-            ...this.state.incident,
-            image: {
-              isPresent: true,
-              mime: image.mime,
-              uri: image.path,
-              base64: image.data,
+    })
+      .then(image => {
+        this.setState(
+          {
+            incident: {
+              ...this.state.incident,
+              image: {
+                isPresent: true,
+                mime: image.mime,
+                uri: image.path,
+                base64: image.data,
+              },
             },
           },
-        },
-        this.showToast('Image Added!', 'success'),
-      );
-    });
+          this.showToast('Image Added!', 'success'),
+        );
+      })
+      .catch(error => this.showToast(error.message));
   };
 
   selectFromCamera = () => {
@@ -281,22 +283,24 @@ class EditIncident extends Component {
       compressImageMaxWidth: width,
       compressImageMaxHeight: height,
       includeBase64: true,
-    }).then(image => {
-      this.setState(
-        {
-          incident: {
-            ...this.state.incident,
-            image: {
-              isPresent: true,
-              mime: image.mime,
-              uri: image.path,
-              base64: image.data,
+    })
+      .then(image => {
+        this.setState(
+          {
+            incident: {
+              ...this.state.incident,
+              image: {
+                isPresent: true,
+                mime: image.mime,
+                uri: image.path,
+                base64: image.data,
+              },
             },
           },
-        },
-        this.showToast('Image Added!', 'success'),
-      );
-    });
+          this.showToast('Image Added!', 'success'),
+        );
+      })
+      .catch(error => this.showToast(error.message));
   };
 
   openGallery() {
@@ -428,7 +432,7 @@ class EditIncident extends Component {
           ) : (
             <View style={styles.textInputHeadingContainer}>
               <Text style={[styles.textInputHeading, {flex: 3}]}>
-                Urgency on a scale of 5
+                Urgency (1 is Lowest)
               </Text>
               <Picker
                 value={this.state.incident.urgency}

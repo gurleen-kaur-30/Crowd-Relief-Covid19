@@ -1,6 +1,7 @@
 import {SEARCH_LOCATION, CURR_LOCATION} from './types';
 import {handleError} from './errorAction';
 import Geolocation from '@react-native-community/geolocation';
+import {Platform} from 'react-native';
 
 /**
  * This function is called to update the location co-ordinates to user's current location
@@ -21,12 +22,11 @@ export const watchCurrLocation = () => {
           reject(dispatch(handleError(error)));
           console.log(error.message);
         },
-        // {
-        // 	enableHighAccuracy: true,
-        // 	timeout: 20000,
-        // 	maximumAge: 1000,
-        // 	distanceFilter: 10
-        // }
+        {
+          enableHighAccuracy: Platform.OS != 'android',
+          timeout: 20000,
+          distanceFilter: 5,
+        },
       );
     });
   };
@@ -46,12 +46,10 @@ export const getCurrLocation = () => {
           reject(dispatch(handleError(error)));
           console.log(error.message);
         },
-        // {
-        // 	enableHighAccuracy: true,
-        // 	timeout: 20000,
-        // 	maximumAge: 1000,
-        // 	distanceFilter: 10
-        // }
+        {
+          enableHighAccuracy: Platform.OS != 'android',
+          timeout: 20000,
+        },
       );
     });
   };
