@@ -8,6 +8,8 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   TextInput,
+  Dimensions,
+  Modal,
 } from 'react-native';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
@@ -17,7 +19,8 @@ import PropTypes from 'prop-types';
 import {updateUserFirebase} from '../../actions/loginAction';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import {Header, Title, Left, Body, Toast} from 'native-base';
-import ImagePicker from 'react-native-image-picker';
+import ImagePicker from 'react-native-image-crop-picker';
+const {width, height} = Dimensions.get('window');
 
 /**
  * Screen showing the edit options for the profile and personal information.
@@ -35,6 +38,7 @@ class EditProfile extends Component {
         agency: this.props.user.agency,
       },
       isChanged: false,
+      modalVisible: false,
     };
   }
 
@@ -157,40 +161,89 @@ class EditProfile extends Component {
    *  This function provides options for adding incident image, and updates the image object.
    * @return updates the incident image.
    */
-  _cameraImage = () => {
-    var options = {
-      title: 'Select Option',
-      storageOptions: {
-        skipBackup: true,
-        path: 'images',
-      },
-    };
-    ImagePicker.showImagePicker(options, response => {
-      if (response.error) {
-        this.showToast('ImagePicker Error: ' + response.error);
-      } else if (response.didCancel) {
-      } else if (response.customButton) {
-        this.showToast('User tapped custom button: ' + response.customButton);
-      } else {
-        this.setState({
-          user: {
-            ...this.state.user,
-            photo: {
-              url: '',
-              base64: response.data,
-            },
+
+  selectFromGallery = () => {
+    ImagePicker.openPicker({
+      cropping: false,
+      compressImageQuality: 0.8,
+      compressImageMaxWidth: width,
+      compressImageMaxHeight: height,
+      includeBase64: true,
+    }).then(image => {
+      this.setState({
+        isChanged: true,
+        user: {
+          ...this.state.user,
+          photo: {
+            url: '',
+            mime: image.mime,
+            base64: image.data,
           },
-        });
-        this.showToast('Image Added!', 'success');
-        this.handleInput('isChanged', true);
-      }
+        },
+      });
     });
   };
+
+  selectFromCamera = () => {
+    ImagePicker.openCamera({
+      cropping: false,
+      compressImageQuality: 0.8,
+      compressImageMaxWidth: width,
+      compressImageMaxHeight: height,
+      includeBase64: true,
+    }).then(image => {
+      console.log(image);
+      this.setState({
+        isChanged: true,
+        user: {
+          ...this.state.user,
+          photo: {
+            url: '',
+            mime: image.mime,
+            base64: image.data,
+          },
+        },
+      });
+    });
+  };
+
+  openGallery() {
+    this.setState({modalVisible: false}, () => this.selectFromGallery());
+  }
+  openCamera() {
+    this.setState({modalVisible: false}, () => this.selectFromCamera());
+  }
 
   render() {
     var user = this.state.user;
     return (
-      <View style={styles.container}>
+      <View
+        style={[
+          styles.container,
+          this.state.modalVisible ? {opacity: 0.4} : {opacity: 1},
+        ]}>
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={this.state.modalVisible}
+          onRequestClose={() => this.setState({modalVisible: false})}>
+          <TouchableOpacity
+            onPress={() => this.setState({modalVisible: false})}
+            style={styles.modalContainer}>
+            <View style={[styles.photoModal, styles.modalShadow]}>
+              <TouchableOpacity
+                style={styles.photoModalOption}
+                onPress={() => this.openCamera()}>
+                <Text style={styles.photoModalText}>Click Photo</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.photoModalOption}
+                onPress={() => this.openGallery()}>
+                <Text style={styles.photoModalText}>Choose from Gallery</Text>
+              </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
+        </Modal>
         <Header androidStatusBarColor="#1c76cb">
           <Left>
             <TouchableOpacity
@@ -216,14 +269,14 @@ class EditProfile extends Component {
                   ? user.photo.base64 === ''
                     ? require('../../assets/images/boy.png')
                     : {
-                        uri: 'data:image/jpeg;base64, ' + user.photo.base64,
+                        uri: `data:${user.photo.mime};base64,${user.photo.base64}`,
                       }
                   : {uri: user.photo.url}
               }
             />
             <TouchableOpacity
               activeOpacity={0.4}
-              onPress={() => this._cameraImage()}>
+              onPress={() => this.setState({modalVisible: true})}>
               <Text style={styles.userName}>Change Profile Photo</Text>
             </TouchableOpacity>
           </View>

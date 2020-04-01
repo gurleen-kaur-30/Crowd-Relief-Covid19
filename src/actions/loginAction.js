@@ -267,6 +267,7 @@ const addUserFirebase = userDetails => {
  * @param  {JSON} userDetails Details of the user
  */
 export const updateUserFirebase = userDetails => {
+  console.log(userDetails);
   return dispatch => {
     dispatch(loginLoading(true));
     return new Promise((resolve, reject) => {

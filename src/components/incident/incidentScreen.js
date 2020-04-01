@@ -158,8 +158,7 @@ class Incident extends Component {
                   style={styles.image}
                   resizeMethod={'resize'}
                   source={{
-                    uri:
-                      'data:image/jpeg;base64, ' + incidentDetails.image.base64,
+                    uri: `data:${incidentDetails.image.mime};base64,${incidentDetails.image.base64}`,
                   }}
                 />
               </View>

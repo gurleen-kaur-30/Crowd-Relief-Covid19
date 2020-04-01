@@ -10,6 +10,9 @@ import {
   Keyboard,
   ActivityIndicator,
   Picker,
+  Dimensions,
+  Modal,
+  TouchableHighlight,
 } from 'react-native';
 import {Header, Title, Left, Body, Switch, Right, Card} from 'native-base';
 import Icon from 'react-native-vector-icons/EvilIcons';
@@ -19,9 +22,10 @@ import {addIncidentToFirebase} from '../actions/incidentsAction';
 import {Actions} from 'react-native-router-flux';
 import {styles} from '../assets/styles/addincident_styles';
 import PropTypes from 'prop-types';
-import ImagePicker from 'react-native-image-picker';
 import {Toast} from 'native-base';
 import CheckBox from '@react-native-community/checkbox';
+import ImagePicker from 'react-native-image-crop-picker';
+const {width, height} = Dimensions.get('window');
 
 /**
  * Screen for adding an incident.
@@ -31,6 +35,7 @@ class AddIncident extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      modalVisible: false,
       incident: {
         details: null,
         visible: true,
@@ -42,7 +47,7 @@ class AddIncident extends Component {
         user_id: this.props.login.userDetails.email,
         image: {
           isPresent: false,
-          base64: '',
+          path: '',
           uri: '',
         },
         items: [],
@@ -196,33 +201,54 @@ class AddIncident extends Component {
    * This function provides options for adding incident image, and updates the image object.
    * @return updates the incident image.
    */
-  _cameraImage = () => {
-    var options = {
-      title: 'Select Option',
-      storageOptions: {
-        skipBackup: true,
-        path: 'images',
-      },
-    };
-    ImagePicker.showImagePicker(options, response => {
-      if (response.error) {
-        this.showToast('ImagePicker Error: ' + response.error);
-      } else if (response.didCancel) {
-      } else if (response.customButton) {
-        this.showToast('User tapped custom button: ' + response.customButton);
-      } else {
-        this.setState({
+  selectFromGallery = () => {
+    ImagePicker.openPicker({
+      cropping: false,
+      compressImageQuality: 0.8,
+      compressImageMaxWidth: width,
+      compressImageMaxHeight: height,
+      includeBase64: true,
+    }).then(image => {
+      this.setState(
+        {
           incident: {
             ...this.state.incident,
             image: {
               isPresent: true,
-              base64: response.data,
-              uri: response.uri,
+              mime: image.mime,
+              base64: image.data,
+              uri: image.path,
             },
           },
-        });
-        this.showToast('Image Added!', 'success');
-      }
+        },
+        this.showToast('Image Added!', 'success'),
+      );
+    });
+  };
+
+  selectFromCamera = () => {
+    ImagePicker.openCamera({
+      cropping: false,
+      compressImageQuality: 0.8,
+      compressImageMaxWidth: width,
+      compressImageMaxHeight: height,
+      includeBase64: true,
+    }).then(image => {
+      console.log(image);
+      this.setState(
+        {
+          incident: {
+            ...this.state.incident,
+            image: {
+              isPresent: true,
+              mime: image.mime,
+              base64: image.data,
+              uri: image.path,
+            },
+          },
+        },
+        this.showToast('Image Added!', 'success'),
+      );
     });
   };
 
@@ -233,6 +259,10 @@ class AddIncident extends Component {
     if (index2 == 0) {
       item.include = inputItem;
     } else if (index2 == 1) {
+      if (inputItem == '-') {
+        Alert.alert('please enter a positive number');
+        this.unitTextInput.clear();
+      }
       item.unit = inputItem;
     }
     dataArray[index] = item;
@@ -241,6 +271,13 @@ class AddIncident extends Component {
     });
     console.log(this.state.checkboxList);
   };
+
+  openGallery() {
+    this.setState({modalVisible: false}, () => this.selectFromGallery());
+  }
+  openCamera() {
+    this.setState({modalVisible: false}, () => this.selectFromCamera());
+  }
 
   render() {
     var title = '';
@@ -256,7 +293,33 @@ class AddIncident extends Component {
       title = 'Relief required';
     }
     return (
-      <View style={styles.container}>
+      <View
+        style={[
+          styles.container,
+          this.state.modalVisible ? {opacity: 0.3} : {opacity: 1},
+        ]}>
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={this.state.modalVisible}
+          onRequestClose={() => this.setState({modalVisible: false})}>
+          <TouchableOpacity
+            onPress={() => this.setState({modalVisible: false})}
+            style={styles.modalContainer}>
+            <View style={styles.photoModal}>
+              <TouchableOpacity
+                style={styles.photoModalOption}
+                onPress={() => this.openCamera()}>
+                <Text style={styles.photoModalText}>Click Photo</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.photoModalOption}
+                onPress={() => this.openGallery()}>
+                <Text style={styles.photoModalText}>Choose from Gallery</Text>
+              </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
+        </Modal>
         <Header androidStatusBarColor="#1c76cb">
           <Left>
             <TouchableOpacity
@@ -278,13 +341,12 @@ class AddIncident extends Component {
                 style={styles.image}
                 resizeMethod={'resize'}
                 source={{
-                  uri:
-                    'data:image/jpeg;base64, ' +
-                    this.state.incident.image.base64,
+                  uri: `data:${this.state.incident.image.mime};base64,${this.state.incident.image.base64}`,
                 }}
               />
             ) : null}
-            <TouchableOpacity onPress={() => this._cameraImage()}>
+            <TouchableOpacity
+              onPress={() => this.setState({modalVisible: true})}>
               <View style={styles.cameraContainer}>
                 <Icon name="camera" size={40} color="white" />
                 {this.state.incident.image.isPresent ? (
@@ -327,7 +389,7 @@ class AddIncident extends Component {
 
           <View style={styles.textInputHeadingContainer}>
             <Text style={[styles.textInputHeading, {flex: 3}]}>
-              Urgency on a scale of 5
+              Urgency (1 is lowest)
             </Text>
             <Picker
               selectedValue={this.state.incident.urgency}
@@ -364,6 +426,10 @@ class AddIncident extends Component {
                       ? this.state.checkboxList[index].unit
                       : null
                   }
+                  autoCorrect={false}
+                  ref={input => {
+                    this.unitTextInput = input;
+                  }}
                   keyboardType="numeric"
                   style={styles.name}
                   placeholder={'units'}
@@ -378,7 +444,7 @@ class AddIncident extends Component {
           <TouchableOpacity
             style={styles.updateButton}
             onPress={() => this.handleAddIncident()}>
-            <Text style={styles.updateText}> Add Incident</Text>
+            <Text style={styles.updateText}> Save</Text>
           </TouchableOpacity>
         </ScrollView>
       </View>

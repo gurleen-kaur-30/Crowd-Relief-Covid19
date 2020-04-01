@@ -10,6 +10,8 @@ import {
   ActivityIndicator,
   Picker,
   Button,
+  Modal,
+  Dimensions,
 } from 'react-native';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
@@ -19,10 +21,10 @@ import Icon from 'react-native-vector-icons/EvilIcons';
 import {Header, Title, Left, Body, Switch, Right, Card} from 'native-base';
 import PropTypes from 'prop-types';
 import {updateIncidentFirebase} from '../../actions/incidentsAction';
-import ImagePicker from 'react-native-image-picker';
+import ImagePicker from 'react-native-image-crop-picker';
 import {Toast} from 'native-base';
-import Icon1 from 'react-native-vector-icons/MaterialIcons';
 import CheckBox from '@react-native-community/checkbox';
+const {width, height} = Dimensions.get('window');
 
 /**
  * Screen showing the edit options for the profile and personal information.
@@ -32,6 +34,7 @@ class EditIncident extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      modalVisible: false,
       checkboxList: [],
       incident: this.props.incidentDetails,
       metaItems: this.props.incidentDetails.items,
@@ -218,35 +221,6 @@ class EditIncident extends Component {
    * This function provides options for adding incident image, and updates the image object.
    * @return updates the incident image.
    */
-  _cameraImage() {
-    var options = {
-      title: 'Select Option',
-      storageOptions: {
-        skipBackup: true,
-        path: 'images',
-      },
-    };
-    ImagePicker.showImagePicker(options, response => {
-      if (response.error) {
-        this.showToast('ImagePicker Error: ' + response.error);
-      } else if (response.didCancel) {
-      } else if (response.customButton) {
-        this.showToast('User tapped custom button: ' + response.customButton);
-      } else {
-        this.setState({
-          incident: {
-            ...this.state.incident,
-            image: {
-              isPresent: true,
-              base64: response.data,
-              uri: response.uri,
-            },
-          },
-        });
-        this.showToast('Image Added!', 'success');
-      }
-    });
-  }
 
   changeUnits(units, item) {
     console.log(units, item);
@@ -275,6 +249,63 @@ class EditIncident extends Component {
     console.log(this.state.checkboxList);
   };
 
+  selectFromGallery = () => {
+    ImagePicker.openPicker({
+      cropping: false,
+      compressImageQuality: 0.8,
+      compressImageMaxWidth: width,
+      compressImageMaxHeight: height,
+      includeBase64: true,
+    }).then(image => {
+      this.setState(
+        {
+          incident: {
+            ...this.state.incident,
+            image: {
+              isPresent: true,
+              mime: image.mime,
+              uri: image.path,
+              base64: image.data,
+            },
+          },
+        },
+        this.showToast('Image Added!', 'success'),
+      );
+    });
+  };
+
+  selectFromCamera = () => {
+    ImagePicker.openCamera({
+      cropping: false,
+      compressImageQuality: 0.8,
+      compressImageMaxWidth: width,
+      compressImageMaxHeight: height,
+      includeBase64: true,
+    }).then(image => {
+      this.setState(
+        {
+          incident: {
+            ...this.state.incident,
+            image: {
+              isPresent: true,
+              mime: image.mime,
+              uri: image.path,
+              base64: image.data,
+            },
+          },
+        },
+        this.showToast('Image Added!', 'success'),
+      );
+    });
+  };
+
+  openGallery() {
+    this.setState({modalVisible: false}, () => this.selectFromGallery());
+  }
+  openCamera() {
+    this.setState({modalVisible: false}, () => this.selectFromCamera());
+  }
+
   render() {
     console.log('state', this.state);
     console.log(this.props.action);
@@ -297,7 +328,33 @@ class EditIncident extends Component {
       title = 'Relief required';
     }
     return (
-      <View style={styles.container}>
+      <View
+        style={[
+          styles.container,
+          this.state.modalVisible ? {opacity: 0.3} : {opacity: 1},
+        ]}>
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={this.state.modalVisible}
+          onRequestClose={() => this.setState({modalVisible: false})}>
+          <TouchableOpacity
+            onPress={() => this.setState({modalVisible: false})}
+            style={styles.modalContainer}>
+            <View style={[styles.photoModal, styles.modalShadow]}>
+              <TouchableOpacity
+                style={styles.photoModalOption}
+                onPress={() => this.openCamera()}>
+                <Text style={styles.photoModalText}>Click Photo</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.photoModalOption}
+                onPress={() => this.openGallery()}>
+                <Text style={styles.photoModalText}>Choose from Gallery</Text>
+              </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
+        </Modal>
         <Header androidStatusBarColor="#1c76cb">
           <Left>
             <TouchableOpacity
@@ -325,18 +382,18 @@ class EditIncident extends Component {
                 style={styles.image}
                 resizeMethod={'resize'}
                 source={{
-                  uri:
-                    'data:image/jpeg;base64, ' +
-                    this.state.incident.image.base64,
+                  uri: `data:${this.state.incident.image.mime};base64,${this.state.incident.image.base64}`,
                 }}
               />
-              <TouchableOpacity onPress={() => this._cameraImage()}>
+              <TouchableOpacity
+                onPress={() => this.setState({modalVisible: true})}>
                 <Text style={styles.imageChangeText}>Change Image</Text>
               </TouchableOpacity>
             </View>
           ) : (
             <View style={styles.avatarContainer}>
-              <TouchableOpacity onPress={() => this._cameraImage()}>
+              <TouchableOpacity
+                onPress={() => this.setState({modalVisible: true})}>
                 <Text style={styles.imageText}>Add Image</Text>
               </TouchableOpacity>
             </View>

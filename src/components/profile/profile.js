@@ -115,9 +115,7 @@ class Profile extends Component {
                     ? this.props.user.photo.base64 === ''
                       ? require('../../assets/images/boy.png')
                       : {
-                          uri:
-                            'data:image/jpeg;base64, ' +
-                            this.props.user.photo.base64,
+                          uri: `data:${this.props.user.photo.mime};base64,${this.props.user.photo.base64}`,
                         }
                     : {uri: this.props.user.photo.url}
                 }
