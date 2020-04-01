@@ -22,7 +22,7 @@ const userFirebaseStructure = data => {
     email: user.email === null ? '' : user.email,
     photo: {
       url: user.photoURL === null ? '' : user.photoURL,
-      uri: '',
+      base64: '',
     },
     phone_no: '',
     agency: '',

@@ -120,7 +120,7 @@ class Profile extends Component {
             style={[
               styles.avatarOutline,
               this.props.user.photo.url === '' &&
-              this.props.user.photo.uri === ''
+              this.props.user.photo.base64 === ''
                 ? styles.noAvatarOutline
                 : null,
             ]}>

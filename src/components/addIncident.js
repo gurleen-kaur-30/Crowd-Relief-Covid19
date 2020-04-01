@@ -283,7 +283,11 @@ class AddIncident extends Component {
 
   render() {
     return (
-      <ScrollView>
+      <View
+        style={[
+          styles.container,
+          this.state.modalVisible ? {opacity: 0.3} : {opacity: 1},
+        ]}>
         <Modal
           animationType="fade"
           transparent={true}
@@ -306,134 +310,128 @@ class AddIncident extends Component {
             </View>
           </TouchableOpacity>
         </Modal>
-        <View
-          style={[
-            styles.container,
-            this.state.modalVisible ? {opacity: 0.3} : {opacity: 1},
-          ]}>
-          <Header androidStatusBarColor="#1c76cb">
-            <Left>
-              <TouchableOpacity
-                style={styles.backButton}
-                onPress={() => Actions.pop()}>
-                <Icon name="close" size={40} color="white" />
-              </TouchableOpacity>
-            </Left>
-            <Body>
-              <Text style={styles.title}>Add Incident</Text>
-            </Body>
-          </Header>
-          <ScrollView
-            keyboardShouldPersistTaps="always"
-            showsVerticalScrollIndicator={false}>
-            <View style={styles.avatarContainer}>
-              {this.state.incident.image.isPresent ? (
-                <Image
-                  style={styles.image}
-                  resizeMethod={'resize'}
-                  source={{
-                    uri: `data:${this.state.incident.image.mime};base64,${this.state.incident.image.base64}`,
-                  }}
-                />
-              ) : null}
-              <TouchableOpacity
-                onPress={() => this.setState({modalVisible: true})}>
-                <View style={styles.cameraContainer}>
-                  <Icon name="camera" size={40} color="white" />
-                  {this.state.incident.image.isPresent ? (
-                    <Text style={styles.imageChangeText}>Change Image</Text>
-                  ) : (
-                    <Text style={styles.imageText}>Add Image</Text>
-                  )}
-                </View>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.textInputHeadingContainer}>
-              <Text style={styles.textInputHeading}>
-                Kind of incident: {this.state.incident.category}
-              </Text>
-            </View>
-            <View style={styles.textInputHeadingContainer}>
-              <Text style={styles.textInputHeading}>
-                Action to be taken: {this.state.incident.action}
-              </Text>
-            </View>
-
-            <TextInput
-              ref={input => (this.detailsInput = input)}
-              style={[styles.textInput, {height: 100}]}
-              onChangeText={details =>
-                this.setState({
-                  incident: {
-                    ...this.state.incident,
-                    details: details,
-                  },
-                })
-              }
-              multiline={true}
-              numberOfLines={4}
-              returnKeyType="next"
-              placeholder="Description"
-            />
-
-            <View style={styles.textInputHeadingContainer}>
-              <Text style={[styles.textInputHeading, {flex: 3}]}>
-                Urgency (1 is lowest)
-              </Text>
-              <Picker
-                selectedValue={this.state.incident.urgency}
-                onValueChange={urgency => {
-                  this.updateUrgency(urgency);
-                }}
-                style={styles.urgencypicker}>
-                {[...Array(5).keys()].map(item => {
-                  return (
-                    <Picker.Item
-                      label={String(item + 1)}
-                      value={item + 1}
-                      key={item}
-                    />
-                  );
-                })}
-              </Picker>
-            </View>
-            {this.state.checkboxList.map((item, index) => {
-              return (
-                <View style={styles.itemList} key={index}>
-                  <CheckBox
-                    style={styles.checkbox}
-                    color="#3a54ff"
-                    value={this.state.checkboxList[index].include}
-                    onValueChange={val => this.addValues(val, index, 0)}
-                  />
-                  <Text style={styles.checkboxTitle}>
-                    {item.name} ( {item.quantity} )
-                  </Text>
-                  <TextInput
-                    autoCorrect={false}
-                    ref={input => {
-                      this.unitTextInput = input;
-                    }}
-                    keyboardType="numeric"
-                    style={styles.name}
-                    placeholder={'units'}
-                    onChangeText={text => this.addValues(text, index, 1)}
-                  />
-                </View>
-              );
-            })}
-            {this.props.incident.loading && (
-              <ActivityIndicator size="large" color="black" />
-            )}
+        <Header androidStatusBarColor="#1c76cb">
+          <Left>
             <TouchableOpacity
-              disabled={this.state.disable}
-              style={styles.updateButton}
-              onPress={() => this.handleAddIncident()}>
-              <Text style={styles.updateText}> Save</Text>
+              style={styles.backButton}
+              onPress={() => Actions.pop()}>
+              <Icon name="close" size={40} color="white" />
             </TouchableOpacity>
-          </ScrollView>
-        </View>
-      </ScrollView>
+          </Left>
+          <Body>
+            <Text style={styles.title}>Add Incident</Text>
+          </Body>
+        </Header>
+        <ScrollView
+          keyboardShouldPersistTaps="always"
+          showsVerticalScrollIndicator={false}>
+          <View style={styles.avatarContainer}>
+            {this.state.incident.image.isPresent ? (
+              <Image
+                style={styles.image}
+                resizeMethod={'resize'}
+                source={{
+                  uri: `data:${this.state.incident.image.mime};base64,${this.state.incident.image.base64}`,
+                }}
+              />
+            ) : null}
+            <TouchableOpacity
+              onPress={() => this.setState({modalVisible: true})}>
+              <View style={styles.cameraContainer}>
+                <Icon name="camera" size={40} color="white" />
+                {this.state.incident.image.isPresent ? (
+                  <Text style={styles.imageChangeText}>Change Image</Text>
+                ) : (
+                  <Text style={styles.imageText}>Add Image</Text>
+                )}
+              </View>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.textInputHeadingContainer}>
+            <Text style={styles.textInputHeading}>
+              Kind of incident: {this.state.incident.category}
+            </Text>
+          </View>
+          <View style={styles.textInputHeadingContainer}>
+            <Text style={styles.textInputHeading}>
+              Action to be taken: {this.state.incident.action}
+            </Text>
+          </View>
+
+          <TextInput
+            ref={input => (this.detailsInput = input)}
+            style={[styles.textInput, {height: 100}]}
+            onChangeText={details =>
+              this.setState({
+                incident: {
+                  ...this.state.incident,
+                  details: details,
+                },
+              })
+            }
+            multiline={true}
+            numberOfLines={4}
+            returnKeyType="next"
+            placeholder="Description"
+          />
+
+          <View style={styles.textInputHeadingContainer}>
+            <Text style={[styles.textInputHeading, {flex: 3}]}>
+              Urgency (1 is lowest)
+            </Text>
+            <Picker
+              selectedValue={this.state.incident.urgency}
+              onValueChange={urgency => {
+                this.updateUrgency(urgency);
+              }}
+              style={styles.urgencypicker}>
+              {[...Array(5).keys()].map(item => {
+                return (
+                  <Picker.Item
+                    label={String(item + 1)}
+                    value={item + 1}
+                    key={item}
+                  />
+                );
+              })}
+            </Picker>
+          </View>
+          {this.state.checkboxList.map((item, index) => {
+            return (
+              <View style={styles.itemList} key={index}>
+                <CheckBox
+                  style={styles.checkbox}
+                  color="#3a54ff"
+                  value={this.state.checkboxList[index].include}
+                  onValueChange={val => this.addValues(val, index, 0)}
+                />
+                <Text style={styles.checkboxTitle}>
+                  {item.name} ( {item.quantity} )
+                </Text>
+                <TextInput
+                  autoCorrect={false}
+                  ref={input => {
+                    this.unitTextInput = input;
+                  }}
+                  keyboardType="numeric"
+                  style={styles.name}
+                  placeholder={'units'}
+                  onChangeText={text => this.addValues(text, index, 1)}
+                />
+              </View>
+            );
+          })}
+          {this.props.incident.loading && (
+            <ActivityIndicator size="large" color="black" />
+          )}
+          <TouchableOpacity
+            disabled={this.state.disable}
+            style={styles.updateButton}
+            onPress={() => this.handleAddIncident()}>
+            <Text style={styles.updateText}> Save</Text>
+          </TouchableOpacity>
+        </ScrollView>
+      </View>
     );
   }
 }

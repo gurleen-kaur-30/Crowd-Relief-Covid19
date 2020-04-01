@@ -217,7 +217,11 @@ class EditProfile extends Component {
   render() {
     var user = this.state.user;
     return (
-      <ScrollView>
+      <View
+        style={[
+          styles.container,
+          this.state.modalVisible ? {opacity: 0.4} : {opacity: 1},
+        ]}>
         <Modal
           animationType="fade"
           transparent={true}
@@ -240,121 +244,113 @@ class EditProfile extends Component {
             </View>
           </TouchableOpacity>
         </Modal>
-        <View
-          style={[
-            styles.container,
-            this.state.modalVisible ? {opacity: 0.4} : {opacity: 1},
-          ]}>
-          <Header androidStatusBarColor="#1c76cb">
-            <Left>
-              <TouchableOpacity
-                style={styles.backButton}
-                onPress={() => Actions.pop()}>
-                <Icon name="close" size={40} color="white" />
-              </TouchableOpacity>
-            </Left>
-            <Body>
-              <Title>Profile Settings</Title>
-            </Body>
-          </Header>
-
-          <ScrollView
-            keyboardShouldPersistTaps="always"
-            showsVerticalScrollIndicator={false}>
-            <View style={styles.avatarContainer}>
-              <Image
-                style={styles.avatar}
-                resizeMethod={'resize'}
-                source={
-                  user.photo.url === ''
-                    ? user.photo.base64 === ''
-                      ? require('../../assets/images/boy.png')
-                      : {
-                          uri: `data:${user.photo.mime};base64,${user.photo.base64}`,
-                        }
-                    : {uri: user.photo.url}
-                }
-              />
-              <TouchableOpacity
-                activeOpacity={0.4}
-                onPress={() => this.setState({modalVisible: true})}>
-                <Text style={styles.userName}>Change Profile Photo</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.valueItem}>
-              <View style={styles.valueTextContainer}>
-                <Text style={styles.valueText}>Name</Text>
-              </View>
-              <TextInput
-                autoCorrect={false}
-                ref={input => (this.nameInput = input)}
-                onChangeText={name => this.handleInput('name', name)}
-                onSubmitEditing={() => this.emailInput.focus()}
-                returnKeyType="next"
-                style={styles.textInput}
-                underlineColorAndroid="transparent"
-                placeholder="Name"
-                value={user.name}
-              />
-            </View>
-
-            <View style={styles.valueItem}>
-              <View style={styles.valueTextContainer}>
-                <Text style={styles.valueText}>Email</Text>
-              </View>
-              <Text style={styles.textInput}>{user.email}</Text>
-            </View>
-            <View style={styles.valueItem}>
-              <View style={styles.valueTextContainer}>
-                <Text style={styles.valueText}>Contact Number</Text>
-              </View>
-              <TextInput
-                autoCorrect={false}
-                ref={input => (this.phoneNoInput = input)}
-                onChangeText={phone_no =>
-                  this.handleInput('phone_no', phone_no)
-                }
-                onSubmitEditing={() => this.agencyNameInput.focus()}
-                keyboardType="phone-pad"
-                returnKeyType="next"
-                style={styles.textInput}
-                underlineColorAndroid="transparent"
-                placeholder="Phone No."
-                value={user.phone_no}
-              />
-            </View>
-            <View style={styles.valueItem}>
-              <View style={styles.valueTextContainer}>
-                <Text style={styles.valueText}>Agency Name</Text>
-              </View>
-              <TextInput
-                autoCorrect={false}
-                ref={input => (this.agencyNameInput = input)}
-                onChangeText={agency => this.handleInput('agency', agency)}
-                returnKeyType="next"
-                style={styles.textInput}
-                underlineColorAndroid="transparent"
-                placeholder="Agency Name"
-                value={user.agency}
-              />
-            </View>
-            {this.props.updateLoading && (
-              <ActivityIndicator size={'large'} color="black" />
-            )}
+        <Header androidStatusBarColor="#1c76cb">
+          <Left>
             <TouchableOpacity
-              disabled={!this.state.isChanged}
-              activeOpacity={0.7}
-              style={
-                this.state.isChanged
-                  ? styles.updateButton
-                  : [styles.updateButton, {backgroundColor: '#7f7f7f'}]
-              }
-              onPress={() => this.handleUpdate()}>
-              <Text style={styles.updateText}> Update </Text>
+              style={styles.backButton}
+              onPress={() => Actions.pop()}>
+              <Icon name="close" size={40} color="white" />
             </TouchableOpacity>
-          </ScrollView>
-        </View>
-      </ScrollView>
+          </Left>
+          <Body>
+            <Title>Profile Settings</Title>
+          </Body>
+        </Header>
+
+        <ScrollView
+          keyboardShouldPersistTaps="always"
+          showsVerticalScrollIndicator={false}>
+          <View style={styles.avatarContainer}>
+            <Image
+              style={styles.avatar}
+              resizeMethod={'resize'}
+              source={
+                user.photo.url === ''
+                  ? user.photo.base64 === ''
+                    ? require('../../assets/images/boy.png')
+                    : {
+                        uri: `data:${user.photo.mime};base64,${user.photo.base64}`,
+                      }
+                  : {uri: user.photo.url}
+              }
+            />
+            <TouchableOpacity
+              activeOpacity={0.4}
+              onPress={() => this.setState({modalVisible: true})}>
+              <Text style={styles.userName}>Change Profile Photo</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.valueItem}>
+            <View style={styles.valueTextContainer}>
+              <Text style={styles.valueText}>Name</Text>
+            </View>
+            <TextInput
+              autoCorrect={false}
+              ref={input => (this.nameInput = input)}
+              onChangeText={name => this.handleInput('name', name)}
+              onSubmitEditing={() => this.emailInput.focus()}
+              returnKeyType="next"
+              style={styles.textInput}
+              underlineColorAndroid="transparent"
+              placeholder="Name"
+              value={user.name}
+            />
+          </View>
+
+          <View style={styles.valueItem}>
+            <View style={styles.valueTextContainer}>
+              <Text style={styles.valueText}>Email</Text>
+            </View>
+            <Text style={styles.textInput}>{user.email}</Text>
+          </View>
+          <View style={styles.valueItem}>
+            <View style={styles.valueTextContainer}>
+              <Text style={styles.valueText}>Contact Number</Text>
+            </View>
+            <TextInput
+              autoCorrect={false}
+              ref={input => (this.phoneNoInput = input)}
+              onChangeText={phone_no => this.handleInput('phone_no', phone_no)}
+              onSubmitEditing={() => this.agencyNameInput.focus()}
+              keyboardType="phone-pad"
+              returnKeyType="next"
+              style={styles.textInput}
+              underlineColorAndroid="transparent"
+              placeholder="Phone No."
+              value={user.phone_no}
+            />
+          </View>
+          <View style={styles.valueItem}>
+            <View style={styles.valueTextContainer}>
+              <Text style={styles.valueText}>Agency Name</Text>
+            </View>
+            <TextInput
+              autoCorrect={false}
+              ref={input => (this.agencyNameInput = input)}
+              onChangeText={agency => this.handleInput('agency', agency)}
+              returnKeyType="next"
+              style={styles.textInput}
+              underlineColorAndroid="transparent"
+              placeholder="Agency Name"
+              value={user.agency}
+            />
+          </View>
+          {this.props.updateLoading && (
+            <ActivityIndicator size={'large'} color="black" />
+          )}
+          <TouchableOpacity
+            disabled={!this.state.isChanged}
+            activeOpacity={0.7}
+            style={
+              this.state.isChanged
+                ? styles.updateButton
+                : [styles.updateButton, {backgroundColor: '#7f7f7f'}]
+            }
+            onPress={() => this.handleUpdate()}>
+            <Text style={styles.updateText}> Update </Text>
+          </TouchableOpacity>
+        </ScrollView>
+      </View>
     );
   }
 }
