@@ -320,20 +320,29 @@ class EditIncident extends Component {
           animationType="fade"
           transparent={true}
           visible={this.state.modalVisible}
-          onRequestClose={()=> this.setState({modalVisible: false})}
-        >
-        <TouchableOpacity onPress={()=>this.setState({modalVisible: false})} style={styles.modalContainer}>
-            <View style={[styles.photoModal,styles.modalShadow]}>
-                <TouchableOpacity style={styles.photoModalOption} onPress={()=>this.openCamera()}>
-                    <Text style={styles.photoModalText}>Click Photo</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.photoModalOption} onPress={()=>this.openGallery()}>
-                    <Text style={styles.photoModalText}>Choose from Gallery</Text>
-                </TouchableOpacity>
+          onRequestClose={() => this.setState({modalVisible: false})}>
+          <TouchableOpacity
+            onPress={() => this.setState({modalVisible: false})}
+            style={styles.modalContainer}>
+            <View style={[styles.photoModal, styles.modalShadow]}>
+              <TouchableOpacity
+                style={styles.photoModalOption}
+                onPress={() => this.openCamera()}>
+                <Text style={styles.photoModalText}>Click Photo</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.photoModalOption}
+                onPress={() => this.openGallery()}>
+                <Text style={styles.photoModalText}>Choose from Gallery</Text>
+              </TouchableOpacity>
             </View>
-        </TouchableOpacity>
+          </TouchableOpacity>
         </Modal>
-        <View style={[styles.container, this.state.modalVisible?{opacity: 0.3}:{opacity:1}]}>
+        <View
+          style={[
+            styles.container,
+            this.state.modalVisible ? {opacity: 0.3} : {opacity: 1},
+          ]}>
           <Header androidStatusBarColor="#1c76cb">
             <Left>
               <TouchableOpacity

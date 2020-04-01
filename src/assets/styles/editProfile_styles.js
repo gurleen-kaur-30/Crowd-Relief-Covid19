@@ -54,53 +54,38 @@ export const styles = StyleSheet.create({
   updateText: {
     color: 'white',
   },
-  photoModal : {
-    width : width/1.75,
-    height : height/5,
-    marginTop : height/3,
-    marginLeft : width/4.5,
-    backgroundColor : 'white',
-    borderRadius : 4,
+  photoModal: {
+    backgroundColor: 'white',
+    borderRadius: 30,
     elevation: 100,
-    borderWidth: 0.5,
-    paddingHorizontal: 10,
-    paddingVertical : 15
-},
-  photoModalOption : {
-    flexDirection : 'row',
-    marginTop : 18,
-    alignItems:"center",
-},
-photoModalText : {
-    fontFamily : 'ProductSans-Regular',
-    fontSize : 16,
-    color : 'black',
-    marginLeft : 7,
-    letterSpacing : 1.99
-},
-shadow: {
-    textShadowColor: '#26243242',
-    shadowOpacity: 0.2,
-    elevation:100,
-    textShadowOffset:{width: 2,height: 0.1},
-    zIndex : 10,
-},
-photoModalArrow : {
-    marginLeft : 173,
-    marginTop : -10
-},
-modalShadow:{
+    borderWidth: 0.1,
+    paddingHorizontal: width / 10,
+    paddingVertical: height / 25,
+  },
+  photoModalOption: {
+    flexDirection: 'row',
+    marginVertical: 15,
+    alignItems: 'center',
+  },
+  photoModalText: {
+    fontSize: 16,
+    color: 'black',
+    letterSpacing: 2,
+  },
+  modalShadow: {
     shadowColor: '#243242',
     shadowOffset: {
-        width: 0, height: 0,
+      width: 0,
+      height: 0,
     },
     shadowOpacity: 0.15,
-    shadowRadius: 8
-},
-modalContainer:{
-  width: width,
-  height: height,
-  backgroundColor: 'transparent',
-},
-
+    shadowRadius: 8,
+  },
+  modalContainer: {
+    width: width,
+    height: height,
+    backgroundColor: 'transparent',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });

@@ -254,7 +254,6 @@ class AddIncident extends Component {
     });
   };
 
-
   addValues = (inputItem, index, index2) => {
     let dataArray = this.state.checkboxList;
     console.log(inputItem, index, index2);
@@ -285,24 +284,33 @@ class AddIncident extends Component {
   render() {
     return (
       <ScrollView>
-       <Modal
-        animationType="fade"
-        transparent={true}
-        visible={this.state.modalVisible}
-        onRequestClose={()=> this.setState({modalVisible: false})}
-        >
-        <TouchableOpacity onPress={()=>this.setState({modalVisible: false})} style={styles.modalContainer}>
-            <View style={[styles.photoModal,styles.modalShadow]}>
-                <TouchableOpacity style={styles.photoModalOption} onPress={()=>this.openCamera()}>
-                    <Text style={styles.photoModalText}>Click Photo</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.photoModalOption} onPress={()=>this.openGallery()}>
-                    <Text style={styles.photoModalText}>Choose from Gallery</Text>
-                </TouchableOpacity>
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={this.state.modalVisible}
+          onRequestClose={() => this.setState({modalVisible: false})}>
+          <TouchableOpacity
+            onPress={() => this.setState({modalVisible: false})}
+            style={styles.modalContainer}>
+            <View style={styles.photoModal}>
+              <TouchableOpacity
+                style={styles.photoModalOption}
+                onPress={() => this.openCamera()}>
+                <Text style={styles.photoModalText}>Click Photo</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.photoModalOption}
+                onPress={() => this.openGallery()}>
+                <Text style={styles.photoModalText}>Choose from Gallery</Text>
+              </TouchableOpacity>
             </View>
-        </TouchableOpacity>
+          </TouchableOpacity>
         </Modal>
-        <View style={[styles.container, this.state.modalVisible?{opacity: 0.3}:{opacity:1}]}>
+        <View
+          style={[
+            styles.container,
+            this.state.modalVisible ? {opacity: 0.3} : {opacity: 1},
+          ]}>
           <Header androidStatusBarColor="#1c76cb">
             <Left>
               <TouchableOpacity
@@ -350,7 +358,7 @@ class AddIncident extends Component {
                 Action to be taken: {this.state.incident.action}
               </Text>
             </View>
-            
+
             <TextInput
               ref={input => (this.detailsInput = input)}
               style={[styles.textInput, {height: 100}]}
