@@ -54,4 +54,38 @@ export const styles = StyleSheet.create({
   updateText: {
     color: 'white',
   },
+  photoModal: {
+    backgroundColor: 'white',
+    borderRadius: 30,
+    elevation: 100,
+    borderWidth: 0.1,
+    paddingHorizontal: width / 10,
+    paddingVertical: height / 25,
+  },
+  photoModalOption: {
+    flexDirection: 'row',
+    marginVertical: 15,
+    alignItems: 'center',
+  },
+  photoModalText: {
+    fontSize: 16,
+    color: 'black',
+    letterSpacing: 2,
+  },
+  modalShadow: {
+    shadowColor: '#243242',
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+  },
+  modalContainer: {
+    width: width,
+    height: height,
+    backgroundColor: 'transparent',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });

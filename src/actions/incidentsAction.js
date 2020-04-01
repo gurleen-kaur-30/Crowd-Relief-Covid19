@@ -76,7 +76,6 @@ export const getAllIncidents = () => {
               all_incidents.push({
                 key: child.key,
                 value: {
-                  title: child.val().title,
                   action: child.val().action,
                   urgency: child.val().urgency,
                   items: child.val().items,
@@ -133,7 +132,6 @@ export const getUserIncidents = userID => {
             incident.push({
               key: child.key,
               value: {
-                title: child.val().title,
                 action: child.val().action,
                 urgency: child.val().urgency,
                 details: child.val().details,
@@ -148,23 +146,6 @@ export const getUserIncidents = userID => {
         dispatch(userIncidents(incident));
         dispatch(incidentsLoading(false));
       });
-  };
-};
-
-/**
- * Stores the current incident viewed along with the state of
- * 'If that incident belongs to the signed in user or not'.
- * @param  {JSON}  incident   Current Incident being viewed
- * @param  {Boolean} isLoggedIn Store the state whether the current
- * incident being viewed is of the logged in user or not
- */
-export const viewIncident = (incident, isLoggedIn) => {
-  return dispatch => {
-    dispatch({
-      type: VIEW_INCIDENT,
-      incident: incident,
-      isLoggedIn: isLoggedIn,
-    });
   };
 };
 
@@ -213,13 +194,30 @@ export const getIndvIncident = key => {
           key: snap.key,
           value: snap._value,
         };
-        if (item.value.user_id === store.getState().login.userDetails.email) {
-          dispatch(viewIncident(item, true));
-        } else {
-          dispatch(viewIncident(item, false));
-        }
+        // if (item.value.user_id === store.getState().login.userDetails.email) {
+        dispatch(viewIncident(item, true));
+        // } else {
+        //   dispatch(viewIncident(item, false));
+        // }
         dispatch(incidentsLoading(false));
       });
+  };
+};
+
+/**
+ * Stores the current incident viewed along with the state of
+ * 'If that incident belongs to the signed in user or not'.
+ * @param  {JSON}  incident   Current Incident being viewed
+ * @param  {Boolean} isLoggedIn Store the state whether the current
+ * incident being viewed is of the logged in user or not
+ */
+export const viewIncident = (incident, isLoggedIn) => {
+  return dispatch => {
+    dispatch({
+      type: VIEW_INCIDENT,
+      incident: incident,
+      isLoggedIn: isLoggedIn,
+    });
   };
 };
 

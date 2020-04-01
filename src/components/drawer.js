@@ -82,6 +82,7 @@ class DrawerContent extends Component {
     if (this.props.user === null) {
       return <ActivityIndicator size={'large'} />;
     } else {
+      var user = this.props.user;
       return (
         <ScrollView style={styles.container}>
           <View style={styles.userHeader}>
@@ -89,19 +90,17 @@ class DrawerContent extends Component {
               <Image
                 style={styles.userImage}
                 source={
-                  this.props.user.photo.url === ''
-                    ? this.props.user.photo.base64 === ''
+                  user.photo.url === ''
+                    ? user.photo.base64 === ''
                       ? require('../assets/images/boy.png')
                       : {
-                          uri:
-                            'data:image/jpeg;base64, ' +
-                            this.props.user.photo.base64,
+                          uri: `data:${user.photo.mime};base64,${user.photo.base64}`,
                         }
-                    : {uri: this.props.user.photo.url}
+                    : {uri: user.photo.url}
                 }
               />
             </TouchableHighlight>
-            <Text style={styles.userName}>{this.props.user.name}</Text>
+            <Text style={styles.userName}>{user.name}</Text>
           </View>
 
           <View style={styles.bar} />
@@ -117,9 +116,6 @@ class DrawerContent extends Component {
           <TouchableHighlight onPress={() => this.onClickSettingsOption()}>
             <Text style={styles.option}>Settings</Text>
           </TouchableHighlight>
-          {/* <TouchableHighlight onPress={Actions.aboutUs}>
-						<Text style={styles.option}>About us</Text>
-					</TouchableHighlight> */}
           <TouchableHighlight
             onPress={() => {
               this.handleLogout();

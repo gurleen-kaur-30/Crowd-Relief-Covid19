@@ -6,10 +6,6 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  picker: {
-    marginVertical: height / 100,
-    marginHorizontal: width / 30,
-  },
   urgencypicker: {
     marginVertical: height / 100,
     marginHorizontal: width / 30,
@@ -44,34 +40,25 @@ export const styles = StyleSheet.create({
     fontSize: 20,
     color: '#fff',
   },
-  textInput: {
-    width: width * 0.9,
-    marginLeft: width / 20,
-    paddingTop: height / 300,
-  },
   textInputHeadingContainer: {
     marginLeft: width / 20,
     paddingTop: height / 40,
     paddingBottom: height / 100,
     flexDirection: 'row',
     alignItems: 'center',
+    flex: 1,
   },
   textInputHeading: {
     color: '#555',
     fontWeight: 'bold',
     fontSize: 17,
   },
-  switchContainer: {
-    flexDirection: 'row',
-    marginHorizontal: width / 20,
-    paddingTop: height / 40,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  switchText: {
+  textInputValue: {
     color: '#555',
-    fontWeight: 'bold',
+    flex: 1,
     fontSize: 17,
+    textAlign: 'right',
+    marginRight: width / 10,
   },
   updateButton: {
     alignItems: 'center',
@@ -85,35 +72,90 @@ export const styles = StyleSheet.create({
     color: 'white',
   },
   itemsRow: {
-    flex: 1,
+    flex: 10,
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
     paddingTop: height / 25,
-  },
-  buttonView: {
-    flexDirection: 'row',
+    marginHorizontal: width / 20,
+    alignItems: 'center',
   },
   textInput: {
-      height: 40,
-      borderColor: 'black', 
-      borderWidth: 1,
-      margin: 20
+    height: 40,
+    borderColor: 'black',
+    borderWidth: 1,
+    margin: 20,
   },
-  row:{
-      flexDirection: 'row',
-      justifyContent: 'center'
+  // row: {
+  //   flexDirection: 'row',
+  //   justifyContent: 'center',
+  // },
+  // name: {
+  //   height: height / 20,
+  //   width: width / 4.5,
+  //   borderColor: 'black',
+  //   borderWidth: 1,
+  //   paddingLeft: width / 50,
+  //   paddingTop: width / 50,
+  // },
+  checkbox: {
+    flex: 1,
   },
-  name:{
-      height: height/20,
-      width: width/4.5,
-      borderColor: 'black', 
-      borderWidth: 1,
-      paddingLeft: width/50,
-      paddingTop: width/50
+  checkboxTitle: {
+    // fontFamily: 'ProductSans-Regular',
+    color: '#464646',
+    marginLeft: 8,
+    flex: 6,
   },
-  pickerStyle:{
-    width: width/4.3,
-    height: height/20,
-    borderColor: 'black', 
+  itemName: {
+    flex: 4,
+    alignSelf: 'flex-start',
+  },
+  itemUnits: {
+    flex: 3,
+    // alignContent: 'center',
+    width: width / 3,
+  },
+  units: {
+    // height: height / 20,
+    width: width / 4,
+    borderColor: 'black',
+    borderWidth: 1,
+    paddingVertical: height / 150,
+    // paddingLeft: width / 60,
+    // fontSize: 16,
+    flex: 1,
+  },
+  photoModal: {
+    backgroundColor: 'white',
+    borderRadius: 30,
+    elevation: 100,
+    borderWidth: 0.1,
+    paddingHorizontal: width / 10,
+    paddingVertical: height / 25,
+  },
+  photoModalOption: {
+    flexDirection: 'row',
+    marginVertical: 15,
+    alignItems: 'center',
+  },
+  photoModalText: {
+    fontSize: 16,
+    color: 'black',
+    letterSpacing: 2,
+  },
+  modalShadow: {
+    shadowColor: '#243242',
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+  },
+  modalContainer: {
+    width: width,
+    height: height,
+    backgroundColor: 'transparent',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

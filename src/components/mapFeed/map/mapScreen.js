@@ -17,7 +17,10 @@ import Config from 'react-native-config';
 import MapContainer from './mapContainer';
 import {getMarkerImage, categories} from '../../../utils/categoryUtil.js';
 import {setLocationOnCustomSearch} from '../../../actions/locationAction';
-import {watchCurrLocation} from '../../../actions/locationAction';
+import {
+  watchCurrLocation,
+  getCurrLocation,
+} from '../../../actions/locationAction';
 import {
   getAllIncidents,
   updateIndvNotification,
@@ -74,9 +77,11 @@ class MapScreen extends Component {
         fastInterval: 5000,
       }).then(data => {
         this.props.watchCurrLocation();
+        this.props.getCurrLocation();
       });
     }
     this.props.watchCurrLocation();
+    this.props.getCurrLocation();
   }
 
   UNSAFE_componentWillUpdate(nextProps) {
@@ -215,11 +220,7 @@ class MapScreen extends Component {
         <CheckBox
           style={filterStyles.check_box}
           value={this.props.incident.nearby.relief}
-          onValueChange={() =>
-            this.props.updateNearbyReliefToggle(
-              !this.props.incident.nearby.relief,
-            )
-          }
+          onValueChange={bool => this.props.updateNearbyReliefToggle(bool)}
         />
       </View>
       <View style={filterStyles.checkboxContainer}>
@@ -229,11 +230,7 @@ class MapScreen extends Component {
         <CheckBox
           style={filterStyles.check_box}
           value={this.props.incident.nearby.contribute}
-          onValueChange={() =>
-            this.props.updateNearbyContributeToggle(
-              !this.props.incident.nearby.contribute,
-            )
-          }
+          onValueChange={bool => this.props.updateNearbyContributeToggle(bool)}
         />
       </View>
       <View style={filterStyles.applyTextContainerOuter}>
@@ -259,7 +256,7 @@ class MapScreen extends Component {
             source={require('../../../assets/images/marker_jump.gif')}
           />
           <Text style={loadingStyle.loadingText}>
-            Loading your incidents & emergency places...
+            Loading Events and Emergency Places
           </Text>
         </View>
       );
@@ -273,12 +270,6 @@ class MapScreen extends Component {
             onPress={() => this.openModal()}>
             <Icon name="filter" size={27} style={styles.fabButtonIcon} />
           </TouchableHighlight>
-          <TouchableOpacity
-            activeOpacity={0.5}
-            style={styles.addIncidentButton}
-            onPress={() => Actions.addIncident()}>
-            <Icon name="plus" size={30} style={styles.fabButtonIcon} />
-          </TouchableOpacity>
           <Modal
             visible={this.state.visibleModal}
             onRequestClose={() => {
@@ -312,6 +303,32 @@ class MapScreen extends Component {
             styles={searchBarStyle}
             renderLeftButton={() => SideDrawer()}
           />
+          <TouchableOpacity
+            activeOpacity={0.5}
+            onPress={() =>
+              Actions.addIncident({
+                action: 'to_be_picked',
+                category: 'contribute',
+              })
+            }
+            style={[styles.fabContainer, styles.fabContainer2]}>
+            <Text style={styles.fabText}> Contribute</Text>
+            <View style={[styles.fabButton, styles.fabButton2]}>
+              <Icon name="plus" size={30} style={styles.fabButtonIcon} />
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() =>
+              Actions.addIncident({action: 'required', category: 'relief'})
+            }
+            activeOpacity={0.5}
+            style={styles.fabContainer}>
+            <Text style={styles.fabText}> Relief</Text>
+
+            <View style={styles.fabButton}>
+              <Icon name="plus" size={30} style={styles.fabButtonIcon} />
+            </View>
+          </TouchableOpacity>
         </View>
       );
     }
@@ -333,6 +350,7 @@ MapScreen.propTypes = {
   getAllItems: PropTypes.func.isRequired,
   getEmergencyPlaces: PropTypes.func.isRequired,
   watchCurrLocation: PropTypes.func.isRequired,
+  getCurrLocation: PropTypes.func.isRequired,
   updateShow: PropTypes.func.isRequired,
   updateIndvNotification: PropTypes.func.isRequired,
 };
@@ -356,6 +374,7 @@ function matchDispatchToProps(dispatch) {
       updateNearbyContributeToggle: updateNearbyContributeToggle,
       updateIndvNotification: updateIndvNotification,
       watchCurrLocation: watchCurrLocation,
+      getCurrLocation: getCurrLocation,
     },
     dispatch,
   );

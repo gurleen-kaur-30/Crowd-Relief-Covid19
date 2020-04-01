@@ -1,10 +1,6 @@
 import {ALL_ITEMS, ITEMS_LOADING} from './types';
 import {handleError} from './errorAction';
 import firebase from 'react-native-firebase';
-import {Toast} from 'native-base';
-
-import configureStore from '../utils/store';
-let {store, persistor} = configureStore();
 
 export const getAllItems = () => {
   return dispatch => {

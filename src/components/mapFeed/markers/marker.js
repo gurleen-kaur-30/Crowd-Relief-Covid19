@@ -1,11 +1,14 @@
 import React, {Component} from 'react';
+import {Image, Alert} from 'react-native';
 import MapView from 'react-native-maps';
 import {getMarkerImage, getMarkerColor} from '../../../utils/categoryUtil.js';
 import {connect} from 'react-redux';
 import {Actions} from 'react-native-router-flux';
+import {bindActionCreators} from 'redux';
 import getDirections from 'react-native-google-maps-directions';
 import PropTypes from 'prop-types';
 import {styles} from '../../../assets/styles/clusterMarker_styles';
+import {getIndvIncident} from '../../../actions/incidentsAction.js';
 
 /**
  * Class for displaying individual marker on map
@@ -25,6 +28,20 @@ class MapMarker extends Component {
    */
   viewClickedIncident(item) {
     Actions.incident({incident_key: item.key}); // Navigates to incident page
+  }
+
+  editClickedIncident(item) {
+    // if (
+    //   this.props.incident.incident !== null
+    //     ? item.key !== this.props.incident.incident.key
+    //     : true
+    // ) {
+    //   this.props.getIndvIncident(this.props.incident_key);
+    //   if (!this.props.incident.loading) {
+    //     Actions.editIncident({action: true});
+    //   }
+    // }
+    Actions.incident({incident_key: item.key, skip2edit: true});
   }
 
   /**
@@ -49,6 +66,33 @@ class MapMarker extends Component {
         },
       ],
     });
+  }
+
+  handleMarkerClick(item) {
+    if (this.props.type === 'relief') {
+      var s = 'deliver';
+    } else if (this.props.type === 'contribute') {
+      var s = 'pick up';
+    }
+    Alert.alert(
+      '',
+      'Do you want to view or ' + String(s) + ' ?',
+      [
+        {
+          text: 'View',
+          onPress: () => {
+            this.viewClickedIncident(item.properties.incident);
+          },
+        },
+        {
+          text: s,
+          onPress: () => {
+            this.editClickedIncident(item.properties.incident);
+          },
+        },
+      ],
+      {cancelable: true},
+    );
   }
 
   render() {
@@ -81,10 +125,9 @@ class MapMarker extends Component {
             longitude: coords[0],
           }}
           pinColor={markerColor}
-          title={item.properties.incident.value.title}
           description={item.properties.incident.value.details}
-          onCalloutPress={() => {
-            this.viewClickedIncident(item.properties.incident);
+          onPress={() => {
+            this.handleMarkerClick(item);
           }}>
           {/* <Image
             source={getMarkerImage(item.properties.incident.value.category)}
@@ -101,10 +144,9 @@ class MapMarker extends Component {
             longitude: coords[0],
           }}
           pinColor={markerColor}
-          title={item.properties.incident.value.title}
           description={item.properties.incident.value.details}
-          onCalloutPress={() => {
-            this.viewClickedIncident(item.properties.incident);
+          onPress={() => {
+            this.handleMarkerClick(item);
           }}>
           {/* <Image
             source={getMarkerImage(item.properties.incident.value.category)}
@@ -124,6 +166,15 @@ MapMarker.propTypes = {
   user: PropTypes.object,
 };
 
+function matchDispatchToProps(dispatch) {
+  return bindActionCreators(
+    {
+      getIndvIncident: getIndvIncident,
+    },
+    dispatch,
+  );
+}
+
 /**
  * Mapping state to props so that state variables can be used
  * through props in children components.
@@ -132,6 +183,7 @@ MapMarker.propTypes = {
  */
 const mapStateToProps = state => ({
   user: state.login.userDetails,
+  incident: state.incident,
 });
 
-export default connect(mapStateToProps, null)(MapMarker);
+export default connect(mapStateToProps, matchDispatchToProps)(MapMarker);

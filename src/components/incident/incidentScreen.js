@@ -71,6 +71,9 @@ class Incident extends Component {
     ) {
       this.props.getIndvIncident(this.props.incident_key);
     }
+    if (this.props.skip2edit && !this.props.incident.loading) {
+      Actions.editIncident({action: true});
+    }
   }
 
   //Handles the navigation by opening the Google Maps
@@ -117,6 +120,16 @@ class Incident extends Component {
       return this.getActivityIndicator();
     } else {
       var incidentDetails = this.props.incident.incident.value;
+      var action = '';
+      if (incidentDetails.action === 'to_be_picked') {
+        action = 'To be picked';
+      } else if (incidentDetails.action === 'required') {
+        action = 'Required';
+      } else if (incidentDetails.action === 'picked') {
+        action = 'Picked';
+      } else if (incidentDetails.action === 'delivered') {
+        action = 'Delivered';
+      }
       return (
         <Container style={styles.container}>
           <Header androidStatusBarColor="#1c76cb">
@@ -145,8 +158,7 @@ class Incident extends Component {
                   style={styles.image}
                   resizeMethod={'resize'}
                   source={{
-                    uri:
-                      'data:image/jpeg;base64, ' + incidentDetails.image.base64,
+                    uri: `data:${incidentDetails.image.mime};base64,${incidentDetails.image.base64}`,
                   }}
                 />
               </View>
@@ -154,18 +166,12 @@ class Incident extends Component {
             <Card style={styles.card}>
               <CardItem>
                 <Text style={styles.titleTextHeader}>Action</Text>
-              </CardItem>
-              <CardItem>
-                <Text style={styles.titleTextDescription}>
-                  {incidentDetails.action}
-                </Text>
+                <Text style={styles.titleTextDescription}>{action}</Text>
               </CardItem>
             </Card>
             <Card style={styles.card}>
               <CardItem>
                 <Text style={styles.titleTextHeader}>Category</Text>
-              </CardItem>
-              <CardItem>
                 <Text style={styles.titleTextDescription}>
                   {incidentDetails.category}
                 </Text>
@@ -174,20 +180,8 @@ class Incident extends Component {
             <Card style={styles.card}>
               <CardItem>
                 <Text style={styles.titleTextHeader}>Urgency</Text>
-              </CardItem>
-              <CardItem>
                 <Text style={styles.titleTextDescription}>
                   {incidentDetails.urgency}
-                </Text>
-              </CardItem>
-            </Card>
-            <Card style={styles.card}>
-              <CardItem>
-                <Text style={styles.titleTextHeader}>Title</Text>
-              </CardItem>
-              <CardItem>
-                <Text style={styles.titleTextDescription}>
-                  {incidentDetails.title}
                 </Text>
               </CardItem>
             </Card>
@@ -215,17 +209,39 @@ class Incident extends Component {
                         placeholder={item.name}
                         editable={false}
                         placeholderTextColor={'black'}
+                        style={styles.itemName}
                       />
                       <TextInput
                         placeholder={item.quantity}
                         editable={false}
                         placeholderTextColor={'black'}
+                        style={styles.itemQuantity}
                       />
                       <TextInput
                         placeholder={item.unit}
                         editable={false}
                         placeholderTextColor={'black'}
+                        style={styles.itemUnits}
                       />
+                      {incidentDetails.category != 'contribute' ? (
+                        item.status == 1 ? (
+                          <Text style={[styles.statusText, {color: 'green'}]}>
+                            delivered
+                          </Text>
+                        ) : (
+                          <Text style={[styles.statusText, {color: 'orange'}]}>
+                            required
+                          </Text>
+                        )
+                      ) : item.status == 1 ? (
+                        <Text style={[styles.statusText, {color: 'green'}]}>
+                          picked
+                        </Text>
+                      ) : (
+                        <Text style={[styles.statusText, {color: 'orange'}]}>
+                          to be picked
+                        </Text>
+                      )}
                     </View>
                   );
                 })}

@@ -8,6 +8,8 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   TextInput,
+  Dimensions,
+  Modal,
 } from 'react-native';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
@@ -17,7 +19,8 @@ import PropTypes from 'prop-types';
 import {updateUserFirebase} from '../../actions/loginAction';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import {Header, Title, Left, Body, Toast} from 'native-base';
-import ImagePicker from 'react-native-image-picker';
+import ImagePicker from 'react-native-image-crop-picker';
+const {width, height} = Dimensions.get('window');
 
 /**
  * Screen showing the edit options for the profile and personal information.
@@ -27,13 +30,15 @@ class EditProfile extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: this.props.user.name,
-      email: this.props.user.email,
-      phone_no: this.props.user.phone_no,
-      photo: this.props.user.photo,
-      emergency_contact_name: this.props.user.emergency_contact_name,
-      emergency_contact_phone_no: this.props.user.emergency_contact_phone_no,
+      user: {
+        name: this.props.user.name,
+        email: this.props.user.email,
+        phone_no: this.props.user.phone_no,
+        photo: this.props.user.photo,
+        agency: this.props.user.agency,
+      },
       isChanged: false,
+      modalVisible: false,
     };
   }
 
@@ -56,7 +61,7 @@ class EditProfile extends Component {
    * Validates the phone number
    */
   validatePhoneNumber(type, label, isRequired = false) {
-    let phoneNumber = this.state[type],
+    let phoneNumber = this.state.user[type],
       error = null,
       // In case the user enter the emergency contact number
       // then we need to validate it
@@ -80,7 +85,7 @@ class EditProfile extends Component {
    * Validates the name type
    */
   validateName(type, label, isRequired = false) {
-    let name = this.state[type],
+    let name = this.state.user[type],
       error = null;
 
     if (isRequired && (!name || name.length <= 3)) {
@@ -106,7 +111,7 @@ class EditProfile extends Component {
   validateAllNames() {
     return ![
       {key: 'name', label: 'Name', isRequired: true},
-      {key: 'emergency_contact_name', label: 'Emergency contact name'},
+      {key: 'agency', label: 'Agency Name'},
     ].some(i => !this.validateName(i.key, i.label, i.isRequired));
   }
 
@@ -115,35 +120,9 @@ class EditProfile extends Component {
    * Returns false in case validation fails
    */
   validateAllPhoneNumbers() {
-    return ![
-      {key: 'phone_no', label: 'Phone number', isRequired: true},
-      {
-        key: 'emergency_contact_phone_no',
-        label: 'Emergency contact phone number',
-      },
-    ].some(i => !this.validatePhoneNumber(i.key, i.label, i.isRequired));
-  }
-
-  /**
-   * Validates the email entered by the user
-   * against an acceptable regex pattern
-   *
-   */
-  validateEmail() {
-    let {email} = this.state;
-
-    if (email === '') {
-      this.showToast("You can't leave the email field blank!");
-      return false;
-    } else {
-      var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-      if (!email.match(mailformat)) {
-        this.showToast('Please check your email format');
-        return false;
-      } else {
-        return true;
-      }
-    }
+    return ![{key: 'phone_no', label: 'Phone number', isRequired: true}].some(
+      i => !this.validatePhoneNumber(i.key, i.label, i.isRequired),
+    );
   }
 
   /**
@@ -151,7 +130,7 @@ class EditProfile extends Component {
    * and show a toast on success
    */
   update = () => {
-    this.props.updateUserFirebase(this.state).then(() => {
+    this.props.updateUserFirebase(this.state.user).then(() => {
       this.showToast('Profile Updated', 'success');
       Actions.pop();
     });
@@ -160,7 +139,6 @@ class EditProfile extends Component {
   handleUpdate() {
     if (
       !this.validateAllNames() ||
-      !this.validateEmail() ||
       !this.validateAllPhoneNumbers() ||
       !this.state.isChanged
     ) {
@@ -174,7 +152,7 @@ class EditProfile extends Component {
    * handle input change across TextInput
    */
   handleInput(name, value) {
-    const state = this.state;
+    const state = this.state.user;
     state[name] = value;
     this.setState({...state, isChanged: true});
   }
@@ -183,36 +161,89 @@ class EditProfile extends Component {
    *  This function provides options for adding incident image, and updates the image object.
    * @return updates the incident image.
    */
-  _cameraImage = () => {
-    var options = {
-      title: 'Select Option',
-      storageOptions: {
-        skipBackup: true,
-        path: 'images',
-      },
-    };
-    ImagePicker.showImagePicker(options, response => {
-      if (response.error) {
-        this.showToast('ImagePicker Error: ' + response.error);
-      } else if (response.didCancel) {
-      } else if (response.customButton) {
-        this.showToast('User tapped custom button: ' + response.customButton);
-      } else {
-        this.setState({
+
+  selectFromGallery = () => {
+    ImagePicker.openPicker({
+      cropping: false,
+      compressImageQuality: 0.8,
+      compressImageMaxWidth: width,
+      compressImageMaxHeight: height,
+      includeBase64: true,
+    }).then(image => {
+      this.setState({
+        isChanged: true,
+        user: {
+          ...this.state.user,
           photo: {
             url: '',
-            base64: response.data,
+            mime: image.mime,
+            base64: image.data,
           },
-        });
-        this.showToast('Image Added!', 'success');
-        this.handleInput('isChanged', true);
-      }
+        },
+      });
     });
   };
 
+  selectFromCamera = () => {
+    ImagePicker.openCamera({
+      cropping: false,
+      compressImageQuality: 0.8,
+      compressImageMaxWidth: width,
+      compressImageMaxHeight: height,
+      includeBase64: true,
+    }).then(image => {
+      console.log(image);
+      this.setState({
+        isChanged: true,
+        user: {
+          ...this.state.user,
+          photo: {
+            url: '',
+            mime: image.mime,
+            base64: image.data,
+          },
+        },
+      });
+    });
+  };
+
+  openGallery() {
+    this.setState({modalVisible: false}, () => this.selectFromGallery());
+  }
+  openCamera() {
+    this.setState({modalVisible: false}, () => this.selectFromCamera());
+  }
+
   render() {
+    var user = this.state.user;
     return (
-      <View style={styles.container}>
+      <View
+        style={[
+          styles.container,
+          this.state.modalVisible ? {opacity: 0.4} : {opacity: 1},
+        ]}>
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={this.state.modalVisible}
+          onRequestClose={() => this.setState({modalVisible: false})}>
+          <TouchableOpacity
+            onPress={() => this.setState({modalVisible: false})}
+            style={styles.modalContainer}>
+            <View style={[styles.photoModal, styles.modalShadow]}>
+              <TouchableOpacity
+                style={styles.photoModalOption}
+                onPress={() => this.openCamera()}>
+                <Text style={styles.photoModalText}>Click Photo</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.photoModalOption}
+                onPress={() => this.openGallery()}>
+                <Text style={styles.photoModalText}>Choose from Gallery</Text>
+              </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
+        </Modal>
         <Header androidStatusBarColor="#1c76cb">
           <Left>
             <TouchableOpacity
@@ -234,19 +265,18 @@ class EditProfile extends Component {
               style={styles.avatar}
               resizeMethod={'resize'}
               source={
-                this.state.photo.url === ''
-                  ? this.state.photo.base64 === ''
+                user.photo.url === ''
+                  ? user.photo.base64 === ''
                     ? require('../../assets/images/boy.png')
                     : {
-                        uri:
-                          'data:image/jpeg;base64, ' + this.state.photo.base64,
+                        uri: `data:${user.photo.mime};base64,${user.photo.base64}`,
                       }
-                  : {uri: this.state.photo.url}
+                  : {uri: user.photo.url}
               }
             />
             <TouchableOpacity
               activeOpacity={0.4}
-              onPress={() => this._cameraImage()}>
+              onPress={() => this.setState({modalVisible: true})}>
               <Text style={styles.userName}>Change Profile Photo</Text>
             </TouchableOpacity>
           </View>
@@ -263,7 +293,7 @@ class EditProfile extends Component {
               style={styles.textInput}
               underlineColorAndroid="transparent"
               placeholder="Name"
-              value={this.state.name}
+              value={user.name}
             />
           </View>
 
@@ -271,7 +301,7 @@ class EditProfile extends Component {
             <View style={styles.valueTextContainer}>
               <Text style={styles.valueText}>Email</Text>
             </View>
-            <Text style={styles.textInput}>{this.state.email}</Text>
+            <Text style={styles.textInput}>{user.email}</Text>
           </View>
           <View style={styles.valueItem}>
             <View style={styles.valueTextContainer}>
@@ -281,56 +311,28 @@ class EditProfile extends Component {
               autoCorrect={false}
               ref={input => (this.phoneNoInput = input)}
               onChangeText={phone_no => this.handleInput('phone_no', phone_no)}
-              onSubmitEditing={() => this.emergencyContactNameInput.focus()}
+              onSubmitEditing={() => this.agencyNameInput.focus()}
               keyboardType="phone-pad"
               returnKeyType="next"
               style={styles.textInput}
               underlineColorAndroid="transparent"
               placeholder="Phone No."
-              value={this.state.phone_no}
+              value={user.phone_no}
             />
           </View>
           <View style={styles.valueItem}>
             <View style={styles.valueTextContainer}>
-              <Text style={styles.valueText}>Emergency Contact Name</Text>
+              <Text style={styles.valueText}>Agency Name</Text>
             </View>
             <TextInput
               autoCorrect={false}
-              ref={input => (this.emergencyContactNameInput = input)}
-              onChangeText={emergency_contact_name =>
-                this.handleInput(
-                  'emergency_contact_name',
-                  emergency_contact_name,
-                )
-              }
-              onSubmitEditing={() => this.emergencyContactPhoneInput.focus()}
+              ref={input => (this.agencyNameInput = input)}
+              onChangeText={agency => this.handleInput('agency', agency)}
               returnKeyType="next"
               style={styles.textInput}
               underlineColorAndroid="transparent"
-              placeholder="Contact Name"
-              value={this.state.emergency_contact_name}
-            />
-          </View>
-          <View style={styles.valueItem}>
-            <View style={styles.valueTextContainer}>
-              <Text style={styles.valueText}>Emergency Contact Number</Text>
-            </View>
-            <TextInput
-              autoCapitalize="none"
-              autoCorrect={false}
-              ref={input => (this.emergencyContactPhoneInput = input)}
-              onChangeText={emergency_contact_phone_no =>
-                this.handleInput(
-                  'emergency_contact_phone_no',
-                  emergency_contact_phone_no,
-                )
-              }
-              keyboardType="phone-pad"
-              returnKeyType="next"
-              style={styles.textInput}
-              underlineColorAndroid="transparent"
-              placeholder="Contact Number"
-              value={this.state.emergency_contact_phone_no}
+              placeholder="Agency Name"
+              value={user.agency}
             />
           </View>
           {this.props.updateLoading && (

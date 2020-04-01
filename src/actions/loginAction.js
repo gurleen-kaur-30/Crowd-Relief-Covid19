@@ -25,8 +25,7 @@ const userFirebaseStructure = data => {
       base64: '',
     },
     phone_no: '',
-    emergency_contact_name: '',
-    emergency_contact_phone_no: '',
+    agency: '',
   };
 };
 
@@ -268,6 +267,7 @@ const addUserFirebase = userDetails => {
  * @param  {JSON} userDetails Details of the user
  */
 export const updateUserFirebase = userDetails => {
+  console.log(userDetails);
   return dispatch => {
     dispatch(loginLoading(true));
     return new Promise((resolve, reject) => {

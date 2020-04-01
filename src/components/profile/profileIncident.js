@@ -29,7 +29,6 @@ class ProfileIncident extends Component {
           ]}>
           <Image style={styles.image} source={getMarkerImage(value.category)} />
           <View style={styles.textContainer}>
-            <Text style={styles.title}>{value.title.toUpperCase()}</Text>
             <Text style={styles.details} numberOfLines={2}>
               {value.details}
             </Text>

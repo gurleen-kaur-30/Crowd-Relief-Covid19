@@ -10,7 +10,9 @@ import {
   Keyboard,
   ActivityIndicator,
   Picker,
-  Button,
+  Dimensions,
+  Modal,
+  TouchableHighlight,
 } from 'react-native';
 import {Header, Title, Left, Body, Switch, Right, Card} from 'native-base';
 import Icon from 'react-native-vector-icons/EvilIcons';
@@ -20,8 +22,10 @@ import {addIncidentToFirebase} from '../actions/incidentsAction';
 import {Actions} from 'react-native-router-flux';
 import {styles} from '../assets/styles/addincident_styles';
 import PropTypes from 'prop-types';
-import ImagePicker from 'react-native-image-picker';
 import {Toast} from 'native-base';
+import CheckBox from '@react-native-community/checkbox';
+import ImagePicker from 'react-native-image-crop-picker';
+const {width, height} = Dimensions.get('window');
 
 /**
  * Screen for adding an incident.
@@ -31,28 +35,41 @@ class AddIncident extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      modalVisible: false,
       incident: {
-        title: null,
         details: null,
         visible: true,
         timestamp: new Date().toString(),
         location: {
           coordinates: this.props.location.curr_coordinates,
         },
-        category: null,
+        category: this.props.category,
         user_id: this.props.login.userDetails.email,
         image: {
           isPresent: false,
-          base64: '',
+          path: '',
           uri: '',
         },
         items: [],
-        action: null,
+        action: this.props.action,
         urgency: 1,
       },
-      disable: false,
-      textInput: [],
+      checkboxList: [],
     };
+  }
+
+  UNSAFE_componentWillMount() {
+    var a = [];
+    this.props.items.all_items.forEach(function(item) {
+      a.push({
+        name: item.key,
+        quantity: item.value.quantity,
+        unit: '0',
+        status: 0,
+        include: false,
+      });
+    });
+    this.setState({checkboxList: a});
   }
 
   /**
@@ -65,15 +82,6 @@ class AddIncident extends Component {
       incident: {
         ...this.state.incident,
         category: category,
-      },
-    });
-  };
-
-  updateAction = action => {
-    this.setState({
-      incident: {
-        ...this.state.incident,
-        action: action,
       },
     });
   };
@@ -104,29 +112,6 @@ class AddIncident extends Component {
   }
 
   /**
-   * Validates the title to make sure it has correct information
-   */
-  validateTitle() {
-    let {title} = this.state.incident,
-      error = null;
-
-    if (!title || title.length <= 3) {
-      error = 'Title should be 3 or more characters';
-    }
-    // Checks for alpha numeric
-    else if (!/^[a-z0-9\s]+$/i.test(title)) {
-      error = 'Title can contain only alphabets and numbers';
-    }
-
-    if (!error) {
-      return true;
-    }
-
-    this.showToast(error);
-    return false;
-  }
-
-  /**
    * Validates the details of the incident
    * to make sure it has correct information
    */
@@ -134,8 +119,8 @@ class AddIncident extends Component {
     let {details} = this.state.incident,
       error = null;
 
-    if (!details || details.length <= 10) {
-      error = 'Details should be 10 or more characters.';
+    if (!details || details.length < 5) {
+      error = 'Details should be 5 or more characters.';
     } else if (details.length > 1000) {
       error = 'Details should be less than 1000 characters.';
     }
@@ -152,11 +137,27 @@ class AddIncident extends Component {
    * Add the incident to firebase
    */
   addIncident = () => {
-    this.props
-      .addIncidentToFirebase(this.state.incident) // waits till incident details are updated in redux
-      .then(result => {
-        Actions.pop(); // set markers on map page to result from firebase.
-      });
+    var items2store = this.state.checkboxList.filter(function(item) {
+      if (item.include) {
+        return true;
+      }
+    });
+    this.setState({
+      incident: {
+        ...this.state.incident,
+        items: items2store,
+      },
+    });
+    console.log(this.state.incident);
+    if (items2store.length !== 0) {
+      this.props
+        .addIncidentToFirebase(this.state.incident) // waits till incident details are updated in redux
+        .then(result => {
+          Actions.pop(); // set markers on map page to result from firebase.
+        });
+    } else {
+      this.showToast('Please select atleast 1 item');
+    }
   };
 
   /**
@@ -166,19 +167,17 @@ class AddIncident extends Component {
     Keyboard.dismiss();
 
     // Validate the title and the details
-    if (!this.validateTitle() || !this.validateDetails()) {
+    if (!this.validateDetails()) {
       return;
     }
 
     if (
-      this.state.incident.title === null ||
       this.state.incident.details === null ||
       this.state.incident.category === null ||
       this.state.incident.action === null
     ) {
       this.showToast('Please dont leave any field blank');
     } else {
-      this.setState({disable: true});
       Alert.alert(
         '',
         'Are the details provided by you correct?',
@@ -202,140 +201,125 @@ class AddIncident extends Component {
    * This function provides options for adding incident image, and updates the image object.
    * @return updates the incident image.
    */
-  _cameraImage = () => {
-    var options = {
-      title: 'Select Option',
-      storageOptions: {
-        skipBackup: true,
-        path: 'images',
-      },
-    };
-    ImagePicker.showImagePicker(options, response => {
-      if (response.error) {
-        this.showToast('ImagePicker Error: ' + response.error);
-      } else if (response.didCancel) {
-      } else if (response.customButton) {
-        this.showToast('User tapped custom button: ' + response.customButton);
-      } else {
-        this.setState({
+  selectFromGallery = () => {
+    ImagePicker.openPicker({
+      cropping: false,
+      compressImageQuality: 0.8,
+      compressImageMaxWidth: width,
+      compressImageMaxHeight: height,
+      includeBase64: true,
+    }).then(image => {
+      this.setState(
+        {
           incident: {
             ...this.state.incident,
             image: {
               isPresent: true,
-              base64: response.data,
-              uri: response.uri,
+              mime: image.mime,
+              base64: image.data,
+              uri: image.path,
             },
           },
-        });
-        this.showToast('Image Added!', 'success');
-      }
+        },
+        this.showToast('Image Added!', 'success'),
+      );
     });
   };
 
-  addValues = (text, index, index2) => {
-    let dataArray = this.state.incident.items;
-    console.log(text, index, index2);
-    if (dataArray[index]) {
-      console.log('Hai index');
-      let item = dataArray[index];
-      if (index2 == 0) {
-        item.name = text;
-      } else if (index2 == 1) {
-        item.quantity = text;
-      } else {
-        item.unit = text;
+  selectFromCamera = () => {
+    ImagePicker.openCamera({
+      cropping: false,
+      compressImageQuality: 0.8,
+      compressImageMaxWidth: width,
+      compressImageMaxHeight: height,
+      includeBase64: true,
+    }).then(image => {
+      console.log(image);
+      this.setState(
+        {
+          incident: {
+            ...this.state.incident,
+            image: {
+              isPresent: true,
+              mime: image.mime,
+              base64: image.data,
+              uri: image.path,
+            },
+          },
+        },
+        this.showToast('Image Added!', 'success'),
+      );
+    });
+  };
+
+  addValues = (inputItem, index, index2) => {
+    let dataArray = this.state.checkboxList;
+    console.log(inputItem, index, index2);
+    let item = dataArray[index];
+    if (index2 == 0) {
+      item.include = inputItem;
+    } else if (index2 == 1) {
+      if (inputItem == '-') {
+        Alert.alert('please enter a positive number');
+        this.unitTextInput.clear();
       }
-      dataArray[index] = item;
-    } else {
-      console.log('No index');
-      let item = {name: '', quantity: '', unit: 'kg'};
-      dataArray[index] = item;
+      item.unit = inputItem;
     }
+    dataArray[index] = item;
     this.setState({
-      incident: {
-        ...this.state.incident,
-        items: dataArray,
-      },
+      checkboxList: dataArray,
     });
-    console.log(this.state.incident.items[index]);
+    console.log(this.state.checkboxList);
   };
 
-  removeTextInput = () => {
-    let textInput = this.state.textInput;
-    let inputData = this.state.incident.items;
-    textInput.pop();
-    inputData.pop();
-    this.setState({
-      incident: {
-        ...this.state.incident,
-        items: inputData,
-      },
-      textInput,
-    });
-    console.log(this.state.incident);
-  };
-
-  addTextInput = index => {
-    let textInput = this.state.textInput;
-    this.addValues(null, index, null);
-    // console.log(this.state.incident.items[index]);
-    textInput.push(
-      <View style={styles.itemsRow} key={index}>
-        <TextInput
-          ref={input => (this.nameInput = input)}
-          onChangeText={text => this.addValues(text, index, 0)}
-          onSubmitEditing={() => this.quantityInput.focus()}
-          keyboardType="email-address"
-          returnKeyType="next"
-          placeholder="Item name"
-          style={styles.name}
-        />
-        <TextInput
-          ref={input => (this.quantityInput = input)}
-          style={styles.name}
-          onChangeText={text => this.addValues(text, index, 1)}
-          keyboardType="numeric"
-          returnKeyType="next"
-          placeholder="Quantity"
-        />
-        <Picker
-          selectedValue={this.state.incident.items[index].unit}
-          onValueChange={text => {
-            this.addValues(text, index, 2);
-          }}
-          style={styles.name}>
-          <Picker.Item label="kg" value="kg" />
-          <Picker.Item label="gm" value="gm" />
-          <Picker.Item label="units" value="units" />
-          <Picker.Item label="ltr" value="ltr" />
-          <Picker.Item label="ml" value="ml" />
-        </Picker>
-      </View>,
-    );
-    this.setState({
-      textInput: textInput,
-    });
-  };
+  openGallery() {
+    this.setState({modalVisible: false}, () => this.selectFromGallery());
+  }
+  openCamera() {
+    this.setState({modalVisible: false}, () => this.selectFromCamera());
+  }
 
   render() {
-    let pickers;
-    if (this.state.incident.category == 'contribute') {
-      pickers = [
-        <Picker.Item label="Choose" value={null} key="null" />,
-        <Picker.Item label="To be picked" value="to_pick" key="to_pick" />,
-        <Picker.Item label="Picked" value="picked" key="picked" />,
-      ];
-    } else {
-      pickers = [
-        <Picker.Item label="Choose" value={null} key="null" />,
-        <Picker.Item label="Required" value="required" key="required" />,
-        <Picker.Item label="Delivered" value="delivered" key="delivered" />,
-      ];
+    var title = '';
+    if (
+      this.state.incident.action === 'to_be_picked' &&
+      this.state.incident.category === 'contribute'
+    ) {
+      title = 'Contribution to be picked';
+    } else if (
+      this.state.incident.action === 'required' &&
+      this.state.incident.category === 'relief'
+    ) {
+      title = 'Relief required';
     }
-    console.log(this.state.incident.items);
-
     return (
-      <View style={styles.container}>
+      <View
+        style={[
+          styles.container,
+          this.state.modalVisible ? {opacity: 0.3} : {opacity: 1},
+        ]}>
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={this.state.modalVisible}
+          onRequestClose={() => this.setState({modalVisible: false})}>
+          <TouchableOpacity
+            onPress={() => this.setState({modalVisible: false})}
+            style={styles.modalContainer}>
+            <View style={styles.photoModal}>
+              <TouchableOpacity
+                style={styles.photoModalOption}
+                onPress={() => this.openCamera()}>
+                <Text style={styles.photoModalText}>Click Photo</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.photoModalOption}
+                onPress={() => this.openGallery()}>
+                <Text style={styles.photoModalText}>Choose from Gallery</Text>
+              </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
+        </Modal>
         <Header androidStatusBarColor="#1c76cb">
           <Left>
             <TouchableOpacity
@@ -345,7 +329,7 @@ class AddIncident extends Component {
             </TouchableOpacity>
           </Left>
           <Body>
-            <Text style={styles.title}>Add Incident</Text>
+            <Text style={styles.title}>{title}</Text>
           </Body>
         </Header>
         <ScrollView
@@ -357,13 +341,12 @@ class AddIncident extends Component {
                 style={styles.image}
                 resizeMethod={'resize'}
                 source={{
-                  uri:
-                    'data:image/jpeg;base64, ' +
-                    this.state.incident.image.base64,
+                  uri: `data:${this.state.incident.image.mime};base64,${this.state.incident.image.base64}`,
                 }}
               />
             ) : null}
-            <TouchableOpacity onPress={() => this._cameraImage()}>
+            <TouchableOpacity
+              onPress={() => this.setState({modalVisible: true})}>
               <View style={styles.cameraContainer}>
                 <Icon name="camera" size={40} color="white" />
                 {this.state.incident.image.isPresent ? (
@@ -374,55 +357,22 @@ class AddIncident extends Component {
               </View>
             </TouchableOpacity>
           </View>
-          <View style={styles.textInputHeadingContainer}>
-            <Text style={styles.textInputHeading}>Kind of incident</Text>
+          {/* <View style={styles.textInputHeadingContainer}>
+            <Text style={styles.textInputHeading}>Kind of incident:</Text>
+            <Text style={styles.textInputValue}>
+              {this.state.incident.category}
+            </Text>
           </View>
-          <Picker
-            selectedValue={this.state.incident.category}
-            onValueChange={category => {
-              this.updateCategory(category);
-            }}
-            style={styles.picker}>
-            <Picker.Item label="Relief" value="relief" />
-            <Picker.Item label="Contribution" value="contribute" />
-          </Picker>
           <View style={styles.textInputHeadingContainer}>
-            <Text style={styles.textInputHeading}>Action to be taken</Text>
-          </View>
-          <Picker
-            selectedValue={this.state.incident.action}
-            onValueChange={action => {
-              this.updateAction(action);
-            }}
-            style={styles.picker}>
-            {pickers}
-          </Picker>
-          <View style={styles.textInputHeadingContainer}>
-            <Text style={styles.textInputHeading}>Incident Title</Text>
-          </View>
-
-          <TextInput
-            style={styles.textInput}
-            ref={input => (this.titleInput = input)}
-            onChangeText={title =>
-              this.setState({
-                incident: {
-                  ...this.state.incident,
-                  title: title,
-                },
-              })
-            }
-            onSubmitEditing={() => this.detailsInput.focus()}
-            keyboardType="email-address"
-            returnKeyType="next"
-            placeholder="Title"
-          />
+            <Text style={styles.textInputHeading}>Action to be taken:</Text>
+            <Text style={styles.textInputValue}>{action}</Text>
+          </View> */}
           <View style={styles.textInputHeadingContainer}>
             <Text style={styles.textInputHeading}>Incident Details</Text>
           </View>
           <TextInput
             ref={input => (this.detailsInput = input)}
-            style={styles.textInput}
+            style={[styles.textInput, {height: 100}]}
             onChangeText={details =>
               this.setState({
                 incident: {
@@ -439,7 +389,7 @@ class AddIncident extends Component {
 
           <View style={styles.textInputHeadingContainer}>
             <Text style={[styles.textInputHeading, {flex: 3}]}>
-              Urgency on a scale of 5
+              Urgency (1 is lowest)
             </Text>
             <Picker
               selectedValue={this.state.incident.urgency}
@@ -451,40 +401,50 @@ class AddIncident extends Component {
                 return (
                   <Picker.Item
                     label={String(item + 1)}
-                    value={String(item + 1)}
+                    value={item + 1}
                     key={item}
                   />
                 );
               })}
             </Picker>
           </View>
-          <View>
-            <View style={styles.row}>
-              <View style={{margin: 10}}>
-                <Button
-                  title="Add Item"
-                  onPress={() => this.addTextInput(this.state.textInput.length)}
+          {this.state.checkboxList.map((item, index) => {
+            return (
+              <View style={styles.itemList} key={index}>
+                <CheckBox
+                  style={styles.checkbox}
+                  color="#3a54ff"
+                  value={this.state.checkboxList[index].include}
+                  onValueChange={val => this.addValues(val, index, 0)}
+                />
+                <Text style={styles.checkboxTitle}>
+                  {item.name} ( {item.quantity} )
+                </Text>
+                <TextInput
+                  value={
+                    this.state.checkboxList[index].include
+                      ? this.state.checkboxList[index].unit
+                      : null
+                  }
+                  autoCorrect={false}
+                  ref={input => {
+                    this.unitTextInput = input;
+                  }}
+                  keyboardType="numeric"
+                  style={styles.name}
+                  placeholder={'units'}
+                  onChangeText={text => this.addValues(text, index, 1)}
                 />
               </View>
-              <View style={{margin: 10}}>
-                <Button
-                  title="Remove Item"
-                  onPress={() => this.removeTextInput()}
-                />
-              </View>
-            </View>
-            {this.state.textInput.map(value => {
-              return value;
-            })}
-          </View>
+            );
+          })}
           {this.props.incident.loading && (
             <ActivityIndicator size="large" color="black" />
           )}
           <TouchableOpacity
-            disabled={this.state.disable}
             style={styles.updateButton}
             onPress={() => this.handleAddIncident()}>
-            <Text style={styles.updateText}> Add Incident</Text>
+            <Text style={styles.updateText}> Save</Text>
           </TouchableOpacity>
         </ScrollView>
       </View>
@@ -527,6 +487,7 @@ const mapStateToProps = state => ({
   login: state.login,
   location: state.location,
   incident: state.incident,
+  items: state.items,
 });
 
 export default connect(mapStateToProps, matchDispatchToProps)(AddIncident);

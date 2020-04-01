@@ -1,10 +1,9 @@
-import { Text, View, TouchableOpacity, Alert } from 'react-native';
-import React, { Component } from 'react';
+import {Text, View, TouchableOpacity, Alert} from 'react-native';
+import React, {Component} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { Actions } from 'react-native-router-flux';
-import { styles } from '../../../assets/styles/navBarButton_styles';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import {Actions} from 'react-native-router-flux';
+import {styles} from '../../../assets/styles/navBarButton_styles';
+import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 /**
@@ -12,22 +11,21 @@ import PropTypes from 'prop-types';
  * @return {React Component} Returns the side menu button component
  */
 class EditButtonIncident extends Component {
-	render() {
-		if (this.props.incident.isLoggedIn) {
-			return (
-				<TouchableOpacity
-					style={styles.incidentNavButton}
-					onPress={() => {
-						Actions.editIncident();
-					}}
-				>
-					<Icon name="pencil" size={23} color={'white'} />
-				</TouchableOpacity>
-			);
-		} else {
-			return <View />;
-		}
-	}
+  render() {
+    if (this.props.incident.isLoggedIn) {
+      return (
+        <TouchableOpacity
+          style={styles.incidentNavButton}
+          onPress={() => {
+            Actions.editIncident({action: false});
+          }}>
+          <Icon name="pencil" size={23} color={'white'} />
+        </TouchableOpacity>
+      );
+    } else {
+      return <View />;
+    }
+  }
 }
 
 /**
@@ -36,7 +34,7 @@ class EditButtonIncident extends Component {
  * does not meet the specified type.
  */
 EditButtonIncident.propTypes = {
-	incident: PropTypes.object
+  incident: PropTypes.object,
 };
 
 /**
@@ -46,7 +44,7 @@ EditButtonIncident.propTypes = {
  * @return Returns states as props.
  */
 const mapStateToProps = state => ({
-	incident: state.incident
+  incident: state.incident,
 });
 
 export default connect(mapStateToProps, null)(EditButtonIncident);

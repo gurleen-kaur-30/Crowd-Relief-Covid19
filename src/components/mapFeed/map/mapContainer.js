@@ -406,7 +406,6 @@ class MapContainer extends Component {
   }
 
   render() {
-    console.log(this.state);
     return (
       <View style={styles.map}>
         <MapView
