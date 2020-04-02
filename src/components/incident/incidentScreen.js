@@ -140,9 +140,9 @@ class Incident extends Component {
                 <Icon name="angle-left" size={35} color="white" />
               </TouchableOpacity>
             </Left>
-            <Body>
+            {/* <Body>
               <Text style={styles.title}>Incident Details</Text>
-            </Body>
+            </Body> */}
             <Right>
               <EditButtonIncident key={1} />
               <DeleteButtonIncident key={2} toggleLoader={this.toggleLoader} />
@@ -206,16 +206,10 @@ class Incident extends Component {
                   return (
                     <View style={styles.itemsRow} key={index}>
                       <TextInput
-                        placeholder={item.name}
+                        placeholder={item.name + ' (' + item.quantity + ')'}
                         editable={false}
                         placeholderTextColor={'black'}
                         style={styles.itemName}
-                      />
-                      <TextInput
-                        placeholder={item.quantity}
-                        editable={false}
-                        placeholderTextColor={'black'}
-                        style={styles.itemQuantity}
                       />
                       <TextInput
                         placeholder={item.unit}

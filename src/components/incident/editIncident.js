@@ -329,7 +329,7 @@ class EditIncident extends Component {
       this.state.incident.action === 'required' &&
       this.state.incident.category === 'relief'
     ) {
-      title = 'Relief required';
+      title = 'Relief Required';
     }
     return (
       <View
@@ -402,14 +402,13 @@ class EditIncident extends Component {
               </TouchableOpacity>
             </View>
           )}
-
           {/* <View style={styles.textInputHeadingContainer}>
             <Text style={styles.textInputHeading}>Current Action:</Text>
             <Text style={styles.textInputValue}>{actionC}</Text>
-          </View>
-          <View style={styles.textInputHeadingContainer}>
-            <Text style={styles.textInputHeading}>Incident Details</Text>
           </View> */}
+          <View style={styles.textInputHeadingContainer}>
+            <Text style={styles.textInputHeading}>Description</Text>
+          </View>
           <TextInput
             multiline={true}
             numberOfLines={4}

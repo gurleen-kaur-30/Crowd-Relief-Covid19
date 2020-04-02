@@ -62,6 +62,11 @@ export const styles = StyleSheet.create({
     textDecorationLine: 'underline',
     fontSize: 15,
   },
+  passwordTip: {
+    paddingHorizontal: width / 20,
+    fontSize: 15,
+    paddingVertical: height / 200,
+  },
 });
 
 /**

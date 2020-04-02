@@ -294,7 +294,7 @@ class AddIncident extends Component {
       this.state.incident.action === 'required' &&
       this.state.incident.category === 'relief'
     ) {
-      title = 'Relief required';
+      title = 'Relief Required';
     }
     return (
       <View
@@ -372,7 +372,7 @@ class AddIncident extends Component {
             <Text style={styles.textInputValue}>{action}</Text>
           </View> */}
           <View style={styles.textInputHeadingContainer}>
-            <Text style={styles.textInputHeading}>Incident Details</Text>
+            <Text style={styles.textInputHeading}>Description</Text>
           </View>
           <TextInput
             ref={input => (this.detailsInput = input)}

@@ -108,7 +108,7 @@ export const styles = StyleSheet.create({
 
   itemName: {
     fontSize: 18,
-    flex: 2,
+    flex: 4,
   },
   itemQuantity: {
     fontSize: 18,

@@ -6,6 +6,7 @@ import {
   TextInput,
   Keyboard,
   ActivityIndicator,
+  ScrollView,
 } from 'react-native';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
@@ -18,7 +19,7 @@ import PropTypes from 'prop-types';
 import {Actions, ActionConst} from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Feather';
 import {Header, Title, Left, Body, Toast} from 'native-base';
-import AnimatedBar from 'react-native-animated-bar';
+import AnimatedBar from '../animatedBar';
 import zxcvbn from 'zxcvbn';
 
 /**
@@ -185,7 +186,7 @@ class Signup extends Component {
    */
   changePassStrength(pass) {
     let passScore = zxcvbn(pass).score,
-      scoreStrengthMap = ['weak', 'weak', 'fair', 'fair', 'strong'],
+      scoreStrengthMap = ['weak', 'fair', 'fair', 'strong'],
       isValid = this.isValidPassword(pass);
 
     this.setState({
@@ -193,7 +194,7 @@ class Signup extends Component {
       // to 4 (being the most secure password)
       // Here diving it by 4 gives the passStrength
       // to go from a range of  0 -> 1
-      passStrength: passScore / 4,
+      passStrength: passScore / 3,
 
       // Checks if the password is valid and assigns a strengthType
       // accordingly
@@ -204,7 +205,7 @@ class Signup extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <Header transparent androidStatusBarColor="#1c76cb">
           <Left>
             <TouchableOpacity onPress={() => Actions.pop()}>
@@ -258,11 +259,19 @@ class Signup extends Component {
             onPress={() => this.handleSignUp()}>
             <Text style={styles.button_text}> Register </Text>
           </TouchableOpacity>
+          <Text style={[styles.passwordTip, {fontWeight: 'bold'}]}>
+            Your password must
+          </Text>
+          <Text style={styles.passwordTip}>1. Have one uppercase letter</Text>
+          <Text style={styles.passwordTip}>2. Have one lowercase letter</Text>
+          <Text style={styles.passwordTip}>3. Have minimum 10 characters</Text>
+          <Text style={styles.passwordTip}>4. Have one Special character</Text>
+          <Text style={styles.passwordTip}>5. Have one Number</Text>
         </View>
         {this.props.login.loading ? (
           <ActivityIndicator size={'large'} color="white" />
         ) : null}
-      </View>
+      </ScrollView>
     );
   }
 }
