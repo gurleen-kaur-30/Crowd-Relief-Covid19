@@ -29,6 +29,36 @@ build/
 local.properties
 *.iml
 
+# Eclipse
+#
+*target*
+*.jar
+*.war
+*.ear
+*.class
+
+# eclipse specific git ignore
+*.pydevproject
+.project
+.metadata
+bin/**
+tmp/**
+tmp/**/*
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.classpath
+.settings/
+.loadpath
+
+# External tool builders
+.externalToolBuilders/
+
+# Locally stored "Eclipse launch configurations"
+*.launch
+
 # node.js
 #
 node_modules/
@@ -57,3 +87,8 @@ buck-out/
 
 # CocoaPods
 /ios/Pods/
+
+# custom
+.env
+google-services.json
+*sentry.properties
